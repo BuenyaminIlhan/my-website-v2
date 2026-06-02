@@ -1,0 +1,64 @@
+<header [class.scrolled]="scrolled()">
+  <div class="header-inner section-padding">
+    <a routerLink="/" (click)="scrollToTop()" class="logo" aria-label="Bünyamin Ilhan">
+      <span class="logo-bracket">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket">]</span>
+    </a>
+
+    <!-- Desktop navigation -->
+    <nav class="desktop-nav">
+      <a (click)="navigateTo('about')">{{ lang.t().nav.about }}</a>
+      <a (click)="navigateTo('skills')">{{ lang.t().nav.skills }}</a>
+      <a (click)="navigateTo('portfolio')">{{ lang.t().nav.portfolio }}</a>
+      <a (click)="navigateTo('contact')">{{ lang.t().nav.contact }}</a>
+    </nav>
+
+    <div class="header-controls">
+      <!-- Language toggle -->
+      <button class="lang-btn" (click)="lang.toggle()" [attr.aria-label]="lang.current() === 'en' ? 'Deutsch' : 'English'">
+        <span [class.lang-active]="lang.current() === 'en'">EN</span>
+        <span class="lang-sep">/</span>
+        <span [class.lang-active]="lang.current() === 'de'">DE</span>
+      </button>
+
+      <!-- Theme toggle -->
+      <button class="theme-btn" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Light mode' : 'Dark mode'">
+        <span class="theme-icon">{{ theme.isDark() ? '☀' : '☾' }}</span>
+      </button>
+
+      <!-- Mobile burger -->
+      <button class="burger" (click)="toggleMenu()" [class.active]="menuOpen()" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile overlay -->
+<div class="nav-overlay" [class.open]="menuOpen()">
+  <nav class="nav-links">
+    <a (click)="navigateTo('about')"><span class="num">01</span>{{ lang.t().nav.about }}</a>
+    <a (click)="navigateTo('skills')"><span class="num">02</span>{{ lang.t().nav.skills }}</a>
+    <a (click)="navigateTo('portfolio')"><span class="num">03</span>{{ lang.t().nav.portfolio }}</a>
+    <a (click)="navigateTo('contact')"><span class="num">04</span>{{ lang.t().nav.contact }}</a>
+    <a routerLink="/legal-notice" (click)="closeMenu()"><span class="num">05</span>{{ lang.t().nav.legal }}</a>
+    <a routerLink="/privacy-policy" (click)="closeMenu()"><span class="num">06</span>{{ lang.t().nav.privacy }}</a>
+  </nav>
+
+  <div class="nav-footer">
+    <p class="nav-footer-label">{{ lang.t().footer.sayHi }}</p>
+    <a href="mailto:mail@ilhan-buenyamin.com" class="nav-email">mail&#64;ilhan-buenyamin.com</a>
+    <div class="nav-social">
+      <a href="mailto:mail@ilhan-buenyamin.com" aria-label="Email">
+        <img src="assets/img/Email_icon.svg" alt="" />
+      </a>
+      <a href="https://github.com/BuenyaminIlhan" target="_blank" aria-label="GitHub">
+        <img src="assets/img/Github_icon.svg" alt="" />
+      </a>
+      <a href="https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/" target="_blank" aria-label="LinkedIn">
+        <img src="assets/img/LinkedIn-icon.svg" alt="" />
+      </a>
+    </div>
+  </div>
+</div>

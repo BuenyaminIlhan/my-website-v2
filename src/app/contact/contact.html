@@ -1,0 +1,64 @@
+<section id="contact" class="contact section-padding">
+  <div class="contact-grid">
+    <div class="contact-left">
+      <div class="section-label">
+        <span class="label-line"></span>
+        <span>{{ lang.t().contact.label }}</span>
+      </div>
+      <h2 class="section-title">{{ lang.t().contact.title }} <span class="accent">{{ lang.t().contact.titleAccent }}</span></h2>
+      <p class="contact-intro">{{ lang.t().contact.intro }}</p>
+
+      <div class="contact-details">
+        <a href="mailto:mail@ilhan-buenyamin.com" class="contact-link">
+          <span class="link-icon">→</span>
+          mail&#64;ilhan-buenyamin.com
+        </a>
+        <div class="social-row">
+          <a href="https://github.com/BuenyaminIlhan" target="_blank" aria-label="GitHub">
+            <img src="assets/img/Github_icon.svg" alt="" />
+          </a>
+          <a href="https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/" target="_blank" aria-label="LinkedIn">
+            <img src="assets/img/LinkedIn-icon.svg" alt="" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-right">
+      @if (sent()) {
+        <div class="success-msg">
+          <span class="success-icon">✓</span>
+          <h3>{{ lang.t().contact.successTitle }}</h3>
+          <p>{{ lang.t().contact.successSub }}</p>
+          <button class="btn-ghost" (click)="sent.set(false)">{{ lang.t().contact.sendAnother }}</button>
+        </div>
+      } @else {
+        <form (submit)="sendMail()" ngNativeValidate>
+          <div class="field">
+            <label for="name">{{ lang.t().contact.name }}</label>
+            <input id="name" type="text" required [placeholder]="lang.t().contact.namePh"
+              [ngModel]="name()" (ngModelChange)="name.set($event)" name="name" />
+          </div>
+          <div class="field">
+            <label for="email">{{ lang.t().contact.email }}</label>
+            <input id="email" type="email" required [placeholder]="lang.t().contact.emailPh"
+              [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
+          </div>
+          <div class="field">
+            <label for="message">{{ lang.t().contact.message }}</label>
+            <textarea id="message" required rows="5" [placeholder]="lang.t().contact.messagePh"
+              [ngModel]="message()" (ngModelChange)="message.set($event)" name="message"></textarea>
+          </div>
+
+          @if (error()) {
+            <p class="error-msg">{{ lang.t().contact.error }}</p>
+          }
+
+          <button type="submit" class="btn-submit" [disabled]="sending()">
+            {{ sending() ? lang.t().contact.sending : lang.t().contact.send }}
+          </button>
+        </form>
+      }
+    </div>
+  </div>
+</section>

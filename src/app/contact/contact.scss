@@ -1,0 +1,169 @@
+.contact {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  border-top: 1px solid var(--border);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  font-family: "Overpass", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+
+  .label-line { display: block; width: 40px; height: 1px; background: var(--accent); }
+}
+
+.section-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+
+  .accent { color: var(--accent); }
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.contact-intro {
+  font-family: "Overpass", sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+
+.contact-details { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Overpass", sans-serif;
+  font-size: 1rem;
+  color: var(--muted);
+  transition: color 150ms;
+
+  .link-icon { color: var(--accent); font-size: 1.2rem; }
+  &:hover { color: var(--accent); }
+}
+
+.social-row {
+  display: flex;
+  gap: 1rem;
+
+  a {
+    opacity: 0.5;
+    transition: opacity 150ms, transform 150ms;
+    img { width: 28px; height: 28px; }
+    &:hover { opacity: 1; transform: translateY(-3px); }
+  }
+}
+
+form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  input, textarea {
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    color: var(--text);
+    font-family: "Overpass", sans-serif;
+    font-size: 1rem;
+    padding: 14px 16px;
+    outline: none;
+    resize: vertical;
+    transition: border-color 200ms;
+
+    &::placeholder { color: var(--border-2); }
+    &:focus { border-color: var(--accent); }
+  }
+}
+
+.btn-submit {
+  align-self: flex-start;
+  padding: 14px 40px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, transform 150ms;
+
+  &:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-2px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.error-msg {
+  font-size: 0.85rem;
+  color: #ff4444;
+  font-family: "Overpass", sans-serif;
+}
+
+.success-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 3rem;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+
+  .success-icon { font-size: 2rem; color: var(--accent); }
+
+  h3 {
+    font-family: "Syne", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  p { font-family: "Overpass", sans-serif; color: var(--muted); }
+
+  .btn-ghost {
+    padding: 10px 28px;
+    border: 1px solid var(--border-2);
+    color: var(--muted);
+    background: none;
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 150ms, color 150ms;
+
+    &:hover { border-color: var(--accent); color: var(--accent); }
+  }
+}
+
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+}

@@ -1,0 +1,98 @@
+.about {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  font-family: "Overpass", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+
+  .label-line { display: block; width: 40px; height: 1px; background: var(--accent); }
+}
+
+.section-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 2rem;
+
+  .accent { color: var(--accent); }
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.about-text {
+  p {
+    font-family: "Overpass", sans-serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 36px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 1.5rem;
+    transition: background 150ms, transform 150ms;
+
+    &:hover { background: var(--accent-h); transform: translateY(-2px); }
+  }
+}
+
+.about-visual { display: flex; justify-content: center; }
+
+.img-frame {
+  position: relative;
+  max-width: 420px;
+  width: 100%;
+
+  img {
+    width: 100%;
+    display: block;
+    filter: grayscale(20%);
+    transition: filter 300ms;
+    &:hover { filter: grayscale(0); }
+  }
+
+  .img-accent {
+    position: absolute;
+    bottom: -16px;
+    right: -16px;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--accent);
+    z-index: -1;
+    transition: transform 300ms;
+  }
+
+  &:hover .img-accent { transform: translate(-6px, -6px); }
+}
+
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .about-visual { order: -1; }
+}

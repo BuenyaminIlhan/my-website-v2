@@ -1,0 +1,85 @@
+.skills {
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  border-top: 1px solid var(--border);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  font-family: "Overpass", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+
+  .label-line { display: block; width: 40px; height: 1px; background: var(--accent); }
+}
+
+.section-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 3rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 200ms, transform 200ms, box-shadow 200ms;
+  cursor: default;
+
+  &:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(255, 153, 0, 0.1);
+  }
+
+  .skill-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: brightness(0) invert(0.75);
+      transition: filter 200ms, transform 200ms;
+    }
+  }
+
+  &:hover .skill-icon img {
+    filter: brightness(0) invert(1);
+    transform: scale(1.1);
+  }
+
+  .skill-name {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: center;
+    transition: color 200ms;
+  }
+
+  &:hover .skill-name { color: var(--text); }
+}

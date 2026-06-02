@@ -1,0 +1,32 @@
+<footer class="section-padding">
+  <div class="footer-top">
+    <a routerLink="/" (click)="scrollToTop()" class="footer-logo" aria-label="Bünyamin Ilhan">
+      <span class="logo-bracket">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket">]</span>
+    </a>
+    <button class="scroll-top" (click)="scrollToTop()" aria-label="Back to top">↑</button>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <div class="footer-bottom">
+    <span class="copyright">© {{ year }} Bünyamin Ilhan</span>
+
+    <nav class="footer-nav">
+      <a routerLink="/legal-notice">{{ lang.t().footer.legal }}</a>
+      <span class="sep">·</span>
+      <a routerLink="/privacy-policy">{{ lang.t().footer.privacy }}</a>
+    </nav>
+
+    <div class="footer-social">
+      <a href="mailto:ilhan.buenyamin@gmail.com" aria-label="Email">
+        <img src="assets/img/Email_icon.svg" alt="" />
+      </a>
+      <a href="https://github.com/BuenyaminIlhan" target="_blank" aria-label="GitHub">
+        <img src="assets/img/Github_icon.svg" alt="" />
+      </a>
+      <a href="https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/" target="_blank" aria-label="LinkedIn">
+        <img src="assets/img/LinkedIn-icon.svg" alt="" />
+      </a>
+    </div>
+  </div>
+</footer>

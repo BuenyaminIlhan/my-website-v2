@@ -1,0 +1,43 @@
+<section id="portfolio" class="portfolio section-padding">
+  <div class="section-label">
+    <span class="label-line"></span>
+    <span>{{ lang.t().portfolio.label }}</span>
+  </div>
+  <h2 class="section-title">{{ lang.t().portfolio.title }}</h2>
+  <p class="section-sub">{{ lang.t().portfolio.sub }}</p>
+
+  <div class="portfolio-split">
+    <div class="project-list">
+      @for (project of projects; track project.index) {
+        <div class="project-item" [class.active]="activeIndex() === $index" (mouseenter)="setActive($index)">
+          <span class="item-num">{{ project.index }}</span>
+          <span class="item-title">{{ project.title }}</span>
+          <span class="item-arrow">→</span>
+        </div>
+      }
+    </div>
+
+    <div class="preview-panel" [class.fading]="fading()">
+      <div class="preview-image">
+        <img [src]="activeProject().image" [alt]="activeProject().title" />
+      </div>
+      <div class="preview-body">
+        <div class="preview-stack">
+          @for (tag of activeProject().stack; track tag) {
+            <span class="tag">{{ tag }}</span>
+          }
+        </div>
+        <p class="preview-desc">{{ activeDescription() }}</p>
+        <div class="preview-links">
+          @if (activeProject().demoUrl) {
+            <a [href]="activeProject().demoUrl" target="_blank" class="link-btn">{{ lang.t().portfolio.demo }}</a>
+          }
+          @if (activeProject().pitchUrl) {
+            <a [href]="activeProject().pitchUrl" target="_blank" class="link-btn">{{ lang.t().portfolio.pitch }}</a>
+          }
+          <a [href]="activeProject().githubUrl" target="_blank" class="link-btn link-ghost">{{ lang.t().portfolio.github }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
