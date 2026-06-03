@@ -25,12 +25,10 @@ jobs:
         run: npm run build
 
       - name: Deploy via SFTP
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          DEPLOY_PASS: ${{ secrets.FTP_PASSWORD }}
         run: |
           sudo apt-get install -y lftp
-          lftp -c "
-            set sftp:auto-confirm yes;
-            set net:max-retries 3;
-            set net:reconnect-interval-base 5;
-            open sftp://${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}@${{ secrets.FTP_SERVER }};
-            mirror --reverse --parallel=5 --delete --verbose dist/my-website-v2/browser/ /;
-          "
+          lftp -u "$DEPLOY_USER","$DEPLOY_PASS" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror --reverse --parallel=5 --delete dist/my-website-v2/browser/ /; quit"
