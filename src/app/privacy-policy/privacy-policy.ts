@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
+import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -10,4 +11,18 @@ import { LangService } from '../services/lang.service';
 })
 export class PrivacyPolicy {
   lang = inject(LangService);
+  private seo = inject(SeoService);
+
+  constructor() {
+    effect(() => {
+      const isDE = this.lang.current() === 'de';
+      this.seo.update(
+        isDE ? 'Datenschutz — Bünyamin Ilhan' : 'Privacy Policy — Bünyamin Ilhan',
+        isDE
+          ? 'Datenschutzerklärung von Bünyamin Ilhan gemäß DSGVO.'
+          : 'Privacy policy of Bünyamin Ilhan in accordance with GDPR.',
+        'privacy-policy',
+      );
+    });
+  }
 }

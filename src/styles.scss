@@ -25,6 +25,10 @@ body.light {
   --accent-h:     #ff9900;
   --bg-glass:     rgba(245, 243, 238, 0.92);
   --bg-overlay:   rgba(245, 243, 238, 0.88);
+
+  /* Override Taiga UI background so tui-root matches our light theme */
+  --tui-background-base:     #f5f3ee;
+  --tui-background-base-alt: #f5f3ee;
 }
 
 /* Font faces */
@@ -72,6 +76,8 @@ app-root, tui-root {
   flex-direction: column;
   flex: 1;
   min-height: 0;
+  background-color: var(--bg);
+  transition: background-color 300ms ease;
 }
 
 .page-content {

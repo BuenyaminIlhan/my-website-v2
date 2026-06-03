@@ -104,6 +104,7 @@ header {
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 0;
+  line-height: 1;
 
   span { color: var(--border-2); transition: color 200ms; }
 
@@ -120,20 +121,23 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
   background: none;
   border: none;
   cursor: pointer;
   color: var(--muted);
-  font-size: 1rem;
+  font-size: 0.75rem;
+  line-height: 1;
   transition: color 200ms, transform 300ms;
   padding: 0;
 
   &:hover { color: var(--accent); transform: rotate(20deg); }
 }
 
-.theme-icon { line-height: 1; }
+.theme-icon {
+  display: block;
+  line-height: 1;
+  font-size: 1rem;
+}
 
 /* ── Mobile burger ── */
 .burger {

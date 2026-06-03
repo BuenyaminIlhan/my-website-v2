@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export type Lang = 'en' | 'de';
 
@@ -89,19 +90,24 @@ const translations: Record<Lang, LangTranslations> = {
 
 @Injectable({ providedIn: 'root' })
 export class LangService {
+  private platformId = inject(PLATFORM_ID);
   current = signal<Lang>('en');
   t = computed<LangTranslations>(() =>
     this.current() === 'de' ? translations.de : translations.en
   );
 
   constructor() {
-    const saved = localStorage.getItem('lang') as Lang | null;
-    if (saved === 'de' || saved === 'en') this.current.set(saved);
+    if (isPlatformBrowser(this.platformId)) {
+      const saved = localStorage.getItem('lang') as Lang | null;
+      if (saved === 'de' || saved === 'en') this.current.set(saved);
+    }
   }
 
   toggle() {
     const next: Lang = this.current() === 'en' ? 'de' : 'en';
     this.current.set(next);
-    localStorage.setItem('lang', next);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('lang', next);
+    }
   }
 }
