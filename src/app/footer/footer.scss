@@ -41,7 +41,9 @@ footer {
   color: #0d0d0d;
   font-size: 1.2rem;
   line-height: 1;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,6 +54,13 @@ footer {
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+  }
+
+  &.is-dragging {
+    cursor: grabbing;
+    transform: scale(1.1);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+    transition: none;
   }
 }
 

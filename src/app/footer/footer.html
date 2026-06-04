@@ -1,5 +1,13 @@
 @if (scrolled()) {
-  <button class="scroll-fab" (click)="scrollToTop()" aria-label="Back to top">↑</button>
+  <button
+    class="scroll-fab"
+    [class.is-dragging]="dragging()"
+    [ngStyle]="fabStyle()"
+    (pointerdown)="onFabPointerDown($event)"
+    (pointermove)="onFabPointerMove($event)"
+    (pointerup)="onFabPointerUp()"
+    (click)="onFabClick()"
+    aria-label="Back to top">↑</button>
 }
 
 <footer class="section-padding">
