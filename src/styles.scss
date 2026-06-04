@@ -82,6 +82,15 @@ app-root, tui-root {
   transition: background-color 300ms ease;
 }
 
+/* Taiga UI wraps projected content in .t-root-content — make it a flex column
+   so the sticky-footer chain (page-content flex:1) reaches the footer */
+tui-root > .t-root-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100%;
+}
+
 .page-content {
   flex: 1;
 }
