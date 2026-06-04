@@ -3,7 +3,9 @@
     <a routerLink="/" (click)="scrollToTop()" class="footer-logo" aria-label="Bünyamin Ilhan">
       <span class="logo-bracket">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket">]</span>
     </a>
-    <button class="scroll-top" (click)="scrollToTop()" aria-label="Back to top">↑</button>
+    @if (scrolled()) {
+      <button class="scroll-top" (click)="scrollToTop()" aria-label="Back to top">↑</button>
+    }
   </div>
 
   <div class="footer-divider"></div>

@@ -77,7 +77,7 @@ app-root, tui-root {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 0;
+  min-height: 100vh;
   background-color: var(--bg);
   transition: background-color 300ms ease;
 }
