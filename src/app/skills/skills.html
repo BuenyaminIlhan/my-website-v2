@@ -9,7 +9,7 @@
     @for (skill of skills; track skill.name) {
       <div class="skill-card">
         <div class="skill-icon">
-          <img [src]="skill.icon" [alt]="skill.name" />
+          <img [src]="skill.icon" [alt]="skill.name" loading="lazy" decoding="async" />
         </div>
         <span class="skill-name">{{ skill.name }}</span>
       </div>

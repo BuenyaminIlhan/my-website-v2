@@ -1,0 +1,18 @@
+{
+  "name": "Bünyamin Ilhan — Web & Mobile Developer",
+  "short_name": "Bünyamin Ilhan",
+  "description": "Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#ff9900",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

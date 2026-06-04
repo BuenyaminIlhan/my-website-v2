@@ -36,12 +36,14 @@ body.light {
   font-family: "Syne";
   src: url("/fonts/Syne/Syne-VariableFont_wght.ttf") format("truetype");
   font-weight: 100 900;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Overpass";
   src: url("/fonts/Overpass/Overpass-VariableFont_wght.ttf") format("truetype");
   font-weight: 100 900;
+  font-display: swap;
 }
 
 /* Global resets */

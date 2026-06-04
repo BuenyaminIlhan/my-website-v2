@@ -10,6 +10,9 @@
   <meta name="keywords" content="Bünyamin Ilhan, Web Developer, Mobile Developer, Angular, Swift, Kotlin, Frontend, Portfolio, Siegburg">
   <link rel="canonical" href="https://ilhan-buenyamin.com/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0d">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f3ee">
 
   <!-- hreflang for bilingual EN/DE content -->
   <link rel="alternate" hreflang="en" href="https://ilhan-buenyamin.com/">
@@ -25,6 +28,8 @@
   <meta property="og:title" content="Bünyamin Ilhan — Web &amp; Mobile Developer">
   <meta property="og:description" content="Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.">
   <meta property="og:image" content="https://ilhan-buenyamin.com/assets/img/Profile_2.jpg">
+  <meta property="og:image:width" content="1535">
+  <meta property="og:image:height" content="2126">
   <meta property="og:locale" content="de_DE">
   <meta property="og:locale:alternate" content="en_GB">
 
@@ -34,7 +39,7 @@
   <meta name="twitter:description" content="Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.">
   <meta name="twitter:image" content="https://ilhan-buenyamin.com/assets/img/Profile_2.jpg">
 
-  <!-- Structured Data: Person + WebSite -->
+  <!-- Structured Data: Person + WebSite + ProfilePage + Portfolio -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -46,6 +51,7 @@
         "url": "https://ilhan-buenyamin.com",
         "email": "mail@ilhan-buenyamin.com",
         "jobTitle": "Web & Mobile Developer",
+        "image": "https://ilhan-buenyamin.com/assets/img/Profile_2.jpg",
         "knowsAbout": ["Angular", "Swift", "Kotlin", "Web Development", "Mobile Development", "TypeScript", "iOS", "Android"],
         "address": {
           "@type": "PostalAddress",
@@ -53,7 +59,8 @@
           "addressCountry": "DE"
         },
         "sameAs": [
-          "https://github.com/BuenyaminIlhan"
+          "https://github.com/BuenyaminIlhan",
+          "https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/"
         ]
       },
       {
@@ -63,6 +70,86 @@
         "name": "Bünyamin Ilhan — Portfolio",
         "author": { "@id": "https://ilhan-buenyamin.com/#person" },
         "inLanguage": ["en", "de"]
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": "https://ilhan-buenyamin.com/#profilepage",
+        "url": "https://ilhan-buenyamin.com",
+        "name": "Bünyamin Ilhan — Web & Mobile Developer",
+        "isPartOf": { "@id": "https://ilhan-buenyamin.com/#website" },
+        "mainEntity": { "@id": "https://ilhan-buenyamin.com/#person" },
+        "inLanguage": ["en", "de"]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://ilhan-buenyamin.com/#projects",
+        "name": "Portfolio Projects",
+        "description": "A selection of web and mobile development projects by Bünyamin Ilhan",
+        "author": { "@id": "https://ilhan-buenyamin.com/#person" },
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Zephir",
+              "description": "Quotation app for small businesses — create professional quotes instantly on iOS.",
+              "applicationCategory": "BusinessApplication",
+              "operatingSystem": "iOS",
+              "author": { "@id": "https://ilhan-buenyamin.com/#person" },
+              "codeRepository": "https://github.com/SI-Classroom-Batch-019/abschlussprojekt-BuenyaminIlhan"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+              "@type": "SoftwareApplication",
+              "name": "Labbayk",
+              "description": "The Quran in 90 languages — free, offline-capable Android app.",
+              "applicationCategory": "LifestyleApplication",
+              "operatingSystem": "Android",
+              "author": { "@id": "https://ilhan-buenyamin.com/#person" },
+              "codeRepository": "https://github.com/BuenyaminIlhan/Labbayk"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+              "@type": "WebApplication",
+              "name": "Join",
+              "description": "Kanban-style task manager with drag-and-drop, user assignment, and categories.",
+              "url": "https://ilhan-buenyamin.com/Join-Kanban/",
+              "author": { "@id": "https://ilhan-buenyamin.com/#person" },
+              "codeRepository": "https://github.com/BuenyaminIlhan/Join-Kanban"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "item": {
+              "@type": "WebApplication",
+              "name": "Sharkie",
+              "description": "Object-oriented browser game — join Sharkie's adventure against the Shark End Boss.",
+              "url": "https://ilhan-buenyamin.com/Sharkie/",
+              "author": { "@id": "https://ilhan-buenyamin.com/#person" },
+              "codeRepository": "https://github.com/BuenyaminIlhan/Sharkie"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "position": 5,
+            "item": {
+              "@type": "WebApplication",
+              "name": "DA-Bubble",
+              "description": "Slack clone with Google authentication, channels, and threaded replies. Built with Angular and Firebase.",
+              "url": "https://da-bubble.ilhan-buenyamin.com/",
+              "author": { "@id": "https://ilhan-buenyamin.com/#person" },
+              "codeRepository": "https://github.com/BuenyaminIlhan/Da-Bubble"
+            }
+          }
+        ]
       }
     ]
   }

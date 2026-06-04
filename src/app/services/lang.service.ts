@@ -1,5 +1,6 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID, effect } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 
 export type Lang = 'en' | 'de';
 
@@ -91,6 +92,7 @@ const translations: Record<Lang, LangTranslations> = {
 @Injectable({ providedIn: 'root' })
 export class LangService {
   private platformId = inject(PLATFORM_ID);
+  private document = inject(DOCUMENT);
   current = signal<Lang>('en');
   t = computed<LangTranslations>(() =>
     this.current() === 'de' ? translations.de : translations.en
@@ -101,6 +103,9 @@ export class LangService {
       const saved = localStorage.getItem('lang') as Lang | null;
       if (saved === 'de' || saved === 'en') this.current.set(saved);
     }
+    effect(() => {
+      this.document.documentElement.setAttribute('lang', this.current());
+    });
   }
 
   toggle() {

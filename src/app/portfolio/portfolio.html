@@ -19,7 +19,7 @@
 
     <div class="preview-panel" [class.fading]="fading()">
       <div class="preview-image">
-        <img [src]="activeProject().image" [alt]="activeProject().title" />
+        <img [src]="activeProject().image" [alt]="activeProject().title" loading="lazy" decoding="async" />
       </div>
       <div class="preview-body">
         <div class="preview-stack">
