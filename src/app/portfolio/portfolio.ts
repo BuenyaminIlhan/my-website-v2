@@ -1,5 +1,6 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { LangService } from '../services/lang.service';
+import { RevealDirective } from '../directives/scroll-reveal.directive';
 
 interface Project {
   index: string;
@@ -15,7 +16,7 @@ interface Project {
 
 @Component({
   selector: 'app-portfolio',
-  imports: [],
+  imports: [RevealDirective],
   templateUrl: './portfolio.html',
   styleUrl: './portfolio.scss',
 })

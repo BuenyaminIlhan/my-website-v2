@@ -1,21 +1,21 @@
 <section id="about" class="about section-padding">
   <div class="about-grid">
     <div class="about-text">
-      <div class="section-label">
+      <div class="section-label" [appReveal]="0">
         <span class="label-line"></span>
         <span>{{ lang.t().about.label }}</span>
       </div>
-      <h2 class="section-title">{{ lang.t().about.title1 }}<br /><span class="accent">{{ lang.t().about.title2 }}</span></h2>
+      <h2 class="section-title" [appReveal]="100">{{ lang.t().about.title1 }}<br /><span class="accent">{{ lang.t().about.title2 }}</span></h2>
 
-      <p>{{ lang.t().about.p1 }}</p>
-      <p>{{ lang.t().about.p2 }}</p>
-      <p>{{ lang.t().about.p3 }}</p>
-      <p>{{ lang.t().about.p4 }}</p>
+      <p [appReveal]="180">{{ lang.t().about.p1 }}</p>
+      <p [appReveal]="230">{{ lang.t().about.p2 }}</p>
+      <p [appReveal]="280">{{ lang.t().about.p3 }}</p>
+      <p [appReveal]="330">{{ lang.t().about.p4 }}</p>
 
-      <a href="#contact" class="btn-primary">{{ lang.t().about.cta }}</a>
+      <a href="#contact" class="btn-primary" [appReveal]="400">{{ lang.t().about.cta }}</a>
     </div>
 
-    <div class="about-visual">
+    <div class="about-visual" [appReveal]="150">
       <div class="img-frame">
         <picture>
           <source srcset="assets/img/Profile_2.webp" type="image/webp">

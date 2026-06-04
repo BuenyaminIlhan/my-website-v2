@@ -1,18 +1,39 @@
 <section id="skills" class="skills section-padding">
-  <div class="section-label">
+  <div class="section-label" [appReveal]="0">
     <span class="label-line"></span>
     <span>{{ lang.t().skills.label }}</span>
   </div>
-  <h2 class="section-title">{{ lang.t().skills.title }}</h2>
+  <h2 class="section-title" [appReveal]="100">{{ lang.t().skills.title }}</h2>
 
-  <div class="skills-grid">
-    @for (skill of skills; track skill.name) {
-      <div class="skill-card">
-        <div class="skill-icon">
-          <img [src]="skill.icon" [alt]="skill.name" loading="lazy" decoding="async" />
+  <div class="skills-split">
+    <div class="skill-group" [appReveal]="150">
+      <p class="group-label">Web &amp; Frontend</p>
+      @for (skill of web; track skill.name; let i = $index) {
+        <div class="skill-row">
+          <div class="skill-meta">
+            <img [src]="skill.icon" [alt]="skill.name" width="18" height="18" loading="lazy" decoding="async" />
+            <span>{{ skill.name }}</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="webWidth(i)"></div>
+          </div>
         </div>
-        <span class="skill-name">{{ skill.name }}</span>
-      </div>
-    }
+      }
+    </div>
+
+    <div class="skill-group" [appReveal]="250">
+      <p class="group-label">Mobile &amp; Tools</p>
+      @for (skill of mobile; track skill.name; let i = $index) {
+        <div class="skill-row">
+          <div class="skill-meta">
+            <img [src]="skill.icon" [alt]="skill.name" width="18" height="18" loading="lazy" decoding="async" />
+            <span>{{ skill.name }}</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="mobileWidth(i)"></div>
+          </div>
+        </div>
+      }
+    </div>
   </div>
 </section>

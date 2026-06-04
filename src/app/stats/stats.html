@@ -1,0 +1,8 @@
+<div class="stats-row">
+  @for (item of items(); track item.label) {
+    <div class="stat-item" [appReveal]="$index * 120">
+      <span class="stat-value">{{ item.value }}{{ item.suffix }}</span>
+      <span class="stat-label">{{ item.label }}</span>
+    </div>
+  }
+</div>

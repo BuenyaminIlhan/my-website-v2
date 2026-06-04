@@ -95,6 +95,14 @@
   50%       { max-width: 160px; opacity: 1; }
 }
 
+.type-cursor {
+  color: var(--accent);
+  font-weight: 300;
+  margin-left: 1px;
+  transition: opacity 80ms;
+  &.hidden { opacity: 0; }
+}
+
 .hero-sub {
   font-family: "Overpass", sans-serif;
   font-size: clamp(0.95rem, 1.5vw, 1.15rem);

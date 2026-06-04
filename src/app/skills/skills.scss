@@ -28,58 +28,85 @@
   margin-bottom: 3rem;
 }
 
-.skills-grid {
+.skills-split {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem 5rem;
+}
+
+.skill-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.group-label {
+  font-family: "Overpass", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.25rem;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
   gap: 1rem;
 }
 
-.skill-card {
+.skill-meta {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.75rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  transition: border-color 200ms, transform 200ms, box-shadow 200ms;
-  cursor: default;
+  gap: 8px;
+  width: 148px;
+  flex-shrink: 0;
 
-  &:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(255, 153, 0, 0.1);
+  img {
+    opacity: 0.65;
+    filter: brightness(0) invert(0.7);
+    flex-shrink: 0;
   }
 
-  .skill-icon {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: brightness(0) invert(0.75);
-      transition: filter 200ms, transform 200ms;
-    }
-  }
-
-  &:hover .skill-icon img {
-    filter: brightness(0) invert(1);
-    transform: scale(1.1);
-  }
-
-  .skill-name {
+  span {
     font-family: "Overpass", sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--muted);
-    text-align: center;
-    transition: color 200ms;
+    white-space: nowrap;
   }
+}
 
-  &:hover .skill-name { color: var(--text); }
+.bar-track {
+  flex: 1;
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 900ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 6px;
+    height: 7px;
+    background: var(--accent);
+    clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  }
+}
+
+@media (max-width: 800px) {
+  .skills-split { grid-template-columns: 1fr; gap: 2.5rem; }
+  .skill-meta { width: 130px; }
 }

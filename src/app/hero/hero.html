@@ -17,7 +17,7 @@
       <span>Bünyamin Ilhan</span>
     </div>
 
-    <p class="hero-sub">{{ lang.t().hero.sub }}</p>
+    <p class="hero-sub">{{ displayed() }}<span class="type-cursor" [class.hidden]="!cursorVisible()">|</span></p>
 
     <div class="hero-cta">
       <a href="#portfolio" class="btn-primary">{{ lang.t().hero.cta1 }}</a>

@@ -1,13 +1,13 @@
 <section id="portfolio" class="portfolio section-padding">
-  <div class="section-label">
+  <div class="section-label" [appReveal]="0">
     <span class="label-line"></span>
     <span>{{ lang.t().portfolio.label }}</span>
   </div>
-  <h2 class="section-title">{{ lang.t().portfolio.title }}</h2>
-  <p class="section-sub">{{ lang.t().portfolio.sub }}</p>
+  <h2 class="section-title" [appReveal]="100">{{ lang.t().portfolio.title }}</h2>
+  <p class="section-sub" [appReveal]="160">{{ lang.t().portfolio.sub }}</p>
 
   <div class="portfolio-split">
-    <div class="project-list">
+    <div class="project-list" [appReveal]="200">
       @for (project of projects; track project.index) {
         <div class="project-item" [class.active]="activeIndex() === $index" (mouseenter)="setActive($index)">
           <span class="item-num">{{ project.index }}</span>
@@ -17,10 +17,18 @@
       }
     </div>
 
-    <div class="preview-panel" [class.fading]="fading()">
-      <div class="preview-image">
+    <div class="preview-panel" [class.fading]="fading()" [appReveal]="280">
+      <a class="preview-image"
+         [href]="activeProject().demoUrl ?? activeProject().githubUrl"
+         target="_blank"
+         rel="noopener"
+         [attr.aria-label]="activeProject().title">
         <img [src]="activeProject().image" [alt]="activeProject().title" loading="lazy" decoding="async" />
-      </div>
+        <div class="preview-overlay">
+          <span class="overlay-icon">↗</span>
+          <span class="overlay-text">{{ activeProject().demoUrl ? lang.t().portfolio.demo : lang.t().portfolio.github }}</span>
+        </div>
+      </a>
       <div class="preview-body">
         <div class="preview-stack">
           @for (tag of activeProject().stack; track tag) {

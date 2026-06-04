@@ -1,14 +1,14 @@
 <section id="contact" class="contact section-padding">
   <div class="contact-grid">
     <div class="contact-left">
-      <div class="section-label">
+      <div class="section-label" [appReveal]="0">
         <span class="label-line"></span>
         <span>{{ lang.t().contact.label }}</span>
       </div>
-      <h2 class="section-title">{{ lang.t().contact.title }} <span class="accent">{{ lang.t().contact.titleAccent }}</span></h2>
-      <p class="contact-intro">{{ lang.t().contact.intro }}</p>
+      <h2 class="section-title" [appReveal]="100">{{ lang.t().contact.title }} <span class="accent">{{ lang.t().contact.titleAccent }}</span></h2>
+      <p class="contact-intro" [appReveal]="180">{{ lang.t().contact.intro }}</p>
 
-      <div class="contact-details">
+      <div class="contact-details" [appReveal]="260">
         <a href="mailto:mail@ilhan-buenyamin.com" class="contact-link">
           <span class="link-icon">→</span>
           mail&#64;ilhan-buenyamin.com
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="contact-right">
+    <div class="contact-right" [appReveal]="200">
       @if (sent()) {
         <div class="success-msg">
           <span class="success-icon">✓</span>

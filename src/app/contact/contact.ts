@@ -1,10 +1,11 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LangService } from '../services/lang.service';
+import { RevealDirective } from '../directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-contact',
-  imports: [FormsModule],
+  imports: [FormsModule, RevealDirective],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })
