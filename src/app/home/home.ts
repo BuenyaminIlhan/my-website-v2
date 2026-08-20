@@ -1,6 +1,8 @@
 import { Component, inject, effect } from '@angular/core';
 import { Hero } from '../hero/hero';
 import { Offerings } from '../offerings/offerings';
+import { Process } from '../process/process';
+import { Faq } from '../faq/faq';
 import { AboutMe } from '../about-me/about-me';
 import { Stats } from '../stats/stats';
 import { Skills } from '../skills/skills';
@@ -11,7 +13,7 @@ import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Offerings, AboutMe, Stats, Skills, Portfolio, Contact],
+  imports: [Hero, Offerings, Process, AboutMe, Stats, Skills, Portfolio, Faq, Contact],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

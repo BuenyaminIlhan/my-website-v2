@@ -11,6 +11,60 @@ footer {
   margin-bottom: 2rem;
 }
 
+.footer-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.2fr;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+
+  @media (max-width: 760px) { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.footer-col {
+  .col-title {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .col-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+
+    a {
+      font-family: "Overpass", sans-serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 150ms;
+      width: fit-content;
+
+      &:hover { color: var(--accent); }
+    }
+  }
+
+  .col-text {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .no-tracking {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 320px;
+
+    .lock { margin-right: 0.3rem; }
+  }
+}
+
 .footer-logo {
   display: flex;
   align-items: baseline;

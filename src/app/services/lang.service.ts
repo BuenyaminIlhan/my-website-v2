@@ -14,11 +14,13 @@ export interface LangTranslations {
   nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string };
   hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string; badges: string[] };
   offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string };
+  process:   { label: string; title: string; sub: string; steps: { title: string; desc: string }[] };
+  faq:       { label: string; title: string; sub: string; items: { q: string; a: string }[] };
   about:     { label: string; title1: string; title2: string; p1: string; p2: string; p3: string; p4: string; cta: string };
   skills:    { label: string; title: string };
   portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string };
   contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string };
-  footer:    { legal: string; privacy: string; back: string; sayHi: string };
+  footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string };
 }
 
 const translations: Record<Lang, LangTranslations> = {
@@ -65,6 +67,56 @@ const translations: Record<Lang, LangTranslations> = {
       cta: 'Request a free quote',
       mailHint: 'Or reach me directly:',
     },
+    process: {
+      label: 'Simple & transparent',
+      title: 'How your project unfolds',
+      sub: 'No surprises, no jargon — you always know where your project stands.',
+      steps: [
+        {
+          title: 'Free consultation',
+          desc: 'You talk, I listen: describe your idea by email or contact form — no obligation, no tech jargon. I get back to you within 24 hours.',
+        },
+        {
+          title: 'Concept & quote',
+          desc: 'I work out a clear proposal that fits your goals and your budget — with a transparent offer. You know exactly where you stand from day one.',
+        },
+        {
+          title: 'Design & development',
+          desc: 'Now your project takes shape: modern, fast and search-engine optimised. You see regular progress and your feedback flows straight in.',
+        },
+        {
+          title: 'Launch & support',
+          desc: 'Your website goes live — tested, optimised and ready to perform. And if you wish, I stay at your side with maintenance, updates and quick answers.',
+        },
+      ],
+    },
+    faq: {
+      label: 'Good to know',
+      title: 'Frequently asked questions',
+      sub: 'The most common questions before a project starts — answered honestly.',
+      items: [
+        {
+          q: 'What does a website or web app cost?',
+          a: 'That depends entirely on the scope — a compact business site costs less than a custom web app. That is why I only quote after the free consultation: you receive a fair, transparent offer with no hidden costs, tailored to your budget.',
+        },
+        {
+          q: 'How long does it take?',
+          a: 'A typical business website is often online within a few weeks; more complex web apps take correspondingly longer. Your quote includes a realistic timeline — and I keep you posted throughout.',
+        },
+        {
+          q: 'What do I need to prepare?',
+          a: 'Just your idea. Everything else — structure, copy, images, technology — we work out together. I guide you step by step, even if you have never commissioned a website before.',
+        },
+        {
+          q: 'Who takes care of the website after launch?',
+          a: 'Entirely up to you: either you maintain it yourself — I will gladly show you how — or you choose the all-in-one package and I keep your website up to date, secure and fast.',
+        },
+        {
+          q: 'Do you also work with existing websites?',
+          a: 'Yes! Slow loading times, dated design or poor Google rankings — I analyse your existing site and modernise it where it counts. Often a lot can be achieved with manageable effort.',
+        },
+      ],
+    },
     about: {
       label: 'About me', title1: 'The person', title2: 'behind your project',
       p1: "Behind every good website is someone who listens. I'm Bünyamin — web and app developer from Siegburg near Cologne/Bonn, and I love turning ideas into digital experiences.",
@@ -88,7 +140,11 @@ const translations: Record<Lang, LangTranslations> = {
       successTitle: 'Message received!', successSub: 'Thank you for your trust — I will get back to you as soon as possible.',
       sendAnother: 'Send another', error: 'Something went wrong. Please email me directly at mail@ilhan-buenyamin.com.',
     },
-    footer: { legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!' },
+    footer: {
+      legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!',
+      servicesTitle: 'Services', contactTitle: 'Contact', location: 'Siegburg near Cologne/Bonn',
+      noTracking: 'This website respects your privacy — no cookies, no tracking.',
+    },
   },
   de: {
     nav: {
@@ -133,6 +189,56 @@ const translations: Record<Lang, LangTranslations> = {
       cta: 'Unverbindlich anfragen',
       mailHint: 'Oder direkt per E-Mail:',
     },
+    process: {
+      label: 'Einfach & transparent',
+      title: 'So läuft Ihr Projekt ab',
+      sub: 'Keine Überraschungen, kein Fachchinesisch — Sie wissen jederzeit, wo Ihr Projekt steht.',
+      steps: [
+        {
+          title: 'Kostenloses Erstgespräch',
+          desc: 'Sie erzählen, ich höre zu: Schildern Sie mir Ihr Vorhaben per E-Mail oder Kontaktformular — unverbindlich und ohne Fachchinesisch. Innerhalb von 24 Stunden melde ich mich bei Ihnen.',
+        },
+        {
+          title: 'Konzept & Angebot',
+          desc: 'Ich erarbeite einen klaren Vorschlag, der zu Ihren Zielen und Ihrem Budget passt — mit transparentem Angebot. Sie wissen von Anfang an, woran Sie sind.',
+        },
+        {
+          title: 'Design & Umsetzung',
+          desc: 'Jetzt nimmt Ihr Projekt Gestalt an: modern, schnell und suchmaschinenoptimiert. Sie sehen regelmäßig Zwischenstände — Ihr Feedback fließt direkt ein.',
+        },
+        {
+          title: 'Launch & Betreuung',
+          desc: 'Ihre Website geht online — getestet, optimiert und startklar. Und wenn Sie möchten, bleibe ich an Ihrer Seite: mit Pflege, Updates und schnellen Antworten.',
+        },
+      ],
+    },
+    faq: {
+      label: 'Gut zu wissen',
+      title: 'Häufige Fragen',
+      sub: 'Die häufigsten Fragen vor dem Projektstart — ehrlich beantwortet.',
+      items: [
+        {
+          q: 'Was kostet eine Website oder Web-App?',
+          a: 'Das hängt ganz vom Umfang ab — eine kompakte Unternehmensseite kostet weniger als eine individuelle Web-App. Deshalb nenne ich Preise erst nach dem kostenlosen Erstgespräch: Sie erhalten ein faires, transparentes Angebot ohne versteckte Kosten, zugeschnitten auf Ihr Budget.',
+        },
+        {
+          q: 'Wie lange dauert die Umsetzung?',
+          a: 'Eine typische Unternehmens-Website ist oft innerhalb weniger Wochen online, komplexere Web-Apps brauchen entsprechend länger. Im Angebot erhalten Sie einen realistischen Zeitplan — und ich halte Sie während der Umsetzung immer auf dem Laufenden.',
+        },
+        {
+          q: 'Was muss ich vorbereiten?',
+          a: 'Nur Ihre Idee. Alles Weitere — Struktur, Texte, Bilder, Technik — erarbeiten wir gemeinsam. Ich führe Sie Schritt für Schritt durch den Prozess, auch wenn Sie noch nie eine Website beauftragt haben.',
+        },
+        {
+          q: 'Wer kümmert sich nach dem Launch um die Website?',
+          a: 'Ganz wie Sie möchten: Entweder übernehmen Sie die Pflege selbst — ich weise Sie gern ein — oder Sie wählen das All-in-One-Paket und ich halte Ihre Website aktuell, sicher und schnell.',
+        },
+        {
+          q: 'Arbeiten Sie auch mit bestehenden Websites?',
+          a: 'Ja! Ob langsame Ladezeiten, veraltetes Design oder schlechte Google-Platzierung — ich analysiere Ihre bestehende Seite und modernisiere sie gezielt. Oft lässt sich mit überschaubarem Aufwand viel erreichen.',
+        },
+      ],
+    },
     about: {
       label: 'Über mich', title1: 'Der Mensch', title2: 'hinter Ihrem Projekt',
       p1: 'Hinter jeder guten Website steht jemand, der zuhört. Ich bin Bünyamin — Web- und App-Entwickler aus Siegburg bei Köln/Bonn, und ich liebe es, Ideen in digitale Erlebnisse zu verwandeln.',
@@ -156,7 +262,11 @@ const translations: Record<Lang, LangTranslations> = {
       successTitle: 'Nachricht erhalten!', successSub: 'Vielen Dank für Ihr Vertrauen — ich melde mich schnellstmöglich bei Ihnen.',
       sendAnother: 'Weitere Nachricht', error: 'Etwas ist schiefgelaufen. Schreiben Sie mir gern direkt an mail@ilhan-buenyamin.com.',
     },
-    footer: { legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!' },
+    footer: {
+      legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!',
+      servicesTitle: 'Leistungen', contactTitle: 'Kontakt', location: 'Siegburg bei Köln/Bonn',
+      noTracking: 'Diese Website respektiert Ihre Privatsphäre — keine Cookies, kein Tracking.',
+    },
   },
 };
 

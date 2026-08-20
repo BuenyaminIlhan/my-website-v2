@@ -1,0 +1,18 @@
+<section id="process" class="process section-padding">
+  <div class="section-label" [appReveal]="0">
+    <span class="label-line"></span>
+    <span>{{ lang.t().process.label }}</span>
+  </div>
+  <h2 class="section-title" [appReveal]="100">{{ lang.t().process.title }}</h2>
+  <p class="section-sub" [appReveal]="150">{{ lang.t().process.sub }}</p>
+
+  <div class="process-grid">
+    @for (step of lang.t().process.steps; track step.title; let i = $index) {
+      <div class="process-step" [appReveal]="180 + i * 70">
+        <span class="step-num">{{ '0' + (i + 1) }}</span>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.desc }}</p>
+      </div>
+    }
+  </div>
+</section>

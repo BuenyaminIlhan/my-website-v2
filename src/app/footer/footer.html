@@ -17,6 +17,28 @@
     </a>
   </div>
 
+  <div class="footer-cols">
+    <div class="footer-col">
+      <p class="col-title">{{ lang.t().footer.servicesTitle }}</p>
+      <nav class="col-links">
+        @for (item of lang.t().offers.items; track item.title) {
+          <a routerLink="/" fragment="offers">{{ item.title }}</a>
+        }
+      </nav>
+    </div>
+    <div class="footer-col">
+      <p class="col-title">{{ lang.t().footer.contactTitle }}</p>
+      <div class="col-links">
+        <a href="mailto:mail@ilhan-buenyamin.com">mail&#64;ilhan-buenyamin.com</a>
+        <span class="col-text">{{ lang.t().footer.location }}</span>
+      </div>
+    </div>
+    <div class="footer-col footer-trust">
+      <p class="col-title">{{ lang.t().nav.privacy }}</p>
+      <p class="no-tracking"><span class="lock">🔒</span> {{ lang.t().footer.noTracking }}</p>
+    </div>
+  </div>
+
   <div class="footer-divider"></div>
 
   <div class="footer-bottom">

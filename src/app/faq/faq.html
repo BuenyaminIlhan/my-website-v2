@@ -1,0 +1,20 @@
+<section id="faq" class="faq section-padding">
+  <div class="section-label" [appReveal]="0">
+    <span class="label-line"></span>
+    <span>{{ lang.t().faq.label }}</span>
+  </div>
+  <h2 class="section-title" [appReveal]="100">{{ lang.t().faq.title }}</h2>
+  <p class="section-sub" [appReveal]="150">{{ lang.t().faq.sub }}</p>
+
+  <div class="faq-list">
+    @for (item of lang.t().faq.items; track item.q; let i = $index) {
+      <details class="faq-item" [appReveal]="180 + i * 50">
+        <summary>
+          <span>{{ item.q }}</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <p>{{ item.a }}</p>
+      </details>
+    }
+  </div>
+</section>
