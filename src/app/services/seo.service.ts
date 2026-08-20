@@ -9,7 +9,7 @@ export class SeoService {
   private document = inject(DOCUMENT);
 
   private readonly baseUrl = 'https://ilhan-buenyamin.com';
-  private readonly defaultImage = 'https://ilhan-buenyamin.com/assets/img/Profile_2.jpg';
+  private readonly defaultImage = 'https://ilhan-buenyamin.com/assets/img/og-image.jpg';
 
   update(pageTitle: string, description: string, path = '', ogImage?: string) {
     const url = path ? `${this.baseUrl}/${path}` : this.baseUrl;
