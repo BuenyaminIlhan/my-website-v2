@@ -5,8 +5,8 @@ RewriteRule (.*) https://ilhan-buenyamin.com/$1 [R=301,L]
 RewriteCond %{HTTPS} off
 RewriteRule (.*) https://ilhan-buenyamin.com%{REQUEST_URI} [R=301,L]
 
-# Unknown paths: real 404 status, app shell as error page
-ErrorDocument 404 /index.html
+# Unknown paths: real 404 status with branded error page
+ErrorDocument 404 /404/index.html
 
 # Long-lived caching for hashed assets, always-fresh HTML
 <IfModule mod_expires.c>

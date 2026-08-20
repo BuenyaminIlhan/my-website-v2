@@ -1,6 +1,7 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LangService } from '../services/lang.service';
+import { InquiryService } from '../services/inquiry.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 
 @Component({
@@ -11,13 +12,23 @@ import { RevealDirective } from '../directives/scroll-reveal.directive';
 })
 export class Contact {
   lang = inject(LangService);
+  private inquiry = inject(InquiryService);
 
-  name    = signal('');
-  email   = signal('');
-  message = signal('');
-  sending = signal(false);
-  sent    = signal(false);
-  error   = signal(false);
+  name     = signal('');
+  email    = signal('');
+  topic    = signal('');
+  message  = signal('');
+  honeypot = signal('');
+  sending  = signal(false);
+  sent     = signal(false);
+  error    = signal(false);
+
+  constructor() {
+    effect(() => {
+      const preset = this.inquiry.projectType();
+      if (preset) this.topic.set(preset);
+    });
+  }
 
   async sendMail() {
     if (this.sending()) return;
@@ -29,13 +40,19 @@ export class Contact {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
-          name: this.name(), email: this.email(), message: this.message(),
+          name: this.name(),
+          email: this.email(),
+          topic: this.topic() || this.lang.t().contact.topicGeneral,
+          message: this.message(),
+          website: this.honeypot(),
         }).toString(),
       });
 
       if (resp.ok) {
         this.sent.set(true);
         this.name.set(''); this.email.set(''); this.message.set('');
+        this.honeypot.set('');
+        this.inquiry.projectType.set('');
       } else {
         this.error.set(true);
       }

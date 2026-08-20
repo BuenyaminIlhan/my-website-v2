@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { LangService } from '../services/lang.service';
+import { InquiryService } from '../services/inquiry.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 
 @Component({
@@ -10,4 +11,5 @@ import { RevealDirective } from '../directives/scroll-reveal.directive';
 })
 export class Offerings {
   lang = inject(LangService);
+  inquiry = inject(InquiryService);
 }

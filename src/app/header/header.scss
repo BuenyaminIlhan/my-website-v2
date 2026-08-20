@@ -91,6 +91,24 @@ header {
   flex-shrink: 0;
 }
 
+.header-cta {
+  padding: 10px 22px;
+  background: var(--accent);
+  color: #0d0d0d;
+  border: none;
+  cursor: pointer;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: background 150ms, transform 150ms;
+
+  &:hover { background: var(--accent-h); transform: translateY(-1px); }
+
+  @media (max-width: 860px) { display: none; }
+}
+
 /* Language toggle: "EN / DE" text style */
 .lang-btn {
   display: flex;

@@ -87,7 +87,7 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
     color: var(--dim);
   }
 
-  input, textarea {
+  input, textarea, select {
     background: var(--surface);
     border: 1px solid var(--border-2);
     color: var(--text);
@@ -101,6 +101,17 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
     &::placeholder { color: var(--border-2); }
     &:focus { border-color: var(--accent); }
   }
+
+  select { cursor: pointer; appearance: auto; }
+}
+
+/* Honeypot: invisible to humans, present for bots */
+.hp-field {
+  position: absolute !important;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .btn-submit {

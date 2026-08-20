@@ -17,6 +17,9 @@
             <li><span class="tick">→</span>{{ point }}</li>
           }
         </ul>
+        <a href="#contact" class="card-cta" (click)="inquiry.projectType.set(item.title)">
+          {{ lang.t().offers.cardCta }} <span class="cta-arrow">→</span>
+        </a>
       </article>
     }
   </div>

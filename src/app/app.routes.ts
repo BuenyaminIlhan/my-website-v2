@@ -16,5 +16,14 @@ export const routes: Routes = [
     title: 'Datenschutz — Bünyamin Ilhan',
     loadComponent: () => import('./privacy-policy/privacy-policy').then(m => m.PrivacyPolicy),
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: '404',
+    title: 'Seite nicht gefunden — Bünyamin Ilhan',
+    loadComponent: () => import('./not-found/not-found').then(m => m.NotFound),
+  },
+  {
+    path: '**',
+    title: 'Seite nicht gefunden — Bünyamin Ilhan',
+    loadComponent: () => import('./not-found/not-found').then(m => m.NotFound),
+  },
 ];

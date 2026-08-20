@@ -11,15 +11,16 @@ export interface OfferItem {
 }
 
 export interface LangTranslations {
-  nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string };
+  nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string; cta: string };
   hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string; badges: string[] };
-  offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string };
+  offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string; cardCta: string };
   process:   { label: string; title: string; sub: string; steps: { title: string; desc: string }[] };
   faq:       { label: string; title: string; sub: string; items: { q: string; a: string }[] };
   about:     { label: string; title1: string; title2: string; p1: string; p2: string; p3: string; p4: string; cta: string };
   skills:    { label: string; title: string };
   portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string };
-  contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string };
+  contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; topic: string; topicGeneral: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string };
+  notFound:  { title: string; sub: string; home: string; contact: string };
   footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string };
 }
 
@@ -27,7 +28,7 @@ const translations: Record<Lang, LangTranslations> = {
   en: {
     nav: {
       offers: 'Services', about: 'About me', skills: 'Skills', portfolio: 'Portfolio',
-      contact: 'Contact', legal: 'Legal notice', privacy: 'Privacy policy',
+      contact: 'Contact', legal: 'Legal notice', privacy: 'Privacy policy', cta: 'Start a project',
     },
     hero: {
       label: 'Your partner for digital projects',
@@ -66,6 +67,7 @@ const translations: Record<Lang, LangTranslations> = {
       priceNote: 'Every project is unique — that is why I only quote prices once I know what you really need. Write to me without obligation: you will receive a fair, transparent offer that fits your budget.',
       cta: 'Request a free quote',
       mailHint: 'Or reach me directly:',
+      cardCta: 'Inquire',
     },
     process: {
       label: 'Simple & transparent',
@@ -134,7 +136,7 @@ const translations: Record<Lang, LangTranslations> = {
     contact: {
       label: 'Get in touch', title: "Let's talk about", titleAccent: 'your project',
       intro: "Tell me about your project — completely without obligation. I usually reply within 24 hours with an honest assessment and the next steps.",
-      name: 'Your name', email: 'Your email', message: 'Your message',
+      name: 'Your name', email: 'Your email', topic: 'Project type', topicGeneral: 'General inquiry', message: 'Your message',
       namePh: 'John Doe', emailPh: 'john@example.com', messagePh: 'Tell me about your project...',
       send: 'Send message', sending: 'Sending…',
       successTitle: 'Message received!', successSub: 'Thank you for your trust — I will get back to you as soon as possible.',
@@ -145,11 +147,16 @@ const translations: Record<Lang, LangTranslations> = {
       servicesTitle: 'Services', contactTitle: 'Contact', location: 'Siegburg near Cologne/Bonn',
       noTracking: 'This website respects your privacy — no cookies, no tracking.',
     },
+    notFound: {
+      title: 'Page not found',
+      sub: "This page does not exist — but your project could. Let's talk about it.",
+      home: 'Back to home', contact: 'Get in touch',
+    },
   },
   de: {
     nav: {
       offers: 'Leistungen', about: 'Über mich', skills: 'Skills', portfolio: 'Portfolio',
-      contact: 'Kontakt', legal: 'Impressum', privacy: 'Datenschutz',
+      contact: 'Kontakt', legal: 'Impressum', privacy: 'Datenschutz', cta: 'Projekt anfragen',
     },
     hero: {
       label: 'Ihr Partner für digitale Projekte',
@@ -188,6 +195,7 @@ const translations: Record<Lang, LangTranslations> = {
       priceNote: 'Jedes Projekt ist einzigartig — deshalb nenne ich Preise erst, wenn ich weiß, was Sie wirklich brauchen. Schreiben Sie mir unverbindlich: Sie erhalten ein faires, transparentes Angebot, das zu Ihrem Budget passt.',
       cta: 'Unverbindlich anfragen',
       mailHint: 'Oder direkt per E-Mail:',
+      cardCta: 'Anfragen',
     },
     process: {
       label: 'Einfach & transparent',
@@ -256,7 +264,7 @@ const translations: Record<Lang, LangTranslations> = {
     contact: {
       label: 'Kontakt', title: 'Sprechen wir über', titleAccent: 'Ihr Projekt',
       intro: 'Erzählen Sie mir von Ihrem Vorhaben — ganz unverbindlich. Ich melde mich in der Regel innerhalb von 24 Stunden mit einer ehrlichen Einschätzung und den nächsten Schritten.',
-      name: 'Ihr Name', email: 'Ihre E-Mail', message: 'Ihre Nachricht',
+      name: 'Ihr Name', email: 'Ihre E-Mail', topic: 'Projektart', topicGeneral: 'Allgemeine Anfrage', message: 'Ihre Nachricht',
       namePh: 'Max Mustermann', emailPh: 'max@beispiel.de', messagePh: 'Erzählen Sie mir von Ihrem Projekt...',
       send: 'Nachricht senden', sending: 'Wird gesendet…',
       successTitle: 'Nachricht erhalten!', successSub: 'Vielen Dank für Ihr Vertrauen — ich melde mich schnellstmöglich bei Ihnen.',
@@ -266,6 +274,11 @@ const translations: Record<Lang, LangTranslations> = {
       legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!',
       servicesTitle: 'Leistungen', contactTitle: 'Kontakt', location: 'Siegburg bei Köln/Bonn',
       noTracking: 'Diese Website respektiert Ihre Privatsphäre — keine Cookies, kein Tracking.',
+    },
+    notFound: {
+      title: 'Seite nicht gefunden',
+      sub: 'Diese Seite gibt es nicht — Ihr Projekt aber schon bald. Sprechen wir darüber.',
+      home: 'Zur Startseite', contact: 'Kontakt aufnehmen',
     },
   },
 };

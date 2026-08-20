@@ -45,6 +45,20 @@
               [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
           </div>
           <div class="field">
+            <label for="topic">{{ lang.t().contact.topic }}</label>
+            <select id="topic" [ngModel]="topic()" (ngModelChange)="topic.set($event)" name="topic">
+              <option value="">{{ lang.t().contact.topicGeneral }}</option>
+              @for (item of lang.t().offers.items; track item.title) {
+                <option [value]="item.title">{{ item.title }}</option>
+              }
+            </select>
+          </div>
+          <div class="field hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" type="text" tabindex="-1" autocomplete="off"
+              [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="website" />
+          </div>
+          <div class="field">
             <label for="message">{{ lang.t().contact.message }}</label>
             <textarea id="message" required rows="5" [placeholder]="lang.t().contact.messagePh"
               [ngModel]="message()" (ngModelChange)="message.set($event)" name="message"></textarea>

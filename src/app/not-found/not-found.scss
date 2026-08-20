@@ -1,0 +1,74 @@
+.not-found {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.nf-code {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+
+  .bracket { color: var(--accent); }
+}
+
+h1 {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.nf-sub {
+  font-family: "Overpass", sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 520px;
+  margin-bottom: 2.5rem;
+}
+
+.nf-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  .btn-primary {
+    display: inline-flex;
+    padding: 14px 36px;
+    background: var(--accent);
+    color: #0d0d0d;
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 150ms, transform 150ms;
+
+    &:hover { background: var(--accent-h); transform: translateY(-2px); }
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    padding: 14px 36px;
+    border: 2px solid var(--border-2);
+    color: var(--text);
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 150ms, color 150ms, transform 150ms;
+
+    &:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  }
+}

@@ -14,6 +14,9 @@
     </nav>
 
     <div class="header-controls">
+      <!-- Header CTA -->
+      <button class="header-cta" (click)="navigateTo('contact')">{{ lang.t().nav.cta }}</button>
+
       <!-- Language toggle -->
       <button class="lang-btn" (click)="lang.toggle()" [attr.aria-label]="lang.current() === 'en' ? 'Deutsch' : 'English'">
         <span [class.lang-active]="lang.current() === 'en'">EN</span>
