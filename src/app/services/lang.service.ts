@@ -4,9 +4,16 @@ import { DOCUMENT } from '@angular/common';
 
 export type Lang = 'en' | 'de';
 
+export interface OfferItem {
+  title: string;
+  desc: string;
+  points: string[];
+}
+
 export interface LangTranslations {
-  nav:       { about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string };
+  nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string };
   hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string };
+  offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string };
   about:     { label: string; title1: string; title2: string; p1: string; p2: string; p3: string; p4: string; cta: string };
   skills:    { label: string; title: string };
   portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string };
@@ -17,75 +24,137 @@ export interface LangTranslations {
 const translations: Record<Lang, LangTranslations> = {
   en: {
     nav: {
-      about: 'About me', skills: 'Skills', portfolio: 'Portfolio',
+      offers: 'Services', about: 'About me', skills: 'Skills', portfolio: 'Portfolio',
       contact: 'Contact', legal: 'Legal notice', privacy: 'Privacy policy',
     },
     hero: {
-      label: 'Available for new projects',
-      title1: 'Web & Mobile', title2: 'Developer',
-      sub: 'Crafting digital experiences with precision — from native iOS & Android apps to modern web applications.',
-      cta1: 'View work', cta2: "Let's talk", scroll: 'Scroll down',
+      label: 'Your partner for digital projects',
+      title1: 'Websites & web apps', title2: 'that win customers',
+      sub: 'I build websites and business web apps that move your company forward — personal, tailor-made, and with genuine attention to detail.',
+      cta1: 'View services', cta2: 'Free consultation', scroll: 'Scroll down',
+    },
+    offers: {
+      label: 'What I can do for you',
+      title: 'My services',
+      sub: 'No website builders, no off-the-shelf templates — every project is designed and developed individually for you.',
+      items: [
+        {
+          title: 'Websites that sell',
+          desc: 'Your website is your digital storefront. I create modern, fast, search-engine-optimised websites that turn visitors into customers — and present your brand unmistakably.',
+          points: ['Individual design instead of templates', 'SEO & fast loading included', 'Flawless on every device'],
+        },
+        {
+          title: 'Business web apps',
+          desc: 'Digitise processes, save time, grow: I develop web applications tailored precisely to your workflows — from internal tools to full customer platforms.',
+          points: ['Custom features for your workflows', 'Modern, future-proof technology', 'Scalable & maintainable'],
+        },
+        {
+          title: 'Optimisation & modernisation',
+          desc: 'Your current website feels dated or loads too slowly? I analyse, optimise and modernise — for better rankings, more inquiries and a fresh appearance.',
+          points: ['Performance analysis', 'SEO optimisation', 'Redesign with substance'],
+        },
+        {
+          title: 'All-in-one care-free package',
+          desc: 'You focus on your business, I take care of your web presence: from the first idea through design and development to maintenance and updates — all from one hand.',
+          points: ['Concept to launch', 'Ongoing support & updates', 'One personal contact'],
+        },
+      ],
+      why: 'What sets me apart from run-of-the-mill agencies? I listen, I think along with you, and I stand behind my work — with a direct line to me instead of a ticket system.',
+      priceNote: 'Every project is unique — that is why I only quote prices once I know what you really need. Write to me without obligation: you will receive a fair, transparent offer that fits your budget.',
+      cta: 'Request a free quote',
+      mailHint: 'Or reach me directly:',
     },
     about: {
-      label: 'About me', title1: 'Building ideas', title2: 'into reality',
-      p1: "I'm a passionate web and app developer driven by creativity. My journey started with JavaScript books and YouTube tutorials, which sparked my love for building digital experiences.",
-      p2: 'That passion led me to a professional software development school in Germany where I deepened both individual and team skills on numerous frontend projects.',
-      p3: 'I then extended my skill set into native mobile development — iOS with Swift and Android with Kotlin — specialising in innovative, user-friendly apps.',
-      p4: "Now I'm ready for the next challenge: joining a creative team, working on cutting-edge projects and creating real value through my craft.",
-      cta: "Let's talk",
+      label: 'About me', title1: 'The person', title2: 'behind your project',
+      p1: "Behind every good website is someone who listens. I'm Bünyamin — web and app developer from Siegburg near Cologne/Bonn, and I love turning ideas into digital experiences.",
+      p2: 'My training at a professional software school in Germany and countless projects — from frontend to native apps — taught me one thing: technology is only a means to an end. What counts is that it works for you.',
+      p3: "That's why you won't get off-the-shelf solutions from me, but a partner who thinks along: honest in consultation, precise in execution, and reachable when you need me.",
+      p4: "Whether a new website, a business web app or a fresh look for your existing presence — let's create something together that you are proud of.",
+      cta: 'Get in touch',
     },
     skills: { label: 'Tech stack', title: 'My skills' },
     portfolio: {
       label: 'Selected work', title: 'My portfolio',
-      sub: 'A sample of my work — feel free to explore each project.',
+      sub: 'A selection of my projects — see for yourself what your solution could look like.',
       demo: 'Live Demo', pitch: 'Pitch', github: 'GitHub',
     },
     contact: {
-      label: 'Get in touch', title: 'Say', titleAccent: 'Hi!',
-      intro: "Want to discuss a new project? Let's talk — I'm always open to exciting opportunities and collaborations.",
+      label: 'Get in touch', title: "Let's talk about", titleAccent: 'your project',
+      intro: "Tell me about your project — completely without obligation. I usually reply within 24 hours with an honest assessment and the next steps.",
       name: 'Your name', email: 'Your email', message: 'Your message',
       namePh: 'John Doe', emailPh: 'john@example.com', messagePh: 'Tell me about your project...',
       send: 'Send message', sending: 'Sending…',
-      successTitle: 'Message received!', successSub: "Thanks for reaching out — I'll reply shortly.",
-      sendAnother: 'Send another', error: 'Something went wrong. Please try emailing me directly.',
+      successTitle: 'Message received!', successSub: 'Thank you for your trust — I will get back to you as soon as possible.',
+      sendAnother: 'Send another', error: 'Something went wrong. Please email me directly at mail@ilhan-buenyamin.com.',
     },
     footer: { legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!' },
   },
   de: {
     nav: {
-      about: 'Über mich', skills: 'Skills', portfolio: 'Portfolio',
+      offers: 'Leistungen', about: 'Über mich', skills: 'Skills', portfolio: 'Portfolio',
       contact: 'Kontakt', legal: 'Impressum', privacy: 'Datenschutz',
     },
     hero: {
-      label: 'Offen für neue Projekte',
-      title1: 'Web & Mobile', title2: 'Entwickler',
-      sub: 'Ich entwickle moderne Websites, Web-Apps und native iOS- & Android-Apps — maßgeschneidert, performant und mit Liebe zum Detail.',
-      cta1: 'Projekte ansehen', cta2: 'Kontakt aufnehmen', scroll: 'Nach unten',
+      label: 'Ihr Partner für digitale Projekte',
+      title1: 'Websites & Web-Apps,', title2: 'die Kunden gewinnen',
+      sub: 'Ich entwickle Websites und Business-Web-Apps, die Ihr Unternehmen voranbringen — persönlich, maßgeschneidert und mit echter Liebe zum Detail.',
+      cta1: 'Leistungen ansehen', cta2: 'Kostenloses Erstgespräch', scroll: 'Nach unten',
+    },
+    offers: {
+      label: 'Was ich für Sie tun kann',
+      title: 'Meine Leistungen',
+      sub: 'Kein Baukasten, keine Massenware — jedes Projekt wird individuell für Sie konzipiert und entwickelt.',
+      items: [
+        {
+          title: 'Websites, die verkaufen',
+          desc: 'Ihre Website ist Ihr digitales Schaufenster. Ich gestalte moderne, schnelle und suchmaschinenoptimierte Websites, die aus Besuchern Kunden machen — und Ihre Marke unverwechselbar präsentieren.',
+          points: ['Individuelles Design statt Vorlage', 'SEO & schnelle Ladezeiten inklusive', 'Perfekt auf jedem Gerät'],
+        },
+        {
+          title: 'Business-Web-Apps',
+          desc: 'Prozesse digitalisieren, Zeit sparen, wachsen: Ich entwickle Webanwendungen, die exakt auf Ihre Abläufe zugeschnitten sind — vom internen Tool bis zur Kundenplattform.',
+          points: ['Maßgeschneiderte Funktionen', 'Moderne, zukunftssichere Technologie', 'Skalierbar & wartbar'],
+        },
+        {
+          title: 'Optimierung & Modernisierung',
+          desc: 'Ihre bestehende Website wirkt in die Jahre gekommen oder lädt zu langsam? Ich analysiere, optimiere und modernisiere — für bessere Rankings, mehr Anfragen und einen frischen Auftritt.',
+          points: ['Performance-Analyse', 'SEO-Optimierung', 'Redesign mit Substanz'],
+        },
+        {
+          title: 'All-in-One Sorglos-Paket',
+          desc: 'Sie kümmern sich um Ihr Geschäft — ich mich um Ihren Webauftritt: von der ersten Idee über Design und Entwicklung bis zu Pflege und Updates. Alles aus einer Hand.',
+          points: ['Vom Konzept bis zum Launch', 'Laufende Betreuung & Updates', 'Ein persönlicher Ansprechpartner'],
+        },
+      ],
+      why: 'Was mich von 08/15-Anbietern unterscheidet? Ich höre zu, denke mit und stehe hinter meiner Arbeit — mit direktem Draht zu mir statt Ticketsystem.',
+      priceNote: 'Jedes Projekt ist einzigartig — deshalb nenne ich Preise erst, wenn ich weiß, was Sie wirklich brauchen. Schreiben Sie mir unverbindlich: Sie erhalten ein faires, transparentes Angebot, das zu Ihrem Budget passt.',
+      cta: 'Unverbindlich anfragen',
+      mailHint: 'Oder direkt per E-Mail:',
     },
     about: {
-      label: 'Über mich', title1: 'Ideen', title2: 'verwirklichen',
-      p1: 'Ich bin ein leidenschaftlicher Web- und App-Entwickler, angetrieben von Kreativität. Meine Reise begann mit JavaScript-Büchern und YouTube-Tutorials, die meine Begeisterung für digitale Erlebnisse entfachten.',
-      p2: 'Diese Leidenschaft führte mich zu einer professionellen Software-Entwicklungsschule in Deutschland, wo ich individuelle und Team-Skills in zahlreichen Frontend-Projekten vertiefte.',
-      p3: 'Anschließend erweiterte ich mein Know-how in die native Mobile-Entwicklung — iOS mit Swift und Android mit Kotlin — mit Fokus auf innovative, nutzerfreundliche Apps.',
-      p4: 'Jetzt bin ich bereit für die nächste Herausforderung: in einem kreativen Team zu arbeiten, an wegweisenden Projekten mitzuwirken und echten Mehrwert zu schaffen.',
-      cta: 'Kontakt aufnehmen',
+      label: 'Über mich', title1: 'Der Mensch', title2: 'hinter Ihrem Projekt',
+      p1: 'Hinter jeder guten Website steht jemand, der zuhört. Ich bin Bünyamin — Web- und App-Entwickler aus Siegburg bei Köln/Bonn, und ich liebe es, Ideen in digitale Erlebnisse zu verwandeln.',
+      p2: 'Meine Ausbildung an einer professionellen Software-Schule in Deutschland und zahlreiche Projekte — vom Frontend bis zur nativen App — haben mich eines gelehrt: Technik ist nur Mittel zum Zweck. Was zählt, ist, dass sie für Sie arbeitet.',
+      p3: 'Deshalb bekommen Sie bei mir keine Lösungen von der Stange, sondern einen Partner, der mitdenkt: ehrlich in der Beratung, präzise in der Umsetzung und erreichbar, wenn Sie mich brauchen.',
+      p4: 'Ob neue Website, Business-Web-App oder frischer Wind für Ihren bestehenden Auftritt — lassen Sie uns gemeinsam etwas schaffen, worauf Sie stolz sind.',
+      cta: 'Jetzt Kontakt aufnehmen',
     },
     skills: { label: 'Tech-Stack', title: 'Meine Skills' },
     portfolio: {
       label: 'Ausgewählte Projekte', title: 'Mein Portfolio',
-      sub: 'Eine Auswahl meiner Projekte — entdecke die Details.',
+      sub: 'Eine Auswahl meiner Projekte — sehen Sie selbst, wie Ihre Lösung aussehen könnte.',
       demo: 'Live-Demo', pitch: 'Pitch', github: 'GitHub',
     },
     contact: {
-      label: 'Kontakt', title: 'Sag', titleAccent: 'Hallo!',
-      intro: 'Möchtest du ein neues Projekt besprechen? Schreib mir — ich bin immer offen für spannende Möglichkeiten und Kooperationen.',
-      name: 'Dein Name', email: 'Deine E-Mail', message: 'Deine Nachricht',
-      namePh: 'Max Mustermann', emailPh: 'max@beispiel.de', messagePh: 'Erzähl mir von deinem Projekt...',
+      label: 'Kontakt', title: 'Sprechen wir über', titleAccent: 'Ihr Projekt',
+      intro: 'Erzählen Sie mir von Ihrem Vorhaben — ganz unverbindlich. Ich melde mich in der Regel innerhalb von 24 Stunden mit einer ehrlichen Einschätzung und den nächsten Schritten.',
+      name: 'Ihr Name', email: 'Ihre E-Mail', message: 'Ihre Nachricht',
+      namePh: 'Max Mustermann', emailPh: 'max@beispiel.de', messagePh: 'Erzählen Sie mir von Ihrem Projekt...',
       send: 'Nachricht senden', sending: 'Wird gesendet…',
-      successTitle: 'Nachricht erhalten!', successSub: 'Danke für deine Nachricht — ich melde mich bald.',
-      sendAnother: 'Weitere Nachricht', error: 'Etwas ist schiefgelaufen. Schreib mir direkt per E-Mail.',
+      successTitle: 'Nachricht erhalten!', successSub: 'Vielen Dank für Ihr Vertrauen — ich melde mich schnellstmöglich bei Ihnen.',
+      sendAnother: 'Weitere Nachricht', error: 'Etwas ist schiefgelaufen. Schreiben Sie mir gern direkt an mail@ilhan-buenyamin.com.',
     },
-    footer: { legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreib mir!' },
+    footer: { legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!' },
   },
 };
 

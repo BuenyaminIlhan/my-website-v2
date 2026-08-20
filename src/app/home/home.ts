@@ -1,5 +1,6 @@
 import { Component, inject, effect } from '@angular/core';
 import { Hero } from '../hero/hero';
+import { Offerings } from '../offerings/offerings';
 import { AboutMe } from '../about-me/about-me';
 import { Stats } from '../stats/stats';
 import { Skills } from '../skills/skills';
@@ -10,7 +11,7 @@ import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, AboutMe, Stats, Skills, Portfolio, Contact],
+  imports: [Hero, Offerings, AboutMe, Stats, Skills, Portfolio, Contact],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -26,8 +27,8 @@ export class Home {
           ? 'Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen'
           : 'Bünyamin Ilhan — Web & App Developer | Websites, Web Apps & Mobile Apps',
         isDE
-          ? 'Web- & App-Entwickler aus Siegburg bei Köln/Bonn. Ich entwickle moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift & Kotlin.'
-          : 'Web & app developer from Siegburg near Cologne/Bonn. I build modern websites, web apps and native iOS & Android apps with Angular, Swift & Kotlin.',
+          ? 'Websites, Business-Web-Apps und Rundum-Betreuung aus einer Hand — individuell entwickelt statt 08/15. Persönlich, transparent, fair. Jetzt unverbindlich anfragen!'
+          : 'Websites, business web apps and all-in-one care from a single source — individually built, not off the shelf. Personal, transparent, fair. Get in touch!',
       );
     });
   }

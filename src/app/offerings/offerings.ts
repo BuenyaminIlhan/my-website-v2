@@ -1,0 +1,13 @@
+import { Component, inject } from '@angular/core';
+import { LangService } from '../services/lang.service';
+import { RevealDirective } from '../directives/scroll-reveal.directive';
+
+@Component({
+  selector: 'app-offerings',
+  imports: [RevealDirective],
+  templateUrl: './offerings.html',
+  styleUrl: './offerings.scss',
+})
+export class Offerings {
+  lang = inject(LangService);
+}
