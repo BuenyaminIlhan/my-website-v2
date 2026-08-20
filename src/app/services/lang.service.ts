@@ -11,7 +11,7 @@ export interface OfferItem {
 }
 
 export interface LangTranslations {
-  nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string; cta: string };
+  nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string; cta: string; skip: string };
   hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string; badges: string[] };
   offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string; cardCta: string };
   process:   { label: string; title: string; sub: string; steps: { title: string; desc: string }[] };
@@ -28,7 +28,7 @@ const translations: Record<Lang, LangTranslations> = {
   en: {
     nav: {
       offers: 'Services', about: 'About me', skills: 'Skills', portfolio: 'Portfolio',
-      contact: 'Contact', legal: 'Legal notice', privacy: 'Privacy policy', cta: 'Start a project',
+      contact: 'Contact', legal: 'Legal notice', privacy: 'Privacy policy', cta: 'Start a project', skip: 'Skip to content',
     },
     hero: {
       label: 'Your partner for digital projects',
@@ -156,7 +156,7 @@ const translations: Record<Lang, LangTranslations> = {
   de: {
     nav: {
       offers: 'Leistungen', about: 'Über mich', skills: 'Skills', portfolio: 'Portfolio',
-      contact: 'Kontakt', legal: 'Impressum', privacy: 'Datenschutz', cta: 'Projekt anfragen',
+      contact: 'Kontakt', legal: 'Impressum', privacy: 'Datenschutz', cta: 'Projekt anfragen', skip: 'Zum Inhalt springen',
     },
     hero: {
       label: 'Ihr Partner für digitale Projekte',

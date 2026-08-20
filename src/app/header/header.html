@@ -1,3 +1,5 @@
+<a class="skip-link" href="#main-content">{{ lang.t().nav.skip }}</a>
+
 <header [class.scrolled]="scrolled()">
   <div class="header-inner section-padding">
     <a routerLink="/" (click)="scrollToTop()" class="logo" aria-label="Bünyamin Ilhan">
@@ -6,11 +8,11 @@
 
     <!-- Desktop navigation -->
     <nav class="desktop-nav">
-      <a (click)="navigateTo('offers')">{{ lang.t().nav.offers }}</a>
-      <a (click)="navigateTo('about')">{{ lang.t().nav.about }}</a>
-      <a (click)="navigateTo('skills')">{{ lang.t().nav.skills }}</a>
-      <a (click)="navigateTo('portfolio')">{{ lang.t().nav.portfolio }}</a>
-      <a (click)="navigateTo('contact')">{{ lang.t().nav.contact }}</a>
+      <a routerLink="/" fragment="offers">{{ lang.t().nav.offers }}</a>
+      <a routerLink="/" fragment="about">{{ lang.t().nav.about }}</a>
+      <a routerLink="/" fragment="skills">{{ lang.t().nav.skills }}</a>
+      <a routerLink="/" fragment="portfolio">{{ lang.t().nav.portfolio }}</a>
+      <a routerLink="/" fragment="contact">{{ lang.t().nav.contact }}</a>
     </nav>
 
     <div class="header-controls">
@@ -42,11 +44,11 @@
 <!-- Mobile overlay -->
 <div class="nav-overlay" [class.open]="menuOpen()">
   <nav class="nav-links">
-    <a (click)="navigateTo('offers')"><span class="num">01</span>{{ lang.t().nav.offers }}</a>
-    <a (click)="navigateTo('about')"><span class="num">02</span>{{ lang.t().nav.about }}</a>
-    <a (click)="navigateTo('skills')"><span class="num">03</span>{{ lang.t().nav.skills }}</a>
-    <a (click)="navigateTo('portfolio')"><span class="num">04</span>{{ lang.t().nav.portfolio }}</a>
-    <a (click)="navigateTo('contact')"><span class="num">05</span>{{ lang.t().nav.contact }}</a>
+    <a routerLink="/" fragment="offers" (click)="closeMenu()"><span class="num">01</span>{{ lang.t().nav.offers }}</a>
+    <a routerLink="/" fragment="about" (click)="closeMenu()"><span class="num">02</span>{{ lang.t().nav.about }}</a>
+    <a routerLink="/" fragment="skills" (click)="closeMenu()"><span class="num">03</span>{{ lang.t().nav.skills }}</a>
+    <a routerLink="/" fragment="portfolio" (click)="closeMenu()"><span class="num">04</span>{{ lang.t().nav.portfolio }}</a>
+    <a routerLink="/" fragment="contact" (click)="closeMenu()"><span class="num">05</span>{{ lang.t().nav.contact }}</a>
     <a routerLink="/legal-notice" (click)="closeMenu()"><span class="num">06</span>{{ lang.t().nav.legal }}</a>
     <a routerLink="/privacy-policy" (click)="closeMenu()"><span class="num">07</span>{{ lang.t().nav.privacy }}</a>
   </nav>
