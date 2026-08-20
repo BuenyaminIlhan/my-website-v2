@@ -45,10 +45,7 @@
           "options": {
             "browser": "src/main.ts",
             "server": "src/main.server.ts",
-            "ssr": {
-              "entry": "server.ts"
-            },
-            "prerender": true,
+            "outputMode": "static",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
