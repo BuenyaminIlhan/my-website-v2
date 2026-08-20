@@ -24,10 +24,83 @@
   50%       { opacity: 1;   transform: scale(1.1); }
 }
 
-.hero-content {
+.hero-grid {
   position: relative;
   z-index: 1;
-  max-width: 900px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+
+  @media (max-width: 960px) { grid-template-columns: 1fr; }
+}
+
+.hero-content {
+  max-width: 640px;
+}
+
+.hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  .bracket {
+    font-family: "Syne", sans-serif;
+    font-weight: 800;
+    font-size: clamp(10rem, 24vh, 22rem);
+    line-height: 0.85;
+    color: var(--accent);
+    opacity: 0.16;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 960px) {
+    margin-top: 1rem;
+    .bracket { display: none; }
+  }
+}
+
+.benefit-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.benefit-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.05rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  font-family: "Overpass", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  animation: chipFloat 5s ease-in-out infinite;
+
+  .tick {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+
+  &.chip-1 { transform: translateX(-16px); animation-delay: 0s; }
+  &.chip-2 { transform: translateX(20px);  animation-delay: 1.2s; }
+  &.chip-3 { transform: translateX(-6px);  animation-delay: 2.4s; }
+
+  @media (max-width: 960px) {
+    white-space: normal;
+    &.chip-1, &.chip-2, &.chip-3 { transform: none; animation: none; }
+  }
+}
+
+@keyframes chipFloat {
+  0%, 100% { translate: 0 0; }
+  50%       { translate: 0 -8px; }
 }
 
 .hero-label {
@@ -57,9 +130,9 @@
 
 .hero-title {
   font-family: "Syne", sans-serif;
-  font-size: clamp(2rem, 10vw, 7rem);
+  font-size: clamp(2.2rem, 4.8vw, 4.4rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: -0.02em;
   color: var(--text);
   margin-bottom: 1.5rem;

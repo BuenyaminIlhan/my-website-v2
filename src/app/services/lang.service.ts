@@ -12,7 +12,7 @@ export interface OfferItem {
 
 export interface LangTranslations {
   nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string };
-  hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string };
+  hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string; badges: string[] };
   offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string };
   about:     { label: string; title1: string; title2: string; p1: string; p2: string; p3: string; p4: string; cta: string };
   skills:    { label: string; title: string };
@@ -29,9 +29,10 @@ const translations: Record<Lang, LangTranslations> = {
     },
     hero: {
       label: 'Your partner for digital projects',
-      title1: 'Websites & web apps', title2: 'that win customers',
+      title1: 'Digital solutions.', title2: 'Real results.',
       sub: 'I build websites and business web apps that move your company forward — personal, tailor-made, and with genuine attention to detail.',
       cta1: 'View services', cta2: 'Free consultation', scroll: 'Scroll down',
+      badges: ['100% custom — no website builders', 'SEO & performance included', 'Reply within 24 hours'],
     },
     offers: {
       label: 'What I can do for you',
@@ -96,9 +97,10 @@ const translations: Record<Lang, LangTranslations> = {
     },
     hero: {
       label: 'Ihr Partner für digitale Projekte',
-      title1: 'Websites & Web-Apps,', title2: 'die Kunden gewinnen',
+      title1: 'Digitale Lösungen.', title2: 'Echte Ergebnisse.',
       sub: 'Ich entwickle Websites und Business-Web-Apps, die Ihr Unternehmen voranbringen — persönlich, maßgeschneidert und mit echter Liebe zum Detail.',
       cta1: 'Leistungen ansehen', cta2: 'Kostenloses Erstgespräch', scroll: 'Nach unten',
+      badges: ['100 % individuell — kein Baukasten', 'SEO & Performance inklusive', 'Antwort innerhalb von 24 Stunden'],
     },
     offers: {
       label: 'Was ich für Sie tun kann',
