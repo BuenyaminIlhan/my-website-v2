@@ -1,23 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Bünyamin Ilhan — Web &amp; Mobile Developer</title>
+  <title>Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.">
+  <meta name="description" content="Web- & App-Entwickler aus Siegburg bei Köln/Bonn. Ich entwickle moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift & Kotlin.">
   <meta name="author" content="Bünyamin Ilhan">
-  <meta name="keywords" content="Bünyamin Ilhan, Web Developer, Mobile Developer, Angular, Swift, Kotlin, Frontend, Portfolio, Siegburg">
+  <meta name="keywords" content="Website erstellen lassen, Webseite erstellen lassen, App entwickeln lassen, Web App entwickeln, Website bauen, Webentwicklung, App-Entwicklung, Angular Entwickler, iOS Entwickler, Android Entwickler, Web Developer, Mobile Developer, Frontend Entwickler, Bünyamin Ilhan, Siegburg, Köln, Bonn, NRW">
   <link rel="canonical" href="https://ilhan-buenyamin.com/">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0d">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f3ee">
-
-  <!-- hreflang for bilingual EN/DE content -->
-  <link rel="alternate" hreflang="en" href="https://ilhan-buenyamin.com/">
-  <link rel="alternate" hreflang="de" href="https://ilhan-buenyamin.com/">
-  <link rel="alternate" hreflang="x-default" href="https://ilhan-buenyamin.com/">
+  <meta name="theme-color" content="#f5f3ee">
 
   <!-- Font preconnect -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,21 +19,23 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ilhan-buenyamin.com/">
-  <meta property="og:title" content="Bünyamin Ilhan — Web &amp; Mobile Developer">
-  <meta property="og:description" content="Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.">
+  <meta property="og:title" content="Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen">
+  <meta property="og:description" content="Web- & App-Entwickler aus Siegburg bei Köln/Bonn. Ich entwickle moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift & Kotlin.">
   <meta property="og:image" content="https://ilhan-buenyamin.com/assets/img/Profile_2.jpg">
   <meta property="og:image:width" content="1535">
   <meta property="og:image:height" content="2126">
+  <meta property="og:image:alt" content="Porträt von Bünyamin Ilhan, Web- & App-Entwickler">
   <meta property="og:locale" content="de_DE">
   <meta property="og:locale:alternate" content="en_GB">
+  <meta property="og:site_name" content="Bünyamin Ilhan — Portfolio">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Bünyamin Ilhan — Web &amp; Mobile Developer">
-  <meta name="twitter:description" content="Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.">
+  <meta name="twitter:title" content="Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen">
+  <meta name="twitter:description" content="Web- & App-Entwickler aus Siegburg bei Köln/Bonn. Moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift & Kotlin.">
   <meta name="twitter:image" content="https://ilhan-buenyamin.com/assets/img/Profile_2.jpg">
 
-  <!-- Structured Data: Person + WebSite + ProfilePage + Portfolio -->
+  <!-- Structured Data: Person + ProfessionalService + WebSite + ProfilePage + Portfolio -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -50,12 +46,14 @@
         "name": "Bünyamin Ilhan",
         "url": "https://ilhan-buenyamin.com",
         "email": "mail@ilhan-buenyamin.com",
-        "jobTitle": "Web & Mobile Developer",
+        "jobTitle": "Web- & App-Entwickler",
+        "description": "Web- und App-Entwickler aus Siegburg. Entwickelt moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift und Kotlin.",
         "image": "https://ilhan-buenyamin.com/assets/img/Profile_2.jpg",
-        "knowsAbout": ["Angular", "Swift", "Kotlin", "Web Development", "Mobile Development", "TypeScript", "iOS", "Android"],
+        "knowsAbout": ["Webentwicklung", "App-Entwicklung", "Web-App-Entwicklung", "Angular", "TypeScript", "Swift", "Kotlin", "iOS", "Android", "Frontend-Entwicklung"],
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Siegburg",
+          "addressRegion": "Nordrhein-Westfalen",
           "addressCountry": "DE"
         },
         "sameAs": [
@@ -64,27 +62,72 @@
         ]
       },
       {
+        "@type": "ProfessionalService",
+        "@id": "https://ilhan-buenyamin.com/#service",
+        "name": "Bünyamin Ilhan — Web- & App-Entwicklung",
+        "url": "https://ilhan-buenyamin.com",
+        "founder": { "@id": "https://ilhan-buenyamin.com/#person" },
+        "description": "Entwicklung von Websites, Web-Apps und nativen Apps für iOS und Android — modern, performant und maßgeschneidert.",
+        "areaServed": "DE",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Siegburg",
+          "addressRegion": "Nordrhein-Westfalen",
+          "addressCountry": "DE"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Leistungen",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Website erstellen",
+                "description": "Entwicklung moderner, responsiver und suchmaschinenoptimierter Websites."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Web-App entwickeln",
+                "description": "Individuelle Webanwendungen mit Angular und TypeScript — von der Idee bis zum Launch."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "App entwickeln (iOS & Android)",
+                "description": "Native Mobile Apps mit Swift (iOS) und Kotlin (Android)."
+              }
+            }
+          ]
+        }
+      },
+      {
         "@type": "WebSite",
         "@id": "https://ilhan-buenyamin.com/#website",
         "url": "https://ilhan-buenyamin.com",
         "name": "Bünyamin Ilhan — Portfolio",
         "author": { "@id": "https://ilhan-buenyamin.com/#person" },
-        "inLanguage": ["en", "de"]
+        "inLanguage": ["de", "en"]
       },
       {
         "@type": "ProfilePage",
         "@id": "https://ilhan-buenyamin.com/#profilepage",
         "url": "https://ilhan-buenyamin.com",
-        "name": "Bünyamin Ilhan — Web & Mobile Developer",
+        "name": "Bünyamin Ilhan — Web- & App-Entwickler",
         "isPartOf": { "@id": "https://ilhan-buenyamin.com/#website" },
         "mainEntity": { "@id": "https://ilhan-buenyamin.com/#person" },
-        "inLanguage": ["en", "de"]
+        "inLanguage": ["de", "en"]
       },
       {
         "@type": "ItemList",
         "@id": "https://ilhan-buenyamin.com/#projects",
-        "name": "Portfolio Projects",
-        "description": "A selection of web and mobile development projects by Bünyamin Ilhan",
+        "name": "Portfolio-Projekte",
+        "description": "Eine Auswahl von Web- und App-Projekten von Bünyamin Ilhan",
         "author": { "@id": "https://ilhan-buenyamin.com/#person" },
         "itemListElement": [
           {
@@ -93,7 +136,7 @@
             "item": {
               "@type": "SoftwareApplication",
               "name": "Zephir",
-              "description": "Quotation app for small businesses — create professional quotes instantly on iOS.",
+              "description": "Angebots-App für kleine Unternehmen — professionelle Angebote direkt auf dem iPhone erstellen.",
               "applicationCategory": "BusinessApplication",
               "operatingSystem": "iOS",
               "author": { "@id": "https://ilhan-buenyamin.com/#person" },
@@ -106,7 +149,7 @@
             "item": {
               "@type": "SoftwareApplication",
               "name": "Labbayk",
-              "description": "The Quran in 90 languages — free, offline-capable Android app.",
+              "description": "Der Koran in 90 Sprachen — kostenlose, offline-fähige Android-App.",
               "applicationCategory": "LifestyleApplication",
               "operatingSystem": "Android",
               "author": { "@id": "https://ilhan-buenyamin.com/#person" },
@@ -119,7 +162,7 @@
             "item": {
               "@type": "WebApplication",
               "name": "Join",
-              "description": "Kanban-style task manager with drag-and-drop, user assignment, and categories.",
+              "description": "Kanban-Taskmanager mit Drag-and-Drop, Nutzer-Zuweisung und Kategorien.",
               "url": "https://ilhan-buenyamin.com/Join-Kanban/",
               "author": { "@id": "https://ilhan-buenyamin.com/#person" },
               "codeRepository": "https://github.com/BuenyaminIlhan/Join-Kanban"
@@ -131,7 +174,7 @@
             "item": {
               "@type": "WebApplication",
               "name": "Sharkie",
-              "description": "Object-oriented browser game — join Sharkie's adventure against the Shark End Boss.",
+              "description": "Objektorientiertes Browser-Game — begleite Sharkie im Kampf gegen den Endboss.",
               "url": "https://ilhan-buenyamin.com/Sharkie/",
               "author": { "@id": "https://ilhan-buenyamin.com/#person" },
               "codeRepository": "https://github.com/BuenyaminIlhan/Sharkie"
@@ -143,7 +186,7 @@
             "item": {
               "@type": "WebApplication",
               "name": "DA-Bubble",
-              "description": "Slack clone with Google authentication, channels, and threaded replies. Built with Angular and Firebase.",
+              "description": "Slack-Klon mit Google-Login, Channels und Thread-Antworten. Entwickelt mit Angular und Firebase.",
               "url": "https://da-bubble.ilhan-buenyamin.com/",
               "author": { "@id": "https://ilhan-buenyamin.com/#person" },
               "codeRepository": "https://github.com/BuenyaminIlhan/Da-Bubble"
@@ -155,7 +198,8 @@
   }
   </script>
 </head>
-<body>
+<body class="light">
+  <script>try{if(localStorage.getItem('theme')==='dark')document.body.classList.remove('light')}catch(e){}</script>
   <app-root></app-root>
 </body>
 </html>

@@ -22,8 +22,12 @@ export class Home {
     effect(() => {
       const isDE = this.lang.current() === 'de';
       this.seo.update(
-        isDE ? 'Bünyamin Ilhan — Web & Mobile Entwickler' : 'Bünyamin Ilhan — Web & Mobile Developer',
-        this.lang.t().hero.sub,
+        isDE
+          ? 'Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen'
+          : 'Bünyamin Ilhan — Web & App Developer | Websites, Web Apps & Mobile Apps',
+        isDE
+          ? 'Web- & App-Entwickler aus Siegburg bei Köln/Bonn. Ich entwickle moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift & Kotlin.'
+          : 'Web & app developer from Siegburg near Cologne/Bonn. I build modern websites, web apps and native iOS & Android apps with Angular, Swift & Kotlin.',
       );
     });
   }

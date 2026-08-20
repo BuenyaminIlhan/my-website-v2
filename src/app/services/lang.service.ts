@@ -59,7 +59,7 @@ const translations: Record<Lang, LangTranslations> = {
     hero: {
       label: 'Offen für neue Projekte',
       title1: 'Web & Mobile', title2: 'Entwickler',
-      sub: 'Digitale Erlebnisse mit Präzision gestalten — von nativen iOS- & Android-Apps bis zu modernen Webanwendungen.',
+      sub: 'Ich entwickle moderne Websites, Web-Apps und native iOS- & Android-Apps — maßgeschneidert, performant und mit Liebe zum Detail.',
       cta1: 'Projekte ansehen', cta2: 'Kontakt aufnehmen', scroll: 'Nach unten',
     },
     about: {
@@ -93,7 +93,7 @@ const translations: Record<Lang, LangTranslations> = {
 export class LangService {
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
-  current = signal<Lang>('en');
+  current = signal<Lang>('de');
   t = computed<LangTranslations>(() =>
     this.current() === 'de' ? translations.de : translations.en
   );

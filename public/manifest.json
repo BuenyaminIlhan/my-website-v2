@@ -1,12 +1,12 @@
 {
-  "name": "Bünyamin Ilhan — Web & Mobile Developer",
+  "name": "Bünyamin Ilhan — Web- & App-Entwickler",
   "short_name": "Bünyamin Ilhan",
-  "description": "Portfolio of Bünyamin Ilhan — Web and Mobile Developer specialising in Angular, Swift, and Kotlin.",
+  "description": "Web- & App-Entwickler aus Siegburg. Moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift & Kotlin.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0d0d",
+  "background_color": "#f5f3ee",
   "theme_color": "#ff9900",
-  "lang": "en",
+  "lang": "de",
   "icons": [
     {
       "src": "favicon.svg",

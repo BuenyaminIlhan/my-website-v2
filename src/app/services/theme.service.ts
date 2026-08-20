@@ -5,13 +5,15 @@ import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 export class ThemeService {
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
-  isDark = signal<boolean>(true);
+  isDark = signal<boolean>(false);
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const saved = localStorage.getItem('theme');
-      if (saved === 'light') {
-        this.isDark.set(false);
+      if (saved === 'dark') {
+        this.isDark.set(true);
+        this.document.body.classList.remove('light');
+      } else {
         this.document.body.classList.add('light');
       }
     }

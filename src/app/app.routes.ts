@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'Bünyamin Ilhan — Web & Mobile Developer',
+    title: 'Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen',
     loadComponent: () => import('./home/home').then(m => m.Home),
   },
   {
