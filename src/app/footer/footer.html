@@ -22,7 +22,7 @@
       <p class="col-title">{{ lang.t().footer.servicesTitle }}</p>
       <nav class="col-links">
         @for (item of lang.t().offers.items; track item.title) {
-          <a routerLink="/" fragment="offers">{{ item.title }}</a>
+          <a [routerLink]="'/' + item.slug">{{ item.title }}</a>
         }
       </nav>
     </div>

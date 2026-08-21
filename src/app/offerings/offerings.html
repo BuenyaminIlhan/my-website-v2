@@ -17,9 +17,12 @@
             <li><span class="tick">→</span>{{ point }}</li>
           }
         </ul>
-        <a href="#contact" class="card-cta" (click)="inquiry.projectType.set(item.title)">
-          {{ lang.t().offers.cardCta }} <span class="cta-arrow">→</span>
-        </a>
+        <div class="offer-card-links">
+          <a [routerLink]="'/' + item.slug" class="card-more">{{ lang.t().offers.moreInfo }}</a>
+          <a href="#contact" class="card-cta" (click)="inquiry.projectType.set(item.title)">
+            {{ lang.t().offers.cardCta }} <span class="cta-arrow">→</span>
+          </a>
+        </div>
       </article>
     }
   </div>

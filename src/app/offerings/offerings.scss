@@ -103,6 +103,24 @@
   }
 }
 
+.offer-card-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.card-more {
+  font-family: "Overpass", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover { color: var(--text); }
+}
+
 .card-cta {
   display: inline-flex;
   align-items: center;

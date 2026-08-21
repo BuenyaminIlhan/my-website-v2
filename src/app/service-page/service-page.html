@@ -1,0 +1,29 @@
+@if (content(); as page) {
+  <div class="service-page section-padding">
+    <a routerLink="/" fragment="offers" class="back-link">{{ page.overviewLink }}</a>
+
+    <span class="eyebrow">{{ page.eyebrow }}</span>
+    <h1>{{ page.h1 }}</h1>
+    <p class="lead">{{ page.lead }}</p>
+
+    @for (paragraph of page.intro; track paragraph) {
+      <p>{{ paragraph }}</p>
+    }
+
+    <h2>{{ page.includedTitle }}</h2>
+    <ul class="included-list">
+      @for (point of page.included; track point) {
+        <li><span class="tick">→</span>{{ point }}</li>
+      }
+    </ul>
+
+    <h2>{{ page.forWhoTitle }}</h2>
+    <p>{{ page.forWho }}</p>
+
+    <div class="service-cta">
+      <h2>{{ page.ctaTitle }}</h2>
+      <p>{{ page.ctaText }}</p>
+      <a routerLink="/" fragment="contact" class="btn-primary" (click)="prefillContact()">{{ page.ctaButton }}</a>
+    </div>
+  </div>
+}

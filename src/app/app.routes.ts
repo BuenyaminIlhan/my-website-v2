@@ -17,6 +17,30 @@ export const routes: Routes = [
     loadComponent: () => import('./privacy-policy/privacy-policy').then(m => m.PrivacyPolicy),
   },
   {
+    path: 'website-erstellen-lassen',
+    title: 'Website erstellen lassen — Bünyamin Ilhan',
+    data: { slug: 'website-erstellen-lassen' },
+    loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
+  },
+  {
+    path: 'web-app-entwicklung',
+    title: 'Web-App entwickeln lassen — Bünyamin Ilhan',
+    data: { slug: 'web-app-entwicklung' },
+    loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
+  },
+  {
+    path: 'website-optimierung',
+    title: 'Website-Optimierung & Modernisierung — Bünyamin Ilhan',
+    data: { slug: 'website-optimierung' },
+    loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
+  },
+  {
+    path: 'sorglos-paket',
+    title: 'All-in-One Sorglos-Paket — Bünyamin Ilhan',
+    data: { slug: 'sorglos-paket' },
+    loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
+  },
+  {
     path: '404',
     title: 'Seite nicht gefunden — Bünyamin Ilhan',
     loadComponent: () => import('./not-found/not-found').then(m => m.NotFound),

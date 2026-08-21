@@ -1,0 +1,112 @@
+.service-page {
+  padding-top: 120px;
+  padding-bottom: 6rem;
+  max-width: 860px;
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: "Overpass", sans-serif;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 3rem;
+    transition: opacity 150ms;
+    cursor: pointer;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  .eyebrow {
+    display: block;
+    font-family: "Overpass", sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: "Syne", sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+  }
+
+  .lead {
+    font-family: "Overpass", sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 2rem;
+    max-width: 680px;
+  }
+
+  h2 {
+    font-family: "Syne", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  p {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    max-width: 680px;
+  }
+
+  .included-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+
+    li {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      font-family: "Overpass", sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+
+      .tick { color: var(--accent); font-weight: 700; }
+    }
+  }
+
+  .service-cta {
+    margin-top: 2.5rem;
+    padding: 2rem;
+    border: 1px solid var(--border-2);
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+
+    h2 { margin-top: 0; border-bottom: none; padding-bottom: 0; }
+  }
+
+  .btn-primary {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.9rem 2rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: "Overpass", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 200ms ease;
+
+    &:hover { background: var(--accent-h); }
+  }
+}

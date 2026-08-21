@@ -1,0 +1,27 @@
+@if (lang.t().testimonials.items.length > 0) {
+  <section id="testimonials" class="testimonials section-padding">
+    <div class="section-label" [appReveal]="0">
+      <span class="label-line"></span>
+      <span>{{ lang.t().testimonials.label }}</span>
+    </div>
+    <h2 class="section-title" [appReveal]="100">{{ lang.t().testimonials.title }}</h2>
+    <p class="section-sub" [appReveal]="150">{{ lang.t().testimonials.sub }}</p>
+
+    <div class="testimonial-grid">
+      @for (item of lang.t().testimonials.items; track item.author; let i = $index) {
+        <blockquote class="testimonial-card" [appReveal]="180 + i * 60">
+          <div class="stars" aria-hidden="true">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <span [class.filled]="star <= item.rating">★</span>
+            }
+          </div>
+          <p class="quote">&ldquo;{{ item.quote }}&rdquo;</p>
+          <footer>
+            <span class="author">{{ item.author }}</span>
+            <span class="role">{{ item.role }}</span>
+          </footer>
+        </blockquote>
+      }
+    </div>
+  </section>
+}

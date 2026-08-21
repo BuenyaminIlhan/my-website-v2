@@ -7,13 +7,14 @@ import { AboutMe } from '../about-me/about-me';
 import { Stats } from '../stats/stats';
 import { Skills } from '../skills/skills';
 import { Portfolio } from '../portfolio/portfolio';
+import { Testimonials } from '../testimonials/testimonials';
 import { Contact } from '../contact/contact';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Offerings, Process, AboutMe, Stats, Skills, Portfolio, Faq, Contact],
+  imports: [Hero, Offerings, Process, AboutMe, Stats, Skills, Portfolio, Testimonials, Faq, Contact],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
