@@ -28,4 +28,18 @@ export class SeoService {
     const canonical = this.document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (canonical) canonical.href = url;
   }
+
+  /** Injects page-specific JSON-LD (e.g. BlogPosting). One slot: a new call replaces the previous script. */
+  setJsonLd(data: object) {
+    this.clearJsonLd();
+    const script = this.document.createElement('script');
+    script.id = 'page-jsonld';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(data);
+    this.document.head.appendChild(script);
+  }
+
+  clearJsonLd() {
+    this.document.getElementById('page-jsonld')?.remove();
+  }
 }

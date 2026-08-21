@@ -1,0 +1,19 @@
+<div class="blog-page section-padding">
+  <span class="eyebrow">Blog</span>
+  <h1>Ehrliche Antworten vor dem Website-Projekt</h1>
+  <p class="page-sub">
+    Die Fragen, die sich Unternehmen vor der Beauftragung stellen — beantwortet ohne Fachchinesisch
+    und ohne Verkaufsdruck.
+  </p>
+
+  <div class="article-list">
+    @for (article of articles; track article.slug) {
+      <a class="article-card" [routerLink]="'/blog/' + article.slug">
+        <span class="article-meta">{{ article.dateDisplay }} · {{ article.readingMinutes }} Min. Lesezeit</span>
+        <h2>{{ article.title }}</h2>
+        <p>{{ article.teaser }}</p>
+        <span class="read-more">Artikel lesen →</span>
+      </a>
+    }
+  </div>
+</div>

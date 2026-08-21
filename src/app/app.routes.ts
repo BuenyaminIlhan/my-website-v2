@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { blogArticles } from './blog/blog-data';
 
 export const routes: Routes = [
   {
@@ -40,6 +41,18 @@ export const routes: Routes = [
     data: { slug: 'sorglos-paket' },
     loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
   },
+  {
+    path: 'blog',
+    title: 'Blog — Websites & digitale Tipps für Unternehmen | Bünyamin Ilhan',
+    loadComponent: () => import('./blog/blog-index').then(m => m.BlogIndex),
+  },
+  // One static route per article so prerendering picks them up (outputMode: static)
+  ...blogArticles.map(article => ({
+    path: 'blog/' + article.slug,
+    title: article.metaTitle,
+    data: { slug: article.slug },
+    loadComponent: () => import('./blog/blog-article').then(m => m.BlogArticlePage),
+  })),
   {
     path: '404',
     title: 'Seite nicht gefunden — Bünyamin Ilhan',

@@ -1,0 +1,54 @@
+<article class="blog-page article section-padding">
+  <a routerLink="/blog" class="back-link">← Alle Artikel</a>
+
+  <span class="article-meta">{{ article.dateDisplay }} · {{ article.readingMinutes }} Min. Lesezeit</span>
+  <h1>{{ article.title }}</h1>
+
+  @for (paragraph of article.intro; track paragraph) {
+    <p class="intro">{{ paragraph }}</p>
+  }
+
+  @for (section of article.sections; track section.h2) {
+    <section>
+      <h2>{{ section.h2 }}</h2>
+      @for (paragraph of section.paragraphs; track paragraph) {
+        <p>{{ paragraph }}</p>
+      }
+      @if (section.list) {
+        <ul>
+          @for (item of section.list; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      }
+      @if (section.table; as table) {
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                @for (cell of table.head; track cell) {
+                  <th>{{ cell }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of table.rows; track $index) {
+                <tr>
+                  @for (cell of row; track $index) {
+                    <td>{{ cell }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+
+  <div class="article-cta">
+    <h2>{{ article.ctaTitle }}</h2>
+    <p>{{ article.ctaText }}</p>
+    <a routerLink="/" fragment="contact" class="btn-primary">Kostenloses Erstgespräch</a>
+  </div>
+</article>

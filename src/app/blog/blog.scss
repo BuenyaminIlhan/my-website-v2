@@ -1,0 +1,189 @@
+/* Shared styles for blog index and article pages */
+.blog-page {
+  padding-top: 120px;
+  padding-bottom: 6rem;
+  max-width: 860px;
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: "Overpass", sans-serif;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 3rem;
+    transition: opacity 150ms;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  .eyebrow {
+    display: block;
+    font-family: "Overpass", sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: "Syne", sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    text-wrap: balance;
+  }
+
+  .page-sub {
+    font-family: "Overpass", sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--dim);
+    margin-bottom: 3.5rem;
+    max-width: 620px;
+  }
+
+  h2 {
+    font-family: "Syne", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  p, li {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    max-width: 680px;
+  }
+
+  .intro {
+    font-size: 1.02rem;
+    color: var(--text);
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+
+    li::marker { color: var(--accent); }
+  }
+
+  .article-meta {
+    display: block;
+    font-family: "Overpass", sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    color: var(--dim);
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Index: article cards */
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.article-card {
+  display: block;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: border-color 250ms ease, transform 250ms ease;
+
+  &:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  h2 {
+    margin-top: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0.6rem;
+  }
+
+  .read-more {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+}
+
+/* Article: table + CTA */
+.table-scroll {
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+
+.article table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 560px;
+  font-family: "Overpass", sans-serif;
+  font-size: 0.9rem;
+
+  th, td {
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  th {
+    font-family: "Syne", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border-bottom: 2px solid var(--border-2);
+  }
+
+  td { color: var(--muted); }
+  td:first-child { color: var(--text); font-weight: 600; }
+}
+
+.article-cta {
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px solid var(--border-2);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+
+  h2 {
+    margin-top: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.btn-primary {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.9rem 2rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Overpass", sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 200ms ease;
+
+  &:hover { background: var(--accent-h); }
+}
