@@ -45,7 +45,7 @@ export interface LangTranslations {
   faq:       { label: string; title: string; sub: string; items: { q: string; a: string }[] };
   about:     { label: string; title1: string; title2: string; p1: string; p2: string; p3: string; p4: string; cta: string };
   skills:    { label: string; title: string };
-  portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string };
+  portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string; liveProduct: string };
   contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; topic: string; topicGeneral: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string };
   notFound:  { title: string; sub: string; home: string; contact: string };
   footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string };
@@ -163,7 +163,7 @@ const translations: Record<Lang, LangTranslations> = {
     portfolio: {
       label: 'Selected work', title: 'My portfolio',
       sub: 'A selection of my projects — see for yourself what your solution could look like.',
-      demo: 'Live Demo', pitch: 'Pitch', github: 'GitHub',
+      demo: 'Live Demo', pitch: 'Pitch', github: 'GitHub', liveProduct: 'Live product',
     },
     testimonials: {
       label: 'Client voices',
@@ -380,7 +380,7 @@ const translations: Record<Lang, LangTranslations> = {
     portfolio: {
       label: 'Ausgewählte Projekte', title: 'Mein Portfolio',
       sub: 'Eine Auswahl meiner Projekte — sehen Sie selbst, wie Ihre Lösung aussehen könnte.',
-      demo: 'Live-Demo', pitch: 'Pitch', github: 'GitHub',
+      demo: 'Live-Demo', pitch: 'Pitch', github: 'GitHub', liveProduct: 'Live im Einsatz',
     },
     testimonials: {
       label: 'Kundenstimmen',

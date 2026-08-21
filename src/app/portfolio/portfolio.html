@@ -19,7 +19,7 @@
 
     <div class="preview-panel" [class.fading]="fading()" [appReveal]="280">
       <a class="preview-image"
-         [href]="activeProject().demoUrl ?? activeProject().githubUrl"
+         [href]="activeProject().demoUrl ?? activeProject().githubUrl ?? '#'"
          target="_blank"
          rel="noopener"
          [attr.aria-label]="activeProject().title">
@@ -31,6 +31,9 @@
       </a>
       <div class="preview-body">
         <div class="preview-stack">
+          @if (activeProject().isLiveProduct) {
+            <span class="tag tag-live">{{ lang.t().portfolio.liveProduct }}</span>
+          }
           @for (tag of activeProject().stack; track tag) {
             <span class="tag">{{ tag }}</span>
           }
@@ -43,7 +46,9 @@
           @if (activeProject().pitchUrl) {
             <a [href]="activeProject().pitchUrl" target="_blank" class="link-btn">{{ lang.t().portfolio.pitch }}</a>
           }
-          <a [href]="activeProject().githubUrl" target="_blank" class="link-btn link-ghost">{{ lang.t().portfolio.github }}</a>
+          @if (activeProject().githubUrl; as githubUrl) {
+            <a [href]="githubUrl" target="_blank" class="link-btn link-ghost">{{ lang.t().portfolio.github }}</a>
+          }
         </div>
       </div>
     </div>

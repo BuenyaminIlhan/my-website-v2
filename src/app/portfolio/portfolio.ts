@@ -11,7 +11,8 @@ interface Project {
   image: string;
   demoUrl?: string;
   pitchUrl?: string;
-  githubUrl: string;
+  githubUrl?: string;
+  isLiveProduct?: boolean;
 }
 
 @Component({
@@ -27,7 +28,16 @@ export class Portfolio {
 
   readonly projects: Project[] = [
     {
-      index: '01', title: 'Zephir',
+      index: '01', title: 'HausVio',
+      stack: ['Angular', 'TypeScript', 'SaaS', 'DSGVO'],
+      description: 'Property management software for German homeowner associations (WEG) — annual statements at the push of a button, income and expense tracking, cost allocation keys. A complete SaaS product, live in production: from concept and design to development, hosting and operations.',
+      descriptionDe: 'Hausverwaltungs-Software für Wohnungseigentümergemeinschaften — Jahresabrechnung auf Knopfdruck, Einnahmen- und Ausgabenverwaltung, Umlageschlüssel. Ein komplettes SaaS-Produkt, live im Einsatz: von Konzept und Design über Entwicklung bis zu Hosting und Betrieb.',
+      image: 'assets/img/HausVio.webp',
+      demoUrl: 'https://hausvio.de/',
+      isLiveProduct: true,
+    },
+    {
+      index: '02', title: 'Zephir',
       stack: ['Swift', 'SwiftUI', 'Firebase', 'Google API'],
       description: 'Your Quotation App – Everything at a Glance. Helps small businesses create professional quotes instantly, saving time and boosting productivity on any device.',
       descriptionDe: 'Deine Angebots-App – alles auf einen Blick. Hilft kleinen Unternehmen, professionelle Angebote sofort zu erstellen und spart Zeit auf jedem Gerät.',
@@ -36,7 +46,7 @@ export class Portfolio {
       githubUrl: 'https://github.com/SI-Classroom-Batch-019/abschlussprojekt-BuenyaminIlhan',
     },
     {
-      index: '02', title: 'Labbayk',
+      index: '03', title: 'Labbayk',
       stack: ['Kotlin', 'Jetpack Compose', 'Room DB'],
       description: 'The Quran in Different Languages. Always free and available offline in 90 languages for recitation and reference.',
       descriptionDe: 'Der Quran in verschiedenen Sprachen. Immer kostenlos und offline in 90 Sprachen verfügbar.',
@@ -45,7 +55,7 @@ export class Portfolio {
       githubUrl: 'https://github.com/BuenyaminIlhan/Labbayk/tree/master',
     },
     {
-      index: '03', title: 'Join',
+      index: '04', title: 'Join',
       stack: ['JavaScript', 'HTML', 'CSS'],
       description: 'Task manager inspired by the Kanban System. Create and organise tasks using drag and drop, assign users and categories.',
       descriptionDe: 'Aufgaben-Manager nach dem Kanban-Prinzip. Aufgaben per Drag & Drop erstellen, Nutzer und Kategorien zuweisen.',
@@ -54,7 +64,7 @@ export class Portfolio {
       githubUrl: 'https://github.com/BuenyaminIlhan/Join-Kanban',
     },
     {
-      index: '04', title: 'Sharkie',
+      index: '05', title: 'Sharkie',
       stack: ['JavaScript', 'HTML', 'CSS'],
       description: "Embark on a simple game driven by an object-oriented approach. Join Sharkie's adventure to uncover poisons and take on the enraged Shark End Boss.",
       descriptionDe: 'Ein einfaches Spiel mit objektorientiertem Ansatz. Begleite Sharkie auf seinem Abenteuer gegen den wütenden Hai-Endboss.',
@@ -63,7 +73,7 @@ export class Portfolio {
       githubUrl: 'https://github.com/BuenyaminIlhan/Sharkie',
     },
     {
-      index: '05', title: 'DA-Bubble',
+      index: '06', title: 'DA-Bubble',
       stack: ['Angular', 'TypeScript', 'Firebase', 'SCSS'],
       description: 'Slack Clone — authentication via Google, chatting in channels, replying in threads. Google Firebase as the backend.',
       descriptionDe: 'Slack-Klon — Google-Authentifizierung, Chatten in Channels, Antworten in Threads. Google Firebase als Backend.',

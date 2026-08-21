@@ -175,6 +175,12 @@
   border: 1px solid var(--border-2);
 }
 
+.tag-live {
+  color: var(--accent);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
 .preview-desc {
   font-family: "Overpass", sans-serif;
   font-size: 0.9rem;
