@@ -107,4 +107,70 @@ export const blogArticles: BlogArticle[] = [
     ctaText:
       'Im kostenlosen Erstgespräch bekommen Sie eine ehrliche Einschätzung und danach ein transparentes Angebot — zugeschnitten auf Ihren Betrieb, ohne versteckte Kosten.',
   },
+  {
+    slug: 'website-relaunch-5-anzeichen',
+    title: '5 Anzeichen, dass Ihre Website ein Update braucht',
+    metaTitle: '5 Anzeichen für ein Website-Redesign — Checkliste 2026',
+    metaDescription:
+      'Lädt Ihre Website langsam, sieht veraltet aus oder bringt kaum noch Anfragen? 5 klare Anzeichen, an denen Sie erkennen, ob sich eine Modernisierung lohnt.',
+    dateIso: '2026-08-22',
+    dateDisplay: '22. August 2026',
+    readingMinutes: 5,
+    teaser:
+      'Eine Website, die vor Jahren gut war, ist nicht automatisch schlecht — aber oft auch nicht mehr das, was sie sein könnte. Diese fünf Anzeichen zeigen, wann sich ein genauerer Blick lohnt.',
+    intro: [
+      'Die meisten Websites werden nicht schlagartig schlecht — sie veralten schleichend. Das Design wirkt irgendwann nicht mehr zeitgemäß, die Ladezeit wird spürbar länger, und die Zahl der Anfragen über die Website nimmt langsam ab, ohne dass ein einzelner Grund erkennbar wäre. Weil dieser Prozess so langsam verläuft, fällt er den Betreibern selbst oft am wenigsten auf.',
+      'Die folgenden fünf Anzeichen helfen bei der ehrlichen Einordnung: Wenn mehrere davon zutreffen, lohnt sich zumindest eine genauere Analyse — nicht zwingend ein kompletter Neubau, aber ein gezielter Blick auf das, was die Website heute leistet und was sie leisten könnte.',
+    ],
+    sections: [
+      {
+        h2: '1. Die Website lädt spürbar langsam — besonders auf dem Handy',
+        paragraphs: [
+          'Wenn eine Seite erkennbar Zeit braucht, bis Inhalte erscheinen, oder Elemente beim Laden noch sichtbar herumspringen, ist das kein rein kosmetisches Problem: Es kostet Besucher, bevor diese überhaupt gesehen haben, was Sie anbieten. Gerade auf dem Smartphone — für die meisten Betriebe mittlerweile die Mehrheit des Traffics — fällt eine langsame Seite besonders auf.',
+          'Ein guter erster Check: Öffnen Sie Ihre eigene Website auf dem Handy über eine mobile Verbindung statt WLAN. Wenn Sie dabei selbst ungeduldig werden, geht es Ihren potenziellen Kunden nicht anders.',
+        ],
+      },
+      {
+        h2: '2. Das Design wirkt wie aus einer anderen Zeit',
+        paragraphs: [
+          'Webdesign entwickelt sich weiter — Schriften, Bildsprache, Aufbau von Startseiten. Eine Website, die vor sieben oder acht Jahren modern aussah, wirkt heute oft angestaubt, selbst wenn inhaltlich alles stimmt. Das ist ein Vertrauensproblem: Besucher übertragen den Eindruck der Website unbewusst auf den Betrieb dahinter. Eine veraltete Seite suggeriert schnell einen veralteten Betrieb — unabhängig davon, ob das stimmt.',
+        ],
+      },
+      {
+        h2: '3. Sie taucht bei Google kaum noch auf',
+        paragraphs: [
+          'Suchmaschinenoptimierung ist kein einmaliger Zustand, sondern ein bewegliches Ziel: Google passt seine Bewertungskriterien laufend an, und die Konkurrenz investiert weiter in ihre eigenen Websites. Eine Seite, die vor Jahren gut platziert war und seitdem unverändert blieb, verliert über die Zeit fast zwangsläufig an Sichtbarkeit — nicht, weil sie schlechter geworden ist, sondern weil andere aufgeholt haben.',
+          'Ein einfacher Test: Suchen Sie bei Google nach Ihren wichtigsten Leistungen in Verbindung mit Ihrem Ort. Wenn Sie sich selbst erst auf Seite zwei oder drei finden, ist das ein klares Signal.',
+        ],
+      },
+      {
+        h2: '4. Inhalte sind veraltet, unvollständig oder ohne klare nächste Schritte',
+        paragraphs: [
+          'Alte Preise, ein Team-Foto mit ausgeschiedenen Mitarbeitenden, Leistungen, die es längst nicht mehr gibt — solche Details wirken einzeln harmlos, summieren sich aber zu einem unfertigen Eindruck. Genauso wichtig: Führt die Website den Besucher zu einer klaren Handlung? Eine Seite ohne erkennbaren nächsten Schritt — anrufen, Formular ausfüllen, Angebot anfragen — verschenkt Anfragen, selbst wenn der Inhalt an sich in Ordnung ist.',
+        ],
+      },
+      {
+        h2: '5. Auf dem Smartphone lässt sie sich schlecht bedienen',
+        paragraphs: [
+          'Zu kleine Buttons, Text, der auf dem Handy erst durch Zoomen lesbar wird, Formulare, die sich kaum ausfüllen lassen: Was auf dem großen Bildschirm harmlos aussieht, wird auf dem Handy schnell zum Hindernis. Da ein Großteil der Suchanfragen heute mobil erfolgt, entscheidet die mobile Bedienbarkeit oft direkt darüber, ob aus einem Besuch eine Anfrage wird.',
+        ],
+      },
+      {
+        h2: 'Muss es gleich ein kompletter Neubau sein?',
+        paragraphs: [
+          'Nicht unbedingt. Wenn nur ein oder zwei der Anzeichen zutreffen, reicht oft eine gezielte Modernisierung: schnellere Bilder, aktualisierte Inhalte, technische Nacharbeit bei der Ladezeit. Treffen mehrere Punkte gleichzeitig zu — vor allem veraltetes Design in Kombination mit schwacher Sichtbarkeit bei Google — lohnt sich meist ein ehrlicher Blick auf einen Neuaufbau, weil sich viele kleine Korrekturen an einer grundlegend alten Struktur sonst kaum noch lohnen.',
+          'In beiden Fällen gilt: Eine Analyse vor der Entscheidung kostet Sie nichts außer einem kurzen Gespräch — und erspart Ihnen, in die falsche Richtung zu investieren.',
+        ],
+      },
+      {
+        h2: 'Fazit',
+        paragraphs: [
+          'Keines dieser fünf Anzeichen ist für sich genommen dramatisch. In Kombination zeigen sie aber recht zuverlässig, ob eine Website noch das leistet, was sie könnte — oder ob sie mittlerweile eher bremst als hilft. Der erste Schritt ist nicht die Entscheidung für ein Redesign, sondern eine ehrliche Bestandsaufnahme.',
+        ],
+      },
+    ],
+    ctaTitle: 'Nicht sicher, wo Ihre Website steht?',
+    ctaText:
+      'Schicken Sie mir Ihre URL — Sie erhalten eine ehrliche Einschätzung, was sich lohnt zu verbessern, und ob ein Redesign überhaupt nötig ist.',
+  },
 ];
