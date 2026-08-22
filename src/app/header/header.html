@@ -2,8 +2,9 @@
 
 <header [class.scrolled]="scrolled()">
   <div class="header-inner section-padding">
-    <a routerLink="/" (click)="scrollToTop()" class="logo" aria-label="Bünyamin Ilhan">
-      <span class="logo-bracket">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket">]</span>
+    <a routerLink="/" (click)="scrollToTop()" class="logo">
+      <span class="logo-bracket" aria-hidden="true">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket" aria-hidden="true">]</span>
+      <span class="sr-only"> – Bünyamin Ilhan</span>
     </a>
 
     <!-- Desktop navigation -->
@@ -20,9 +21,10 @@
       <button class="header-cta" (click)="navigateTo('contact')">{{ lang.t().nav.cta }}</button>
 
       <!-- Language toggle -->
-      <button class="lang-btn" (click)="lang.toggle()" [attr.aria-label]="lang.current() === 'en' ? 'Deutsch' : 'English'">
+      <button class="lang-btn" (click)="lang.toggle()">
+        <span class="sr-only">{{ lang.current() === 'en' ? 'Switch language to German' : 'Sprache wechseln zu Englisch' }}: </span>
         <span [class.lang-active]="lang.current() === 'en'">EN</span>
-        <span class="lang-sep">/</span>
+        <span class="lang-sep" aria-hidden="true">/</span>
         <span [class.lang-active]="lang.current() === 'de'">DE</span>
       </button>
 

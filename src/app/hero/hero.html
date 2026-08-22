@@ -20,7 +20,8 @@
 
       <p class="hero-sub">
         <span class="sr-only">{{ lang.t().hero.sub }}</span>
-        <span aria-hidden="true">{{ displayed() }}<span class="type-cursor" [class.hidden]="!cursorVisible()">|</span></span>
+        <span class="type-sizer" aria-hidden="true">{{ lang.t().hero.sub }}</span>
+        <span class="type-display" aria-hidden="true">{{ displayed() }}<span class="type-cursor" [class.hidden]="!cursorVisible()">|</span></span>
       </p>
 
       <div class="hero-cta">
