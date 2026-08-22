@@ -79,7 +79,7 @@ header {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .desktop-nav { display: none; }
 }
 
@@ -106,7 +106,7 @@ header {
 
   &:hover { background: var(--accent-h); transform: translateY(-1px); }
 
-  @media (max-width: 860px) { display: none; }
+  @media (max-width: 1100px) { display: none; }
 }
 
 /* Language toggle: "EN / DE" text style */
@@ -193,7 +193,7 @@ header {
   &:hover span { background: var(--accent); }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1101px) {
   .burger { display: none; }
   .nav-overlay { display: none !important; }
 }
