@@ -1,0 +1,138 @@
+import { Lang, LangTranslations } from './translations';
+import { urlPathFor } from './route-map';
+import { SITE_CONFIG } from '../config/site.config';
+
+const BASE = SITE_CONFIG.baseUrl;
+
+const PERSON_DESC: Record<Lang, string> = {
+  de: 'Web- und App-Entwickler aus Siegburg. Entwickelt moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift und Kotlin.',
+  en: 'Web and app developer based in Siegburg, Germany. Builds modern websites, web apps and native iOS & Android apps with Angular, Swift and Kotlin.',
+  tr: 'Almanya/Siegburg merkezli web ve uygulama geliştiricisi. Angular, Swift ve Kotlin ile modern web siteleri, web uygulamaları ve native iOS & Android uygulamaları geliştirir.',
+};
+
+const SERVICE_DESC: Record<Lang, string> = {
+  de: 'Entwicklung von Websites, Web-Apps und nativen Apps für iOS und Android — modern, performant und maßgeschneidert.',
+  en: 'Development of websites, web apps and native apps for iOS and Android — modern, performant and tailor-made.',
+  tr: 'Web siteleri, web uygulamaları ve iOS/Android için native uygulama geliştirme — modern, yüksek performanslı ve size özel.',
+};
+
+const APP_OFFER: Record<Lang, { name: string; description: string }> = {
+  de: { name: 'App entwickeln (iOS & Android)', description: 'Native Mobile Apps mit Swift (iOS) und Kotlin (Android) — inklusive Veröffentlichung im App Store und Play Store.' },
+  en: { name: 'Mobile app development (iOS & Android)', description: 'Native mobile apps with Swift (iOS) and Kotlin (Android) — including App Store and Play Store publishing.' },
+  tr: { name: 'Mobil uygulama geliştirme (iOS & Android)', description: 'Swift (iOS) ve Kotlin (Android) ile native mobil uygulamalar — App Store ve Play Store yayını dahil.' },
+};
+
+const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services', tr: 'Hizmetler' };
+
+/** Localized site-wide JSON-LD @graph, injected on the home page of each locale. */
+export function buildSiteGraph(lang: Lang, t: LangTranslations): object {
+  const homeUrl = BASE + '/' + (urlPathFor('home', lang) || '');
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Person',
+        '@id': `${BASE}/#person`,
+        name: 'Bünyamin Ilhan',
+        url: BASE,
+        email: SITE_CONFIG.email,
+        jobTitle: 'Web- & App-Entwickler',
+        description: PERSON_DESC[lang],
+        image: `${BASE}/assets/img/Profile_2.jpg`,
+        knowsAbout: ['Webentwicklung', 'App-Entwicklung', 'Web-App-Entwicklung', 'Angular', 'TypeScript', 'Swift', 'Kotlin', 'iOS', 'Android', 'Frontend-Entwicklung'],
+        knowsLanguage: ['de', 'en', 'tr'],
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Siegburg',
+          addressRegion: 'Nordrhein-Westfalen',
+          addressCountry: 'DE',
+        },
+        sameAs: [
+          'https://github.com/BuenyaminIlhan',
+          'https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/',
+        ],
+      },
+      {
+        '@type': 'ProfessionalService',
+        '@id': `${BASE}/#service`,
+        name: 'Bünyamin Ilhan — Web- & App-Entwicklung',
+        url: BASE,
+        founder: { '@id': `${BASE}/#person` },
+        description: SERVICE_DESC[lang],
+        areaServed: ['DE', 'TR'],
+        knowsLanguage: ['de', 'en', 'tr'],
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Siegburg',
+          addressRegion: 'Nordrhein-Westfalen',
+          addressCountry: 'DE',
+        },
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: CATALOG_NAME[lang],
+          itemListElement: [
+            ...t.offers.items.map(item => ({
+              '@type': 'Offer',
+              itemOffered: { '@type': 'Service', name: item.title, description: item.desc },
+            })),
+            {
+              '@type': 'Offer',
+              itemOffered: { '@type': 'Service', name: APP_OFFER[lang].name, description: APP_OFFER[lang].description },
+            },
+          ],
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${homeUrl}#faq`,
+        mainEntity: t.faq.items.map(item => ({
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${BASE}/#website`,
+        url: BASE,
+        name: 'Bünyamin Ilhan — Portfolio',
+        author: { '@id': `${BASE}/#person` },
+        inLanguage: lang,
+      },
+      {
+        '@type': 'ProfilePage',
+        '@id': `${homeUrl}#profilepage`,
+        url: homeUrl,
+        name: 'Bünyamin Ilhan — Web- & App-Entwickler',
+        isPartOf: { '@id': `${BASE}/#website` },
+        mainEntity: { '@id': `${BASE}/#person` },
+        inLanguage: lang,
+      },
+      {
+        '@type': 'ItemList',
+        '@id': `${BASE}/#projects`,
+        name: 'Portfolio',
+        author: { '@id': `${BASE}/#person` },
+        itemListElement: [
+          { pos: 1, type: 'WebApplication', name: 'HausVio', url: 'https://hausvio.de/', category: 'BusinessApplication' },
+          { pos: 2, type: 'WebApplication', name: 'Badeo', url: 'https://badeo.net/', category: 'BusinessApplication' },
+          { pos: 3, type: 'SoftwareApplication', name: 'Labbayk', url: undefined, category: 'LifestyleApplication' },
+          { pos: 4, type: 'WebApplication', name: 'Join', url: `${BASE}/Join-Kanban/`, category: undefined },
+          { pos: 5, type: 'WebApplication', name: 'Sharkie', url: `${BASE}/Sharkie/`, category: undefined },
+          { pos: 6, type: 'WebApplication', name: 'DA-Bubble', url: 'https://da-bubble.ilhan-buenyamin.com/', category: undefined },
+        ].map(p => ({
+          '@type': 'ListItem',
+          position: p.pos,
+          item: {
+            '@type': p.type,
+            name: p.name,
+            ...(p.url ? { url: p.url } : {}),
+            ...(p.category ? { applicationCategory: p.category } : {}),
+            author: { '@id': `${BASE}/#person` },
+          },
+        })),
+      },
+    ],
+  };
+}

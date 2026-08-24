@@ -3,7 +3,7 @@
   <h1>{{ lang.t().notFound.title }}</h1>
   <p class="nf-sub">{{ lang.t().notFound.sub }}</p>
   <div class="nf-actions">
-    <a routerLink="/" class="btn-primary">{{ lang.t().notFound.home }}</a>
-    <a routerLink="/" fragment="contact" class="btn-ghost">{{ lang.t().notFound.contact }}</a>
+    <a [routerLink]="lang.link('/')" class="btn-primary">{{ lang.t().notFound.home }}</a>
+    <a [routerLink]="lang.link('/')" fragment="contact" class="btn-ghost">{{ lang.t().notFound.contact }}</a>
   </div>
 </section>

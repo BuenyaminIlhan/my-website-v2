@@ -7,12 +7,12 @@
     (pointermove)="onFabPointerMove($event)"
     (pointerup)="onFabPointerUp()"
     (click)="onFabClick()"
-    aria-label="Back to top">↑</button>
+    [attr.aria-label]="lang.t().a11y.backToTop">↑</button>
 }
 
 <footer class="section-padding">
   <div class="footer-top">
-    <a routerLink="/" (click)="scrollToTop()" class="footer-logo">
+    <a [routerLink]="lang.link('/')" (click)="scrollToTop()" class="footer-logo">
       <span class="logo-bracket" aria-hidden="true">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket" aria-hidden="true">]</span>
       <span class="sr-only"> – Bünyamin Ilhan</span>
     </a>
@@ -23,7 +23,7 @@
       <p class="col-title">{{ lang.t().footer.servicesTitle }}</p>
       <nav class="col-links">
         @for (item of lang.t().offers.items; track item.title) {
-          <a [routerLink]="'/' + item.slug">{{ item.title }}</a>
+          <a [routerLink]="lang.pagePath(item.slug)">{{ item.title }}</a>
         }
       </nav>
     </div>
@@ -46,11 +46,13 @@
     <span class="copyright">© {{ year }} Bünyamin Ilhan</span>
 
     <nav class="footer-nav">
-      <a routerLink="/blog">Blog</a>
+      @if (lang.current() !== 'en') {
+        <a [routerLink]="lang.pagePath('blog')">Blog</a>
+        <span class="sep">·</span>
+      }
+      <a [routerLink]="lang.pagePath('legal')">{{ lang.t().footer.legal }}</a>
       <span class="sep">·</span>
-      <a routerLink="/legal-notice">{{ lang.t().footer.legal }}</a>
-      <span class="sep">·</span>
-      <a routerLink="/privacy-policy">{{ lang.t().footer.privacy }}</a>
+      <a [routerLink]="lang.pagePath('privacy')">{{ lang.t().footer.privacy }}</a>
     </nav>
 
     <div class="footer-social">

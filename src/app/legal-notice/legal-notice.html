@@ -1,26 +1,74 @@
 <div class="legal-page section-padding">
-  <a routerLink="/" class="back-link">{{ lang.t().footer.back }}</a>
+  <a [routerLink]="lang.link('/')" class="back-link">{{ lang.t().footer.back }}</a>
 
   <h1>{{ lang.t().footer.legal }}</h1>
 
-  <h2>Angaben gem&auml;&szlig; &sect; 5 DDG</h2>
-  <p>B&uuml;nyamin Ilhan<br />
-    Beethovenstr. 13<br />
-    53721 Siegburg</p>
+  @switch (lang.current()) {
+    @case ('de') {
+      <h2>Angaben gem&auml;&szlig; &sect; 5 DDG</h2>
+      <p>B&uuml;nyamin Ilhan<br />
+        Beethovenstr. 13<br />
+        53721 Siegburg</p>
 
-  <h2>Kontakt</h2>
-  <p>Telefon: 01732856136<br />
-    E-Mail: mail&#64;ilhan-buenyamin.com</p>
+      <h2>Kontakt</h2>
+      <p>Telefon: 01732856136<br />
+        E-Mail: mail&#64;ilhan-buenyamin.com</p>
 
-  <h2>Umsatzsteuer-ID</h2>
-  <p>Umsatzsteuer-Identifikationsnummer gem&auml;&szlig; &sect; 27a Umsatzsteuergesetz:<br />
-    DE365661578</p>
+      <h2>Umsatzsteuer-ID</h2>
+      <p>Umsatzsteuer-Identifikationsnummer gem&auml;&szlig; &sect; 27a Umsatzsteuergesetz:<br />
+        DE365661578</p>
 
-  <h2>Redaktionell verantwortlich</h2>
-  <p>B&uuml;nyamin Ilhan</p>
+      <h2>Redaktionell verantwortlich</h2>
+      <p>B&uuml;nyamin Ilhan</p>
 
-  <h2>Verbraucher&shy;streit&shy;beilegung</h2>
-  <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+      <h2>Verbraucher&shy;streit&shy;beilegung</h2>
+      <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
 
-  <p>Quelle: <a href="https://www.e-recht24.de" target="_blank" rel="noopener">e-recht24.de</a></p>
+      <p>Quelle: <a href="https://www.e-recht24.de" target="_blank" rel="noopener">e-recht24.de</a></p>
+    }
+    @case ('en') {
+      <p class="legal-note"><em>This translation is provided for convenience. The <a routerLink="/legal-notice">German version</a> is legally authoritative.</em></p>
+
+      <h2>Information pursuant to &sect; 5 DDG (German Digital Services Act)</h2>
+      <p>B&uuml;nyamin Ilhan<br />
+        Beethovenstr. 13<br />
+        53721 Siegburg, Germany</p>
+
+      <h2>Contact</h2>
+      <p>Phone: +49 173 2856136<br />
+        Email: mail&#64;ilhan-buenyamin.com</p>
+
+      <h2>VAT ID</h2>
+      <p>VAT identification number pursuant to &sect; 27a of the German VAT Act:<br />
+        DE365661578</p>
+
+      <h2>Editorially responsible</h2>
+      <p>B&uuml;nyamin Ilhan</p>
+
+      <h2>Consumer dispute resolution</h2>
+      <p>We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.</p>
+    }
+    @case ('tr') {
+      <p class="legal-note"><em>Bu &ccedil;eviri bilgilendirme ama&ccedil;l&#305;d&#305;r. Hukuken ba&#287;lay&#305;c&#305; olan <a routerLink="/legal-notice">Almanca s&uuml;r&uuml;md&uuml;r</a>.</em></p>
+
+      <h2>&sect; 5 DDG (Alman Dijital Hizmetler Yasas&#305;) uyar&#305;nca bilgiler</h2>
+      <p>B&uuml;nyamin Ilhan<br />
+        Beethovenstr. 13<br />
+        53721 Siegburg, Almanya</p>
+
+      <h2>&#304;leti&#351;im</h2>
+      <p>Telefon: +49 173 2856136<br />
+        E-posta: mail&#64;ilhan-buenyamin.com</p>
+
+      <h2>KDV Kimlik Numaras&#305;</h2>
+      <p>Alman KDV Kanunu &sect; 27a uyar&#305;nca KDV kimlik numaras&#305;:<br />
+        DE365661578</p>
+
+      <h2>&#304;&ccedil;erikten sorumlu</h2>
+      <p>B&uuml;nyamin Ilhan</p>
+
+      <h2>T&uuml;keticiler i&ccedil;in uyu&#351;mazl&#305;k &ccedil;&ouml;z&uuml;m&uuml;</h2>
+      <p>Bir t&uuml;ketici hakem heyeti &ouml;n&uuml;nde uyu&#351;mazl&#305;k &ccedil;&ouml;z&uuml;m s&uuml;recine kat&#305;lmaya istekli veya y&uuml;k&uuml;ml&uuml; de&#287;iliz.</p>
+    }
+  }
 </div>

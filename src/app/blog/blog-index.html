@@ -1,18 +1,15 @@
 <div class="blog-page section-padding">
-  <span class="eyebrow">Blog</span>
-  <h1>Ehrliche Antworten vor dem Website-Projekt</h1>
-  <p class="page-sub">
-    Die Fragen, die sich Unternehmen vor der Beauftragung stellen — beantwortet ohne Fachchinesisch
-    und ohne Verkaufsdruck.
-  </p>
+  <span class="eyebrow">{{ lang.t().blogUi.eyebrow }}</span>
+  <h1>{{ lang.t().blogUi.h1 }}</h1>
+  <p class="page-sub">{{ lang.t().blogUi.sub }}</p>
 
   <div class="article-list">
-    @for (article of articles; track article.slug) {
-      <a class="article-card" [routerLink]="'/blog/' + article.slug">
-        <span class="article-meta">{{ article.dateDisplay }} · {{ article.readingMinutes }} Min. Lesezeit</span>
-        <h2>{{ article.title }}</h2>
-        <p>{{ article.teaser }}</p>
-        <span class="read-more">Artikel lesen →</span>
+    @for (article of articles(); track article.slug) {
+      <a class="article-card" [routerLink]="lang.pagePath('blog') + '/' + article.slug">
+        <span class="article-meta">{{ article.content.dateDisplay }} · {{ article.content.readingMinutes }} {{ lang.t().blogUi.minRead }}</span>
+        <h2>{{ article.content.title }}</h2>
+        <p>{{ article.content.teaser }}</p>
+        <span class="read-more">{{ lang.t().blogUi.readMore }}</span>
       </a>
     }
   </div>

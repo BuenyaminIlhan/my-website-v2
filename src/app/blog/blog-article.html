@@ -1,7 +1,7 @@
 <article class="blog-page article section-padding">
-  <a routerLink="/blog" class="back-link">← Alle Artikel</a>
+  <a [routerLink]="lang.pagePath('blog')" class="back-link">{{ lang.t().blogUi.backToAll }}</a>
 
-  <span class="article-meta">{{ article.dateDisplay }} · {{ article.readingMinutes }} Min. Lesezeit</span>
+  <span class="article-meta">{{ article.dateDisplay }} · {{ article.readingMinutes }} {{ lang.t().blogUi.minRead }}</span>
   <h1>{{ article.title }}</h1>
 
   @for (paragraph of article.intro; track paragraph) {
@@ -49,6 +49,6 @@
   <div class="article-cta">
     <h2>{{ article.ctaTitle }}</h2>
     <p>{{ article.ctaText }}</p>
-    <a routerLink="/" fragment="contact" class="btn-primary">Kostenloses Erstgespräch</a>
+    <a [routerLink]="lang.link('/')" fragment="contact" class="btn-primary">{{ lang.t().blogUi.cta }}</a>
   </div>
 </article>

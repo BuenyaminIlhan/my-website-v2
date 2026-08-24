@@ -1,0 +1,56 @@
+<section id="website-check" class="website-check section-padding">
+  <div class="check-inner">
+    <div class="check-left">
+      <div class="section-label" [appReveal]="0">
+        <span class="label-line"></span>
+        <span>{{ lang.t().websiteCheck.label }}</span>
+      </div>
+      <h2 class="section-title" [appReveal]="100">
+        {{ lang.t().websiteCheck.title }} <span class="accent">{{ lang.t().websiteCheck.titleAccent }}</span>
+      </h2>
+      <p class="check-sub" [appReveal]="150">{{ lang.t().websiteCheck.sub }}</p>
+      <p class="check-note" [appReveal]="180">{{ lang.t().websiteCheck.note }}</p>
+    </div>
+
+    <div class="check-right" [appReveal]="200">
+      @if (sent()) {
+        <div class="success-msg">
+          <span class="success-icon">✓</span>
+          <h3>{{ lang.t().websiteCheck.successTitle }}</h3>
+          <p>{{ lang.t().websiteCheck.successSub }}</p>
+        </div>
+      } @else {
+        <form (submit)="send()" ngNativeValidate>
+          <div class="field">
+            <label for="check-url">{{ lang.t().websiteCheck.urlLabel }}</label>
+            <input id="check-url" type="url" required [placeholder]="lang.t().websiteCheck.urlPh"
+              [ngModel]="url()" (ngModelChange)="url.set($event)" name="url" />
+          </div>
+          <div class="field">
+            <label for="check-name">{{ lang.t().websiteCheck.nameLabel }}</label>
+            <input id="check-name" type="text" required [placeholder]="lang.t().contact.namePh"
+              [ngModel]="name()" (ngModelChange)="name.set($event)" name="name" />
+          </div>
+          <div class="field">
+            <label for="check-email">{{ lang.t().websiteCheck.emailLabel }}</label>
+            <input id="check-email" type="email" required [placeholder]="lang.t().contact.emailPh"
+              [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
+          </div>
+          <div class="field hp-field" aria-hidden="true">
+            <label for="check-website">Website</label>
+            <input id="check-website" type="text" tabindex="-1" autocomplete="off"
+              [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="website" />
+          </div>
+
+          @if (error()) {
+            <p class="error-msg">{{ lang.t().websiteCheck.error }}</p>
+          }
+
+          <button type="submit" class="btn-submit" [disabled]="sending()">
+            {{ sending() ? lang.t().websiteCheck.sending : lang.t().websiteCheck.submit }}
+          </button>
+        </form>
+      }
+    </div>
+  </div>
+</section>

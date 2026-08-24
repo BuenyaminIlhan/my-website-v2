@@ -1,517 +1,67 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID, effect } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
+import { Lang, LangTranslations, SUPPORTED_LOCALES } from '../i18n/translations';
+import { de } from '../i18n/de';
+import { en } from '../i18n/en';
+import { tr } from '../i18n/tr';
+import { PageKey, urlPathFor, blogArticleUrlPath } from '../i18n/route-map';
 
-export type Lang = 'en' | 'de';
+export type { Lang, LangTranslations, OfferItem, ServicePageContent, TestimonialItem } from '../i18n/translations';
 
-export interface OfferItem {
-  title: string;
-  desc: string;
-  points: string[];
-  slug: string;
+const translations: Record<Lang, LangTranslations> = { de, en, tr };
+
+/** Where the visitor currently is, in locale-independent terms — set by the langGuard. */
+interface RouteContext {
+  pageKey: PageKey;
+  articleId?: string;
 }
-
-export interface TestimonialItem {
-  quote: string;
-  author: string;
-  role: string;
-  rating: number;
-}
-
-export interface ServicePageContent {
-  metaTitle: string;
-  metaDescription: string;
-  eyebrow: string;
-  h1: string;
-  lead: string;
-  intro: string[];
-  includedTitle: string;
-  included: string[];
-  forWhoTitle: string;
-  forWho: string;
-  ctaTitle: string;
-  ctaText: string;
-  ctaButton: string;
-  overviewLink: string;
-}
-
-export interface LangTranslations {
-  nav:       { offers: string; about: string; skills: string; portfolio: string; contact: string; legal: string; privacy: string; cta: string; skip: string };
-  hero:      { label: string; title1: string; title2: string; sub: string; cta1: string; cta2: string; scroll: string; badges: string[] };
-  offers:    { label: string; title: string; sub: string; items: OfferItem[]; why: string; priceNote: string; cta: string; mailHint: string; cardCta: string; moreInfo: string };
-  testimonials: { label: string; title: string; sub: string; items: TestimonialItem[] };
-  servicePages: Record<string, ServicePageContent>;
-  process:   { label: string; title: string; sub: string; steps: { title: string; desc: string }[] };
-  faq:       { label: string; title: string; sub: string; items: { q: string; a: string }[] };
-  about:     { label: string; title1: string; title2: string; p1: string; p2: string; p3: string; p4: string; cta: string };
-  skills:    { label: string; title: string };
-  portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string; liveProduct: string };
-  contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; topic: string; topicGeneral: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string };
-  notFound:  { title: string; sub: string; home: string; contact: string };
-  footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string };
-}
-
-const translations: Record<Lang, LangTranslations> = {
-  en: {
-    nav: {
-      offers: 'Services', about: 'About me', skills: 'Skills', portfolio: 'Portfolio',
-      contact: 'Contact', legal: 'Legal notice', privacy: 'Privacy policy', cta: 'Start a project', skip: 'Skip to content',
-    },
-    hero: {
-      label: 'Your partner for digital projects',
-      title1: 'Digital solutions.', title2: 'Real results.',
-      sub: 'I build websites and business web apps that move your company forward — personal, tailor-made, and with genuine attention to detail.',
-      cta1: 'View services', cta2: 'Free consultation', scroll: 'Scroll down',
-      badges: ['100% custom — no website builders', 'SEO & performance included', 'Reply within 24 hours'],
-    },
-    offers: {
-      label: 'What I can do for you',
-      title: 'My services',
-      sub: 'No website builders, no off-the-shelf templates — every project is designed and developed individually for you.',
-      items: [
-        {
-          title: 'Websites that sell',
-          desc: 'Your website is your digital storefront. I create modern, fast, search-engine-optimised websites that turn visitors into customers — and present your brand unmistakably.',
-          points: ['Individual design instead of templates', 'SEO & fast loading included', 'Flawless on every device'],
-          slug: 'website-erstellen-lassen',
-        },
-        {
-          title: 'Business web apps',
-          desc: 'Digitise processes, save time, grow: I develop web applications tailored precisely to your workflows — from internal tools to full customer platforms.',
-          points: ['Custom features for your workflows', 'Modern, future-proof technology', 'Scalable & maintainable'],
-          slug: 'web-app-entwicklung',
-        },
-        {
-          title: 'Optimisation & modernisation',
-          desc: 'Your current website feels dated or loads too slowly? I analyse, optimise and modernise — for better rankings, more inquiries and a fresh appearance.',
-          points: ['Performance analysis', 'SEO optimisation', 'Redesign with substance'],
-          slug: 'website-optimierung',
-        },
-        {
-          title: 'All-in-one care-free package',
-          desc: 'You focus on your business, I take care of your web presence: from the first idea through design and development to maintenance and updates — all from one hand.',
-          points: ['Concept to launch', 'Ongoing support & updates', 'One personal contact'],
-          slug: 'sorglos-paket',
-        },
-      ],
-      why: 'What sets me apart from run-of-the-mill agencies? I listen, I think along with you, and I stand behind my work — with a direct line to me instead of a ticket system.',
-      priceNote: 'Every project is unique — that is why I only quote prices once I know what you really need. Write to me without obligation: you will receive a fair, transparent offer that fits your budget.',
-      cta: 'Request a free quote',
-      mailHint: 'Or reach me directly:',
-      cardCta: 'Inquire',
-      moreInfo: 'Learn more',
-    },
-    process: {
-      label: 'Simple & transparent',
-      title: 'How your project unfolds',
-      sub: 'No surprises, no jargon — you always know where your project stands.',
-      steps: [
-        {
-          title: 'Free consultation',
-          desc: 'You talk, I listen: describe your idea by email or contact form — no obligation, no tech jargon. I get back to you within 24 hours.',
-        },
-        {
-          title: 'Concept & quote',
-          desc: 'I work out a clear proposal that fits your goals and your budget — with a transparent offer. You know exactly where you stand from day one.',
-        },
-        {
-          title: 'Design & development',
-          desc: 'Now your project takes shape: modern, fast and search-engine optimised. You see regular progress and your feedback flows straight in.',
-        },
-        {
-          title: 'Launch & support',
-          desc: 'Your website goes live — tested, optimised and ready to perform. And if you wish, I stay at your side with maintenance, updates and quick answers.',
-        },
-      ],
-    },
-    faq: {
-      label: 'Good to know',
-      title: 'Frequently asked questions',
-      sub: 'The most common questions before a project starts — answered honestly.',
-      items: [
-        {
-          q: 'What does a website or web app cost?',
-          a: 'That depends entirely on the scope — a compact business site costs less than a custom web app. That is why I only quote after the free consultation: you receive a fair, transparent offer with no hidden costs, tailored to your budget.',
-        },
-        {
-          q: 'How long does it take?',
-          a: 'A typical business website is often online within a few weeks; more complex web apps take correspondingly longer. Your quote includes a realistic timeline — and I keep you posted throughout.',
-        },
-        {
-          q: 'What do I need to prepare?',
-          a: 'Just your idea. Everything else — structure, copy, images, technology — we work out together. I guide you step by step, even if you have never commissioned a website before.',
-        },
-        {
-          q: 'Who takes care of the website after launch?',
-          a: 'Entirely up to you: either you maintain it yourself — I will gladly show you how — or you choose the all-in-one package and I keep your website up to date, secure and fast.',
-        },
-        {
-          q: 'Do you also work with existing websites?',
-          a: 'Yes! Slow loading times, dated design or poor Google rankings — I analyse your existing site and modernise it where it counts. Often a lot can be achieved with manageable effort.',
-        },
-      ],
-    },
-    about: {
-      label: 'About me', title1: 'The person', title2: 'behind your project',
-      p1: "Behind every good website is someone who listens. I'm Bünyamin — web and app developer from Siegburg near Cologne/Bonn, and I love turning ideas into digital experiences.",
-      p2: 'My training at a professional software school in Germany and countless projects — from frontend to native apps — taught me one thing: technology is only a means to an end. What counts is that it works for you.',
-      p3: "That's why you won't get off-the-shelf solutions from me, but a partner who thinks along: honest in consultation, precise in execution, and reachable when you need me.",
-      p4: "Whether a new website, a business web app or a fresh look for your existing presence — let's create something together that you are proud of.",
-      cta: 'Get in touch',
-    },
-    skills: { label: 'Tech stack', title: 'My skills' },
-    portfolio: {
-      label: 'Selected work', title: 'My portfolio',
-      sub: 'A selection of my projects — see for yourself what your solution could look like.',
-      demo: 'Live Demo', pitch: 'Pitch', github: 'GitHub', liveProduct: 'Live product',
-    },
-    testimonials: {
-      label: 'Client voices',
-      title: 'What clients say',
-      sub: 'Real feedback from real projects.',
-      items: [],
-    },
-    contact: {
-      label: 'Get in touch', title: "Let's talk about", titleAccent: 'your project',
-      intro: "Tell me about your project — completely without obligation. I usually reply within 24 hours with an honest assessment and the next steps.",
-      name: 'Your name', email: 'Your email', topic: 'Project type', topicGeneral: 'General inquiry', message: 'Your message',
-      namePh: 'John Doe', emailPh: 'john@example.com', messagePh: 'Tell me about your project...',
-      send: 'Send message', sending: 'Sending…',
-      successTitle: 'Message received!', successSub: 'Thank you for your trust — I will get back to you as soon as possible.',
-      sendAnother: 'Send another', error: 'Something went wrong. Please email me directly at mail@ilhan-buenyamin.com.',
-    },
-    footer: {
-      legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!',
-      servicesTitle: 'Services', contactTitle: 'Contact', location: 'Siegburg near Cologne/Bonn',
-      noTracking: 'This website respects your privacy — no cookies, no tracking.',
-    },
-    notFound: {
-      title: 'Page not found',
-      sub: "This page does not exist — but your project could. Let's talk about it.",
-      home: 'Back to home', contact: 'Get in touch',
-    },
-    servicePages: {
-      'website-erstellen-lassen': {
-        metaTitle: 'Website Development — Custom & SEO-Optimised | Bünyamin Ilhan',
-        metaDescription: 'Custom website development for businesses in Siegburg, Cologne, Bonn and NRW: modern, fast and search-engine-optimised — no website builders. Get a free quote.',
-        eyebrow: 'Service 01',
-        h1: 'Website development',
-        lead: 'Your website is your digital storefront — often the first impression customers get of your business.',
-        intro: [
-          'I build modern, fast and search-engine-optimised websites for businesses, freelancers and start-ups in Siegburg, Cologne, Bonn and across North Rhine-Westphalia — fully custom, never off the shelf.',
-          'No website builder, no interchangeable template: every website is designed and developed from the ground up around your brand, your audience and your goals.',
-        ],
-        includedTitle: "What's included",
-        included: ['Individual design instead of a template', 'SEO & fast loading from day one', 'Flawless on every device — mobile, tablet, desktop', 'Accessibility built to WCAG standards', 'Personal support from idea to launch'],
-        forWhoTitle: 'Who this is for',
-        forWho: 'Freelancers and small to medium businesses who want a professional online presence and to be found on Google — without agency overhead.',
-        ctaTitle: 'Ready for your new website?',
-        ctaText: 'Write to me without obligation — you will receive a fair, transparent quote.',
-        ctaButton: 'Get in touch',
-        overviewLink: '← All services',
-      },
-      'web-app-entwicklung': {
-        metaTitle: 'Web App Development — Custom Business Software | Bünyamin Ilhan',
-        metaDescription: 'Custom web apps built with Angular & TypeScript: digitise processes, save time, grow. Development from Siegburg for clients in Cologne, Bonn and NRW.',
-        eyebrow: 'Service 02',
-        h1: 'Web app development',
-        lead: 'Digitise your processes, save time, and build the technical foundation for your growth.',
-        intro: [
-          'I develop web applications tailored precisely to your workflows — from internal tools to complete customer platforms — using modern, future-proof technology such as Angular and TypeScript.',
-          'Whether you need to replace a spreadsheet-driven process or build a full customer-facing platform, the app is designed around how your business actually works.',
-        ],
-        includedTitle: "What's included",
-        included: ['Custom features built around your workflows', 'Modern, future-proof technology (Angular, TypeScript)', 'Scalable & maintainable as your business grows', 'From internal tools to full customer platforms', 'Close collaboration throughout development'],
-        forWhoTitle: 'Who this is for',
-        forWho: 'Businesses that want to digitise internal processes or offer their customers a dedicated platform — from booking software to customer portals.',
-        ctaTitle: 'Have a process worth digitising?',
-        ctaText: 'Tell me about your workflow — you will receive an honest assessment and a transparent quote.',
-        ctaButton: 'Get in touch',
-        overviewLink: '← All services',
-      },
-      'website-optimierung': {
-        metaTitle: 'Website Optimisation & SEO — Modernise Your Site | Bünyamin Ilhan',
-        metaDescription: 'Slow loading times, dated design or poor Google rankings? I analyse and modernise existing websites — for better rankings and more inquiries.',
-        eyebrow: 'Service 03',
-        h1: 'Website optimisation & modernisation',
-        lead: 'Your current website feels dated or loads too slowly? That can be fixed.',
-        intro: [
-          'I analyse your existing website — performance, SEO, structure and accessibility — and modernise exactly where it counts, instead of rebuilding everything from scratch.',
-          'The goal: better Google rankings, more inquiries, and a website that actually reflects your business today.',
-        ],
-        includedTitle: "What's included",
-        included: ['Performance analysis (load times, Core Web Vitals)', 'SEO optimisation for better Google rankings', 'Technical audit (structure, meta data, accessibility)', 'Redesign with substance, not just a fresh coat of paint', 'Ongoing support after optimisation, if you want it'],
-        forWhoTitle: 'Who this is for',
-        forWho: 'Businesses with an existing website who want noticeably more from their online presence — more visibility, more inquiries, better performance.',
-        ctaTitle: 'Time for a fresh look at your website?',
-        ctaText: 'Send me your URL — you will get an honest assessment of what is worth improving.',
-        ctaButton: 'Get in touch',
-        overviewLink: '← All services',
-      },
-      'sorglos-paket': {
-        metaTitle: 'All-in-One Care-Free Package — Website Support | Bünyamin Ilhan',
-        metaDescription: 'Complete website care from a single source: concept, design, development, ongoing maintenance and updates — one personal contact, no ticket system.',
-        eyebrow: 'Service 04',
-        h1: 'All-in-one care-free package',
-        lead: 'You focus on your business — I take care of your web presence.',
-        intro: [
-          'From the first idea through design and development to ongoing maintenance and updates — everything from a single source, with one personal contact instead of a ticket system.',
-          'Ideal if you would rather not deal with hosting, security updates or content changes yourself after launch.',
-        ],
-        includedTitle: "What's included",
-        included: ['Concept to launch from a single source', 'Ongoing maintenance, updates & security', 'One personal contact instead of a ticket system', 'Fast turnaround on change requests', 'Predictable, transparent costs'],
-        forWhoTitle: 'Who this is for',
-        forWho: 'Anyone who does not want to handle technology, updates and security themselves after launch, and instead wants a reliable partner at their side.',
-        ctaTitle: 'Want a website that just works?',
-        ctaText: 'Tell me about your project — you will receive a fair, transparent offer.',
-        ctaButton: 'Get in touch',
-        overviewLink: '← All services',
-      },
-    },
-  },
-  de: {
-    nav: {
-      offers: 'Leistungen', about: 'Über mich', skills: 'Skills', portfolio: 'Portfolio',
-      contact: 'Kontakt', legal: 'Impressum', privacy: 'Datenschutz', cta: 'Projekt anfragen', skip: 'Zum Inhalt springen',
-    },
-    hero: {
-      label: 'Ihr Partner für digitale Projekte',
-      title1: 'Digitale Lösungen.', title2: 'Echte Ergebnisse.',
-      sub: 'Ich entwickle Websites und Business-Web-Apps, die Ihr Unternehmen voranbringen — persönlich, maßgeschneidert und mit echter Liebe zum Detail.',
-      cta1: 'Leistungen ansehen', cta2: 'Kostenloses Erstgespräch', scroll: 'Nach unten',
-      badges: ['100 % individuell — kein Baukasten', 'SEO & Performance inklusive', 'Antwort innerhalb von 24 Stunden'],
-    },
-    offers: {
-      label: 'Was ich für Sie tun kann',
-      title: 'Meine Leistungen',
-      sub: 'Kein Baukasten, keine Massenware — jedes Projekt wird individuell für Sie konzipiert und entwickelt.',
-      items: [
-        {
-          title: 'Websites, die verkaufen',
-          desc: 'Ihre Website ist Ihr digitales Schaufenster. Ich gestalte moderne, schnelle und suchmaschinenoptimierte Websites, die aus Besuchern Kunden machen — und Ihre Marke unverwechselbar präsentieren.',
-          points: ['Individuelles Design statt Vorlage', 'SEO & schnelle Ladezeiten inklusive', 'Perfekt auf jedem Gerät'],
-          slug: 'website-erstellen-lassen',
-        },
-        {
-          title: 'Business-Web-Apps',
-          desc: 'Prozesse digitalisieren, Zeit sparen, wachsen: Ich entwickle Webanwendungen, die exakt auf Ihre Abläufe zugeschnitten sind — vom internen Tool bis zur Kundenplattform.',
-          points: ['Maßgeschneiderte Funktionen', 'Moderne, zukunftssichere Technologie', 'Skalierbar & wartbar'],
-          slug: 'web-app-entwicklung',
-        },
-        {
-          title: 'Optimierung & Modernisierung',
-          desc: 'Ihre bestehende Website wirkt in die Jahre gekommen oder lädt zu langsam? Ich analysiere, optimiere und modernisiere — für bessere Rankings, mehr Anfragen und einen frischen Auftritt.',
-          points: ['Performance-Analyse', 'SEO-Optimierung', 'Redesign mit Substanz'],
-          slug: 'website-optimierung',
-        },
-        {
-          title: 'All-in-One Sorglos-Paket',
-          desc: 'Sie kümmern sich um Ihr Geschäft — ich mich um Ihren Webauftritt: von der ersten Idee über Design und Entwicklung bis zu Pflege und Updates. Alles aus einer Hand.',
-          points: ['Vom Konzept bis zum Launch', 'Laufende Betreuung & Updates', 'Ein persönlicher Ansprechpartner'],
-          slug: 'sorglos-paket',
-        },
-      ],
-      why: 'Was mich von 08/15-Anbietern unterscheidet? Ich höre zu, denke mit und stehe hinter meiner Arbeit — mit direktem Draht zu mir statt Ticketsystem.',
-      priceNote: 'Jedes Projekt ist einzigartig — deshalb nenne ich Preise erst, wenn ich weiß, was Sie wirklich brauchen. Schreiben Sie mir unverbindlich: Sie erhalten ein faires, transparentes Angebot, das zu Ihrem Budget passt.',
-      cta: 'Unverbindlich anfragen',
-      mailHint: 'Oder direkt per E-Mail:',
-      cardCta: 'Anfragen',
-      moreInfo: 'Mehr erfahren',
-    },
-    process: {
-      label: 'Einfach & transparent',
-      title: 'So läuft Ihr Projekt ab',
-      sub: 'Keine Überraschungen, kein Fachchinesisch — Sie wissen jederzeit, wo Ihr Projekt steht.',
-      steps: [
-        {
-          title: 'Kostenloses Erstgespräch',
-          desc: 'Sie erzählen, ich höre zu: Schildern Sie mir Ihr Vorhaben per E-Mail oder Kontaktformular — unverbindlich und ohne Fachchinesisch. Innerhalb von 24 Stunden melde ich mich bei Ihnen.',
-        },
-        {
-          title: 'Konzept & Angebot',
-          desc: 'Ich erarbeite einen klaren Vorschlag, der zu Ihren Zielen und Ihrem Budget passt — mit transparentem Angebot. Sie wissen von Anfang an, woran Sie sind.',
-        },
-        {
-          title: 'Design & Umsetzung',
-          desc: 'Jetzt nimmt Ihr Projekt Gestalt an: modern, schnell und suchmaschinenoptimiert. Sie sehen regelmäßig Zwischenstände — Ihr Feedback fließt direkt ein.',
-        },
-        {
-          title: 'Launch & Betreuung',
-          desc: 'Ihre Website geht online — getestet, optimiert und startklar. Und wenn Sie möchten, bleibe ich an Ihrer Seite: mit Pflege, Updates und schnellen Antworten.',
-        },
-      ],
-    },
-    faq: {
-      label: 'Gut zu wissen',
-      title: 'Häufige Fragen',
-      sub: 'Die häufigsten Fragen vor dem Projektstart — ehrlich beantwortet.',
-      items: [
-        {
-          q: 'Was kostet eine Website oder Web-App?',
-          a: 'Das hängt ganz vom Umfang ab — eine kompakte Unternehmensseite kostet weniger als eine individuelle Web-App. Deshalb nenne ich Preise erst nach dem kostenlosen Erstgespräch: Sie erhalten ein faires, transparentes Angebot ohne versteckte Kosten, zugeschnitten auf Ihr Budget.',
-        },
-        {
-          q: 'Wie lange dauert die Umsetzung?',
-          a: 'Eine typische Unternehmens-Website ist oft innerhalb weniger Wochen online, komplexere Web-Apps brauchen entsprechend länger. Im Angebot erhalten Sie einen realistischen Zeitplan — und ich halte Sie während der Umsetzung immer auf dem Laufenden.',
-        },
-        {
-          q: 'Was muss ich vorbereiten?',
-          a: 'Nur Ihre Idee. Alles Weitere — Struktur, Texte, Bilder, Technik — erarbeiten wir gemeinsam. Ich führe Sie Schritt für Schritt durch den Prozess, auch wenn Sie noch nie eine Website beauftragt haben.',
-        },
-        {
-          q: 'Wer kümmert sich nach dem Launch um die Website?',
-          a: 'Ganz wie Sie möchten: Entweder übernehmen Sie die Pflege selbst — ich weise Sie gern ein — oder Sie wählen das All-in-One-Paket und ich halte Ihre Website aktuell, sicher und schnell.',
-        },
-        {
-          q: 'Arbeiten Sie auch mit bestehenden Websites?',
-          a: 'Ja! Ob langsame Ladezeiten, veraltetes Design oder schlechte Google-Platzierung — ich analysiere Ihre bestehende Seite und modernisiere sie gezielt. Oft lässt sich mit überschaubarem Aufwand viel erreichen.',
-        },
-      ],
-    },
-    about: {
-      label: 'Über mich', title1: 'Der Mensch', title2: 'hinter Ihrem Projekt',
-      p1: 'Hinter jeder guten Website steht jemand, der zuhört. Ich bin Bünyamin — Web- und App-Entwickler aus Siegburg bei Köln/Bonn, und ich liebe es, Ideen in digitale Erlebnisse zu verwandeln.',
-      p2: 'Meine Ausbildung an einer professionellen Software-Schule in Deutschland und zahlreiche Projekte — vom Frontend bis zur nativen App — haben mich eines gelehrt: Technik ist nur Mittel zum Zweck. Was zählt, ist, dass sie für Sie arbeitet.',
-      p3: 'Deshalb bekommen Sie bei mir keine Lösungen von der Stange, sondern einen Partner, der mitdenkt: ehrlich in der Beratung, präzise in der Umsetzung und erreichbar, wenn Sie mich brauchen.',
-      p4: 'Ob neue Website, Business-Web-App oder frischer Wind für Ihren bestehenden Auftritt — lassen Sie uns gemeinsam etwas schaffen, worauf Sie stolz sind.',
-      cta: 'Jetzt Kontakt aufnehmen',
-    },
-    skills: { label: 'Tech-Stack', title: 'Meine Skills' },
-    portfolio: {
-      label: 'Ausgewählte Projekte', title: 'Mein Portfolio',
-      sub: 'Eine Auswahl meiner Projekte — sehen Sie selbst, wie Ihre Lösung aussehen könnte.',
-      demo: 'Live-Demo', pitch: 'Pitch', github: 'GitHub', liveProduct: 'Live im Einsatz',
-    },
-    testimonials: {
-      label: 'Kundenstimmen',
-      title: 'Was Kunden sagen',
-      sub: 'Echtes Feedback aus echten Projekten.',
-      items: [],
-    },
-    contact: {
-      label: 'Kontakt', title: 'Sprechen wir über', titleAccent: 'Ihr Projekt',
-      intro: 'Erzählen Sie mir von Ihrem Vorhaben — ganz unverbindlich. Ich melde mich in der Regel innerhalb von 24 Stunden mit einer ehrlichen Einschätzung und den nächsten Schritten.',
-      name: 'Ihr Name', email: 'Ihre E-Mail', topic: 'Projektart', topicGeneral: 'Allgemeine Anfrage', message: 'Ihre Nachricht',
-      namePh: 'Max Mustermann', emailPh: 'max@beispiel.de', messagePh: 'Erzählen Sie mir von Ihrem Projekt...',
-      send: 'Nachricht senden', sending: 'Wird gesendet…',
-      successTitle: 'Nachricht erhalten!', successSub: 'Vielen Dank für Ihr Vertrauen — ich melde mich schnellstmöglich bei Ihnen.',
-      sendAnother: 'Weitere Nachricht', error: 'Etwas ist schiefgelaufen. Schreiben Sie mir gern direkt an mail@ilhan-buenyamin.com.',
-    },
-    footer: {
-      legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!',
-      servicesTitle: 'Leistungen', contactTitle: 'Kontakt', location: 'Siegburg bei Köln/Bonn',
-      noTracking: 'Diese Website respektiert Ihre Privatsphäre — keine Cookies, kein Tracking.',
-    },
-    notFound: {
-      title: 'Seite nicht gefunden',
-      sub: 'Diese Seite gibt es nicht — Ihr Projekt aber schon bald. Sprechen wir darüber.',
-      home: 'Zur Startseite', contact: 'Kontakt aufnehmen',
-    },
-    servicePages: {
-      'website-erstellen-lassen': {
-        metaTitle: 'Website erstellen lassen — individuell & SEO-optimiert | Bünyamin Ilhan',
-        metaDescription: 'Website erstellen lassen in Siegburg, Köln & Bonn: modern, schnell und suchmaschinenoptimiert — 100% individuell, kein Baukasten. Jetzt unverbindlich anfragen.',
-        eyebrow: 'Leistung 01',
-        h1: 'Website erstellen lassen',
-        lead: 'Ihre Website ist Ihr digitales Schaufenster — und oft der erste Eindruck, den Kund:innen von Ihrem Unternehmen bekommen.',
-        intro: [
-          'Ich entwickle moderne, schnelle und suchmaschinenoptimierte Websites für Unternehmen, Selbstständige und Start-ups aus Siegburg, Köln, Bonn und ganz Nordrhein-Westfalen — komplett individuell statt von der Stange.',
-          'Kein Baukasten, kein austauschbares Template: Jede Website wird von Grund auf für Ihre Marke, Ihre Zielgruppe und Ihre Ziele konzipiert und entwickelt.',
-        ],
-        includedTitle: 'Das ist inklusive',
-        included: ['Individuelles Design statt Vorlage', 'SEO & schnelle Ladezeiten von Anfang an', 'Perfekt auf jedem Gerät — Mobile, Tablet, Desktop', 'Barrierefreiheit nach WCAG-Standards', 'Persönliche Betreuung von der Idee bis zum Launch'],
-        forWhoTitle: 'Für wen geeignet',
-        forWho: 'Für Einzelunternehmer:innen sowie kleine und mittlere Unternehmen, die online professionell auftreten und über Google gefunden werden möchten — ohne Agentur-Wasserkopf.',
-        ctaTitle: 'Bereit für Ihre neue Website?',
-        ctaText: 'Schreiben Sie mir unverbindlich — Sie erhalten ein faires, transparentes Angebot.',
-        ctaButton: 'Jetzt anfragen',
-        overviewLink: '← Alle Leistungen',
-      },
-      'web-app-entwicklung': {
-        metaTitle: 'Web-App entwickeln lassen — individuelle Business-Software | Bünyamin Ilhan',
-        metaDescription: 'Individuelle Web-Apps mit Angular & TypeScript: Prozesse digitalisieren, Zeit sparen, wachsen. Entwicklung aus Siegburg für Kunden in Köln, Bonn und ganz NRW.',
-        eyebrow: 'Leistung 02',
-        h1: 'Web-App entwickeln lassen',
-        lead: 'Digitalisieren Sie Prozesse, sparen Sie Zeit und schaffen Sie die technische Basis für Ihr Wachstum.',
-        intro: [
-          'Ich entwickle Webanwendungen, die exakt auf Ihre Abläufe zugeschnitten sind — vom internen Tool bis zur vollständigen Kundenplattform — mit moderner, zukunftssicherer Technologie wie Angular und TypeScript.',
-          'Ob Sie einen Excel-getriebenen Prozess ablösen oder eine vollständige Plattform für Ihre Kund:innen aufbauen möchten: Die App wird so konzipiert, wie Ihr Unternehmen tatsächlich arbeitet.',
-        ],
-        includedTitle: 'Das ist inklusive',
-        included: ['Maßgeschneiderte Funktionen für Ihre Abläufe', 'Moderne, zukunftssichere Technologie (Angular, TypeScript)', 'Skalierbar & wartbar — mitwachsend mit Ihrem Unternehmen', 'Vom internen Tool bis zur vollständigen Kundenplattform', 'Enge Abstimmung während der gesamten Entwicklung'],
-        forWhoTitle: 'Für wen geeignet',
-        forWho: 'Für Unternehmen, die interne Abläufe digitalisieren oder ihren Kund:innen eine eigene Plattform bieten möchten — von der Buchungssoftware bis zum Kundenportal.',
-        ctaTitle: 'Haben Sie einen Prozess, der sich digitalisieren lässt?',
-        ctaText: 'Erzählen Sie mir von Ihrem Ablauf — Sie erhalten eine ehrliche Einschätzung und ein transparentes Angebot.',
-        ctaButton: 'Jetzt anfragen',
-        overviewLink: '← Alle Leistungen',
-      },
-      'website-optimierung': {
-        metaTitle: 'Website-Optimierung & SEO — bestehende Seite modernisieren | Bünyamin Ilhan',
-        metaDescription: 'Langsame Ladezeiten, veraltetes Design oder schlechte Google-Platzierung? Ich analysiere und modernisiere bestehende Websites — für bessere Rankings und mehr Anfragen.',
-        eyebrow: 'Leistung 03',
-        h1: 'Website-Optimierung & Modernisierung',
-        lead: 'Ihre bestehende Website wirkt in die Jahre gekommen oder lädt zu langsam? Das lässt sich beheben.',
-        intro: [
-          'Ich analysiere Ihre bestehende Website — Performance, SEO, Struktur und Barrierefreiheit — und modernisiere gezielt dort, wo es zählt, statt alles von Grund auf neu zu bauen.',
-          'Das Ziel: bessere Google-Rankings, mehr Anfragen und ein Auftritt, der Ihr Unternehmen heute wirklich widerspiegelt.',
-        ],
-        includedTitle: 'Das ist inklusive',
-        included: ['Performance-Analyse (Ladezeiten, Core Web Vitals)', 'SEO-Optimierung für bessere Google-Rankings', 'Technisches Audit (Struktur, Meta-Daten, Barrierefreiheit)', 'Redesign mit Substanz statt nur neuem Anstrich', 'Laufende Betreuung nach der Optimierung möglich'],
-        forWhoTitle: 'Für wen geeignet',
-        forWho: 'Für Unternehmen mit bestehender Website, die spürbar mehr aus ihrem Online-Auftritt herausholen wollen — mehr Sichtbarkeit, mehr Anfragen, bessere Performance.',
-        ctaTitle: 'Zeit für einen frischen Blick auf Ihre Website?',
-        ctaText: 'Schicken Sie mir Ihre URL — Sie erhalten eine ehrliche Einschätzung, was sich lohnt zu verbessern.',
-        ctaButton: 'Jetzt anfragen',
-        overviewLink: '← Alle Leistungen',
-      },
-      'sorglos-paket': {
-        metaTitle: 'All-in-One Sorglos-Paket — Website-Betreuung aus einer Hand | Bünyamin Ilhan',
-        metaDescription: 'Komplettbetreuung für Ihre Website: von Konzept über Design und Entwicklung bis zu laufender Pflege und Updates — alles aus einer Hand, ein persönlicher Ansprechpartner.',
-        eyebrow: 'Leistung 04',
-        h1: 'All-in-One Sorglos-Paket',
-        lead: 'Sie kümmern sich um Ihr Geschäft — ich kümmere mich um Ihren Webauftritt.',
-        intro: [
-          'Von der ersten Idee über Design und Entwicklung bis zu laufender Pflege und Updates — alles aus einer Hand, mit einem persönlichen Ansprechpartner statt Ticketsystem.',
-          'Ideal, wenn Sie sich nach dem Launch nicht selbst um Hosting, Sicherheitsupdates oder Inhaltsänderungen kümmern möchten.',
-        ],
-        includedTitle: 'Das ist inklusive',
-        included: ['Vom Konzept bis zum Launch aus einer Hand', 'Laufende Pflege, Updates & Sicherheit', 'Ein persönlicher Ansprechpartner statt Ticketsystem', 'Schnelle Reaktionszeiten bei Änderungswünschen', 'Planbare, transparente Kosten'],
-        forWhoTitle: 'Für wen geeignet',
-        forWho: 'Für alle, die sich nach dem Launch nicht selbst um Technik, Updates und Sicherheit kümmern möchten, sondern einen verlässlichen Partner an ihrer Seite wollen.',
-        ctaTitle: 'Wollen Sie eine Website, die einfach funktioniert?',
-        ctaText: 'Erzählen Sie mir von Ihrem Projekt — Sie erhalten ein faires, transparentes Angebot.',
-        ctaButton: 'Jetzt anfragen',
-        overviewLink: '← Alle Leistungen',
-      },
-    },
-  },
-};
 
 @Injectable({ providedIn: 'root' })
 export class LangService {
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
-  current = signal<Lang>('de');
-  t = computed<LangTranslations>(() =>
-    this.current() === 'de' ? translations.de : translations.en
-  );
+  private router = inject(Router);
 
-  constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const saved = localStorage.getItem('lang') as Lang | null;
-      if (saved === 'de' || saved === 'en') this.current.set(saved);
-    }
-    effect(() => {
-      this.document.documentElement.setAttribute('lang', this.current());
-    });
+  readonly locales = SUPPORTED_LOCALES;
+  current = signal<Lang>('de');
+  t = computed<LangTranslations>(() => translations[this.current()]);
+
+  private routeCtx = signal<RouteContext | null>(null);
+
+  /** Called by the langGuard on every navigation. The URL is the source of truth for the language. */
+  applyRoute(lang: Lang, pageKey: PageKey, articleId?: string) {
+    this.routeCtx.set({ pageKey, articleId });
+    if (this.current() !== lang) this.current.set(lang);
+    // Imperative so the prerendered HTML of every locale carries the right <html lang>.
+    this.document.documentElement.setAttribute('lang', lang);
   }
 
-  toggle() {
-    const next: Lang = this.current() === 'en' ? 'de' : 'en';
-    this.current.set(next);
+  /** Prefixes an absolute in-app link ('/blog', '/') with the current locale ('' for de). */
+  link(path: string): string {
+    const lang = this.current();
+    if (lang === 'de') return path;
+    return path === '/' ? `/${lang}` : `/${lang}${path}`;
+  }
+
+  /** Localized URL of a service/legal/blog page for the current locale. */
+  pagePath(key: string): string {
+    const p = urlPathFor(key as PageKey, this.current()) ?? urlPathFor('home', this.current())!;
+    return '/' + p;
+  }
+
+  /** Navigates to the equivalent page in another locale (falls back to that locale's home). */
+  switchTo(target: Lang) {
+    if (target === this.current()) return;
+    const ctx = this.routeCtx();
+    let path: string | undefined;
+    if (ctx?.articleId) path = blogArticleUrlPath(ctx.articleId, target);
+    else if (ctx) path = urlPathFor(ctx.pageKey, target);
+    if (path === undefined) path = urlPathFor('home', target)!;
+    this.router.navigateByUrl('/' + path);
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('lang', next);
+      localStorage.setItem('lang', target);
     }
   }
 }

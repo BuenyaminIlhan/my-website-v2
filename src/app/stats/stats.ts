@@ -21,10 +21,7 @@ export class Stats implements AfterViewInit {
   readonly suffixes = ['+', '', '+', '%'];
 
   items = computed(() => {
-    const isDE = this.lang.current() === 'de';
-    const labels = isDE
-      ? ['Projekte', 'Plattformen', 'Jahre Coding', 'Leidenschaft']
-      : ['Projects', 'Platforms', 'Years Coding', 'Passion'];
+    const labels = this.lang.t().stats.labels;
     return this.targets.map((_, i) => ({
       value: this.counters()[i],
       suffix: this.suffixes[i],

@@ -2,6 +2,7 @@ import { Component, inject, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
+import { urlPathsFor } from '../i18n/route-map';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -15,14 +16,13 @@ export class PrivacyPolicy {
 
   constructor() {
     effect(() => {
-      const isDE = this.lang.current() === 'de';
-      this.seo.update(
-        isDE ? 'Datenschutz — Bünyamin Ilhan' : 'Privacy Policy — Bünyamin Ilhan',
-        isDE
-          ? 'Datenschutzerklärung von Bünyamin Ilhan gemäß DSGVO.'
-          : 'Privacy policy of Bünyamin Ilhan in accordance with GDPR.',
-        'privacy-policy',
-      );
+      const t = this.lang.t();
+      this.seo.update({
+        title: t.meta.privacyTitle,
+        description: t.meta.privacyDesc,
+        lang: this.lang.current(),
+        paths: urlPathsFor('privacy'),
+      });
     });
   }
 }

@@ -23,7 +23,7 @@ export class Header {
   }
 
   navigateTo(fragment: string) {
-    this.router.navigate(['/'], { fragment });
+    this.router.navigate([this.lang.link('/')], { fragment });
     this.closeMenu();
   }
 

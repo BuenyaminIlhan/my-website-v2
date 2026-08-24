@@ -18,8 +18,8 @@
           }
         </ul>
         <div class="offer-card-links">
-          <a [routerLink]="'/' + item.slug" class="card-more">{{ lang.t().offers.moreInfo }}</a>
-          <a href="#contact" class="card-cta" (click)="inquiry.projectType.set(item.title)">
+          <a [routerLink]="lang.pagePath(item.slug)" class="card-more">{{ lang.t().offers.moreInfo }}</a>
+          <a href="#contact" class="card-cta" (click)="prefill(item.slug)">
             {{ lang.t().offers.cardCta }} <span class="cta-arrow">→</span>
           </a>
         </div>

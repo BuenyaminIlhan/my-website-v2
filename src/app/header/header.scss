@@ -109,29 +109,35 @@ header {
   @media (max-width: 1100px) { display: none; }
 }
 
-/* Language toggle: "EN / DE" text style */
+/* Language switcher: "DE / EN / TR" text style */
 .lang-btn {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  background: none;
-  border: none;
-  cursor: pointer;
   font-family: "Overpass", sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  padding: 0;
   line-height: 1;
 
-  span { color: var(--muted); transition: color 200ms; }
+  .lang-opt {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: 1;
+    color: var(--muted);
+    transition: color 200ms;
+
+    &:hover { color: var(--fg, var(--muted)); }
+  }
 
   .lang-sep { color: var(--border); }
 
-  .lang-active { color: var(--accent); }
-
-  &:hover span:not(.lang-sep) { color: var(--muted); }
-  &:hover .lang-active         { color: var(--accent); }
+  .lang-active,
+  .lang-opt.lang-active:hover { color: var(--accent); }
 }
 
 /* Theme toggle: minimal icon */

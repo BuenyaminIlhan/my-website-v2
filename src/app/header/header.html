@@ -2,31 +2,37 @@
 
 <header [class.scrolled]="scrolled()">
   <div class="header-inner section-padding">
-    <a routerLink="/" (click)="scrollToTop()" class="logo">
+    <a [routerLink]="lang.link('/')" (click)="scrollToTop()" class="logo">
       <span class="logo-bracket" aria-hidden="true">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket" aria-hidden="true">]</span>
       <span class="sr-only"> – Bünyamin Ilhan</span>
     </a>
 
     <!-- Desktop navigation -->
     <nav class="desktop-nav">
-      <a routerLink="/" fragment="offers">{{ lang.t().nav.offers }}</a>
-      <a routerLink="/" fragment="about">{{ lang.t().nav.about }}</a>
-      <a routerLink="/" fragment="skills">{{ lang.t().nav.skills }}</a>
-      <a routerLink="/" fragment="portfolio">{{ lang.t().nav.portfolio }}</a>
-      <a routerLink="/" fragment="contact">{{ lang.t().nav.contact }}</a>
+      <a [routerLink]="lang.link('/')" fragment="offers">{{ lang.t().nav.offers }}</a>
+      <a [routerLink]="lang.link('/')" fragment="about">{{ lang.t().nav.about }}</a>
+      <a [routerLink]="lang.link('/')" fragment="skills">{{ lang.t().nav.skills }}</a>
+      <a [routerLink]="lang.link('/')" fragment="portfolio">{{ lang.t().nav.portfolio }}</a>
+      <a [routerLink]="lang.link('/')" fragment="contact">{{ lang.t().nav.contact }}</a>
     </nav>
 
     <div class="header-controls">
       <!-- Header CTA -->
       <button class="header-cta" (click)="navigateTo('contact')">{{ lang.t().nav.cta }}</button>
 
-      <!-- Language toggle -->
-      <button class="lang-btn" (click)="lang.toggle()">
-        <span class="sr-only">{{ lang.current() === 'en' ? 'Switch language to German' : 'Sprache wechseln zu Englisch' }}: </span>
-        <span [class.lang-active]="lang.current() === 'en'">EN</span>
-        <span class="lang-sep" aria-hidden="true">/</span>
-        <span [class.lang-active]="lang.current() === 'de'">DE</span>
-      </button>
+      <!-- Language switcher -->
+      <div class="lang-btn" role="group" [attr.aria-label]="lang.t().a11y.langSwitch">
+        @for (locale of lang.locales; track locale; let last = $last) {
+          <button
+            class="lang-opt"
+            [class.lang-active]="lang.current() === locale"
+            [attr.aria-pressed]="lang.current() === locale"
+            (click)="lang.switchTo(locale)">{{ locale.toUpperCase() }}</button>
+          @if (!last) {
+            <span class="lang-sep" aria-hidden="true">/</span>
+          }
+        }
+      </div>
 
       <!-- Theme toggle -->
       <button class="theme-btn" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Light mode' : 'Dark mode'">
@@ -34,7 +40,7 @@
       </button>
 
       <!-- Mobile burger -->
-      <button class="burger" (click)="toggleMenu()" [class.active]="menuOpen()" aria-label="Menu">
+      <button class="burger" (click)="toggleMenu()" [class.active]="menuOpen()" [attr.aria-label]="lang.t().a11y.menu">
         <span></span>
         <span></span>
         <span></span>
@@ -46,13 +52,13 @@
 <!-- Mobile overlay -->
 <div class="nav-overlay" [class.open]="menuOpen()">
   <nav class="nav-links">
-    <a routerLink="/" fragment="offers" (click)="closeMenu()"><span class="num">01</span>{{ lang.t().nav.offers }}</a>
-    <a routerLink="/" fragment="about" (click)="closeMenu()"><span class="num">02</span>{{ lang.t().nav.about }}</a>
-    <a routerLink="/" fragment="skills" (click)="closeMenu()"><span class="num">03</span>{{ lang.t().nav.skills }}</a>
-    <a routerLink="/" fragment="portfolio" (click)="closeMenu()"><span class="num">04</span>{{ lang.t().nav.portfolio }}</a>
-    <a routerLink="/" fragment="contact" (click)="closeMenu()"><span class="num">05</span>{{ lang.t().nav.contact }}</a>
-    <a routerLink="/legal-notice" (click)="closeMenu()"><span class="num">06</span>{{ lang.t().nav.legal }}</a>
-    <a routerLink="/privacy-policy" (click)="closeMenu()"><span class="num">07</span>{{ lang.t().nav.privacy }}</a>
+    <a [routerLink]="lang.link('/')" fragment="offers" (click)="closeMenu()"><span class="num">01</span>{{ lang.t().nav.offers }}</a>
+    <a [routerLink]="lang.link('/')" fragment="about" (click)="closeMenu()"><span class="num">02</span>{{ lang.t().nav.about }}</a>
+    <a [routerLink]="lang.link('/')" fragment="skills" (click)="closeMenu()"><span class="num">03</span>{{ lang.t().nav.skills }}</a>
+    <a [routerLink]="lang.link('/')" fragment="portfolio" (click)="closeMenu()"><span class="num">04</span>{{ lang.t().nav.portfolio }}</a>
+    <a [routerLink]="lang.link('/')" fragment="contact" (click)="closeMenu()"><span class="num">05</span>{{ lang.t().nav.contact }}</a>
+    <a [routerLink]="lang.pagePath('legal')" (click)="closeMenu()"><span class="num">06</span>{{ lang.t().nav.legal }}</a>
+    <a [routerLink]="lang.pagePath('privacy')" (click)="closeMenu()"><span class="num">07</span>{{ lang.t().nav.privacy }}</a>
   </nav>
 
   <div class="nav-footer">

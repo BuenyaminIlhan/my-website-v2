@@ -1,43 +1,145 @@
 <div class="legal-page section-padding">
-  <a routerLink="/" class="back-link">{{ lang.t().footer.back }}</a>
+  <a [routerLink]="lang.link('/')" class="back-link">{{ lang.t().footer.back }}</a>
 
   <h1>{{ lang.t().footer.privacy }}</h1>
-  <h2>1. Datenschutz auf einen Blick</h2>
-  <h3>Allgemeine Hinweise</h3>
-  <p>Die folgenden Hinweise geben einen einfachen &Uuml;berblick dar&uuml;ber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.</p>
-  <h3>Datenerfassung auf dieser Website</h3>
-  <h4>Wer ist verantwortlich?</h4>
-  <p>Die Datenverarbeitung erfolgt durch den Websitebetreiber. Kontaktdaten siehe Abschnitt &bdquo;Verantwortliche Stelle&ldquo;.</p>
-  <h4>Wie erfassen wir Ihre Daten?</h4>
-  <p>Zum einen durch Ihre Eingaben (z.&nbsp;B. Kontaktformular). Zum anderen werden technische Daten automatisch beim Seitenaufruf erfasst.</p>
-  <h4>Wof&uuml;r nutzen wir Ihre Daten?</h4>
-  <p>Ausschlie&szlig;lich zur fehlerfreien Bereitstellung der Website und zur Bearbeitung Ihrer Anfragen. Eine Analyse des Nutzerverhaltens (Tracking) findet nicht statt.</p>
-  <h4>Welche Rechte haben Sie?</h4>
-  <p>Sie haben jederzeit das Recht auf Auskunft, Berichtigung, L&ouml;schung und Einschr&auml;nkung der Verarbeitung Ihrer gespeicherten personenbezogenen Daten, das Recht auf Daten&uuml;bertragbarkeit, das Recht auf Widerruf einer erteilten Einwilligung sowie ein Widerspruchsrecht gem&auml;&szlig; Art. 21 DSGVO. Zudem steht Ihnen ein Beschwerderecht bei der zust&auml;ndigen Datenschutz-Aufsichtsbeh&ouml;rde zu.</p>
-  <h4>Keine Cookies, kein Tracking</h4>
-  <p>Diese Website verwendet keine Cookies und keine Analyse- oder Tracking-Dienste. Es werden keine Verbindungen zu Drittanbietern (z.&nbsp;B. Google Fonts, CDNs) aufgebaut &mdash; alle Schriften und Ressourcen werden lokal von unserem Server geladen. Lediglich Ihre Einstellungen zu Sprache und Farbschema werden auf Ihren Wunsch im lokalen Speicher (localStorage) Ihres Browsers abgelegt. Diese Speicherung ist technisch erforderlich (&sect; 25 Abs. 2 TDDDG), enth&auml;lt keine personenbezogenen Daten und wird nicht an uns oder Dritte &uuml;bertragen.</p>
 
-  <h2>2. Hosting</h2>
-  <h3>IONOS</h3>
-  <p>Anbieter: IONOS SE, Elgendorfer Str. 57, 56410 Montabaur. Details: <a href="https://www.ionos.de/terms-gtc/terms-privacy" target="_blank" rel="noopener noreferrer">ionos.de/terms-gtc/terms-privacy</a>.</p>
-  <p>Wir haben mit dem Anbieter einen Vertrag &uuml;ber Auftragsverarbeitung (AVV) geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gew&auml;hrleistet, dass der Anbieter die personenbezogenen Daten unserer Websitebesucher nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.</p>
-  <h3>Server-Log-Dateien</h3>
-  <p>Der Hosting-Anbieter erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch &uuml;bermittelt: Browsertyp und -version, verwendetes Betriebssystem, Referrer-URL, Uhrzeit der Serveranfrage und IP-Adresse. Eine Zusammenf&uuml;hrung dieser Daten mit anderen Datenquellen findet nicht statt. Die Erfassung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO &mdash; der Websitebetreiber hat ein berechtigtes Interesse an der technisch fehlerfreien Darstellung und Sicherheit seiner Website.</p>
+  @switch (lang.current()) {
+    @case ('de') {
+      <h2>1. Datenschutz auf einen Blick</h2>
+      <h3>Allgemeine Hinweise</h3>
+      <p>Die folgenden Hinweise geben einen einfachen &Uuml;berblick dar&uuml;ber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.</p>
+      <h3>Datenerfassung auf dieser Website</h3>
+      <h4>Wer ist verantwortlich?</h4>
+      <p>Die Datenverarbeitung erfolgt durch den Websitebetreiber. Kontaktdaten siehe Abschnitt &bdquo;Verantwortliche Stelle&ldquo;.</p>
+      <h4>Wie erfassen wir Ihre Daten?</h4>
+      <p>Zum einen durch Ihre Eingaben (z.&nbsp;B. Kontakt- oder Anfrageformular). Zum anderen werden technische Daten automatisch beim Seitenaufruf erfasst.</p>
+      <h4>Wof&uuml;r nutzen wir Ihre Daten?</h4>
+      <p>Ausschlie&szlig;lich zur fehlerfreien Bereitstellung der Website und zur Bearbeitung Ihrer Anfragen. Eine Analyse des Nutzerverhaltens (Tracking) findet nicht statt.</p>
+      <h4>Welche Rechte haben Sie?</h4>
+      <p>Sie haben jederzeit das Recht auf Auskunft, Berichtigung, L&ouml;schung und Einschr&auml;nkung der Verarbeitung Ihrer gespeicherten personenbezogenen Daten, das Recht auf Daten&uuml;bertragbarkeit, das Recht auf Widerruf einer erteilten Einwilligung sowie ein Widerspruchsrecht gem&auml;&szlig; Art. 21 DSGVO. Zudem steht Ihnen ein Beschwerderecht bei der zust&auml;ndigen Datenschutz-Aufsichtsbeh&ouml;rde zu.</p>
+      <h4>Keine Cookies, kein Tracking</h4>
+      <p>Diese Website verwendet keine Cookies und keine Analyse- oder Tracking-Dienste. Es werden keine Verbindungen zu Drittanbietern (z.&nbsp;B. Google Fonts, CDNs) aufgebaut &mdash; alle Schriften und Ressourcen werden lokal von unserem Server geladen. Lediglich Ihre Einstellungen zu Sprache und Farbschema werden auf Ihren Wunsch im lokalen Speicher (localStorage) Ihres Browsers abgelegt. Diese Speicherung ist technisch erforderlich (&sect; 25 Abs. 2 TDDDG), enth&auml;lt keine personenbezogenen Daten und wird nicht an uns oder Dritte &uuml;bertragen.</p>
 
-  <h2>3. Allgemeine Hinweise und Pflicht&shy;informationen</h2>
-  <h3>Datenschutz</h3>
-  <p>Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften.</p>
-  <h3>Verantwortliche Stelle</h3>
-  <p>B&uuml;nyamin Ilhan<br />Beethovenstr. 13<br />53721 Siegburg<br />
-    Telefon: 01732856136<br />E-Mail: mail&#64;ilhan-buenyamin.com</p>
-  <h3>Speicherdauer</h3>
-  <p>Personenbezogene Daten werden gel&ouml;scht, sobald der Zweck der Speicherung entf&auml;llt, sofern keine gesetzlichen Aufbewahrungsfristen entgegenstehen.</p>
-  <h3>SSL- bzw. TLS-Verschl&uuml;sselung</h3>
-  <p>Diese Seite nutzt aus Sicherheitsgr&uuml;nden eine SSL- bzw. TLS-Verschl&uuml;sselung f&uuml;r die &Uuml;bertragung vertraulicher Inhalte.</p>
+      <h2>2. Hosting</h2>
+      <h3>IONOS</h3>
+      <p>Anbieter: IONOS SE, Elgendorfer Str. 57, 56410 Montabaur. Details: <a href="https://www.ionos.de/terms-gtc/terms-privacy" target="_blank" rel="noopener noreferrer">ionos.de/terms-gtc/terms-privacy</a>.</p>
+      <p>Wir haben mit dem Anbieter einen Vertrag &uuml;ber Auftragsverarbeitung (AVV) geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gew&auml;hrleistet, dass der Anbieter die personenbezogenen Daten unserer Websitebesucher nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.</p>
+      <h3>Server-Log-Dateien</h3>
+      <p>Der Hosting-Anbieter erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch &uuml;bermittelt: Browsertyp und -version, verwendetes Betriebssystem, Referrer-URL, Uhrzeit der Serveranfrage und IP-Adresse. Eine Zusammenf&uuml;hrung dieser Daten mit anderen Datenquellen findet nicht statt. Die Erfassung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO &mdash; der Websitebetreiber hat ein berechtigtes Interesse an der technisch fehlerfreien Darstellung und Sicherheit seiner Website.</p>
 
-  <h2>4. Datenerfassung auf dieser Website</h2>
-  <h3>Kontaktformular und E-Mail-Kontakt</h3>
-  <p>Wenn Sie uns per Kontaktformular oder E-Mail eine Anfrage senden, werden Ihre Angaben (Name, E-Mail-Adresse, gew&auml;hlte Projektart und Nachricht) zur Bearbeitung der Anfrage und f&uuml;r den Fall von Anschlussfragen per E-Mail an uns &uuml;bermittelt und bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter. Grundlage der Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Anbahnung bzw. Erf&uuml;llung eines Vertrags) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung von Anfragen). Die Daten werden gel&ouml;scht, sobald Ihre Anfrage abschlie&szlig;end bearbeitet ist und keine gesetzlichen Aufbewahrungsfristen entgegenstehen.</p>
+      <h2>3. Allgemeine Hinweise und Pflicht&shy;informationen</h2>
+      <h3>Datenschutz</h3>
+      <p>Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften.</p>
+      <h3>Verantwortliche Stelle</h3>
+      <p>B&uuml;nyamin Ilhan<br />Beethovenstr. 13<br />53721 Siegburg<br />
+        Telefon: 01732856136<br />E-Mail: mail&#64;ilhan-buenyamin.com</p>
+      <h3>Speicherdauer</h3>
+      <p>Personenbezogene Daten werden gel&ouml;scht, sobald der Zweck der Speicherung entf&auml;llt, sofern keine gesetzlichen Aufbewahrungsfristen entgegenstehen.</p>
+      <h3>SSL- bzw. TLS-Verschl&uuml;sselung</h3>
+      <p>Diese Seite nutzt aus Sicherheitsgr&uuml;nden eine SSL- bzw. TLS-Verschl&uuml;sselung f&uuml;r die &Uuml;bertragung vertraulicher Inhalte.</p>
 
-  <p>Quelle: <a href="https://www.e-recht24.de" target="_blank" rel="noopener">e-recht24.de</a></p>
+      <h2>4. Datenerfassung auf dieser Website</h2>
+      <h3>Anfrage- und Kontaktformulare, E-Mail-Kontakt</h3>
+      <p>Wenn Sie uns &uuml;ber ein Formular dieser Website oder per E-Mail eine Anfrage senden, werden Ihre Angaben zur Bearbeitung der Anfrage und f&uuml;r den Fall von Anschlussfragen bei uns gespeichert. Das betrifft je nach Formular: Name, E-Mail-Adresse, gew&auml;hlte Projektart, Angaben zu Budget und Zeitrahmen, Ihre Nachricht sowie &mdash; beim kostenlosen Website-Check &mdash; die von Ihnen angegebene Website-Adresse. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter. Grundlage der Verarbeitung ist Art. 6 Abs. 1 lit. b DSGVO (Anbahnung bzw. Erf&uuml;llung eines Vertrags) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung von Anfragen). Die Daten werden gel&ouml;scht, sobald Ihre Anfrage abschlie&szlig;end bearbeitet ist und keine gesetzlichen Aufbewahrungsfristen entgegenstehen.</p>
+      <h3>Kontakt per WhatsApp</h3>
+      <p>Sofern auf dieser Website ein WhatsApp-Kontakt angeboten wird, handelt es sich um einen externen Link zum Dienst WhatsApp (WhatsApp Ireland Ltd.). Die Kommunikation kommt erst zustande, wenn Sie den Link aktiv anklicken und WhatsApp nutzen; es gelten dann die Datenschutzbestimmungen von WhatsApp. Auf dieser Website selbst findet dadurch keine Daten&uuml;bertragung an WhatsApp statt.</p>
+
+      <p>Quelle: <a href="https://www.e-recht24.de" target="_blank" rel="noopener">e-recht24.de</a></p>
+    }
+    @case ('en') {
+      <p class="legal-note"><em>This translation is provided for convenience. The <a routerLink="/privacy-policy">German version</a> is legally authoritative.</em></p>
+
+      <h2>1. Privacy at a glance</h2>
+      <h3>General information</h3>
+      <p>The following notes provide a simple overview of what happens to your personal data when you visit this website.</p>
+      <h3>Data collection on this website</h3>
+      <h4>Who is responsible?</h4>
+      <p>Data processing is carried out by the website operator. See the section &ldquo;Controller&rdquo; for contact details.</p>
+      <h4>How do we collect your data?</h4>
+      <p>On the one hand through your input (e.g. contact or inquiry forms). On the other hand, technical data is collected automatically when you visit the site.</p>
+      <h4>What do we use your data for?</h4>
+      <p>Exclusively for the error-free provision of the website and for processing your inquiries. No analysis of user behaviour (tracking) takes place.</p>
+      <h4>What rights do you have?</h4>
+      <p>You have the right at any time to information about, rectification, erasure and restriction of the processing of your stored personal data, the right to data portability, the right to withdraw consent, and a right to object pursuant to Art. 21 GDPR. You also have the right to lodge a complaint with the competent data protection supervisory authority.</p>
+      <h4>No cookies, no tracking</h4>
+      <p>This website uses no cookies and no analytics or tracking services. No connections to third-party providers (e.g. Google Fonts, CDNs) are established &mdash; all fonts and resources are served locally from our server. Only your language and colour-scheme preferences are stored, at your request, in your browser's local storage (localStorage). This storage is technically necessary (&sect; 25 (2) TDDDG), contains no personal data and is not transmitted to us or to third parties.</p>
+
+      <h2>2. Hosting</h2>
+      <h3>IONOS</h3>
+      <p>Provider: IONOS SE, Elgendorfer Str. 57, 56410 Montabaur, Germany. Details: <a href="https://www.ionos.de/terms-gtc/terms-privacy" target="_blank" rel="noopener noreferrer">ionos.de/terms-gtc/terms-privacy</a>.</p>
+      <p>We have concluded a data processing agreement (DPA) with the provider, as required by data protection law, ensuring that the provider processes the personal data of our website visitors only in accordance with our instructions and in compliance with the GDPR.</p>
+      <h3>Server log files</h3>
+      <p>The hosting provider automatically collects and stores information in so-called server log files that your browser transmits automatically: browser type and version, operating system used, referrer URL, time of the server request and IP address. This data is not merged with other data sources. Collection is based on Art. 6 (1) (f) GDPR &mdash; the website operator has a legitimate interest in the technically error-free presentation and security of the website.</p>
+
+      <h2>3. General notes and mandatory information</h2>
+      <h3>Data protection</h3>
+      <p>We treat your personal data confidentially and in accordance with the statutory data protection regulations.</p>
+      <h3>Controller</h3>
+      <p>B&uuml;nyamin Ilhan<br />Beethovenstr. 13<br />53721 Siegburg, Germany<br />
+        Phone: +49 173 2856136<br />Email: mail&#64;ilhan-buenyamin.com</p>
+      <h3>Storage period</h3>
+      <p>Personal data is deleted as soon as the purpose of storage no longer applies, unless statutory retention periods require otherwise.</p>
+      <h3>SSL/TLS encryption</h3>
+      <p>For security reasons, this site uses SSL/TLS encryption for the transmission of confidential content.</p>
+
+      <h2>4. Data collection on this website</h2>
+      <h3>Inquiry and contact forms, email contact</h3>
+      <p>If you send us an inquiry via a form on this website or by email, your details are stored by us for the purpose of processing the inquiry and in case of follow-up questions. Depending on the form, this includes: name, email address, selected project type, budget and timeline information, your message and &mdash; for the free website check &mdash; the website address you provide. We do not pass this data on without your consent. Processing is based on Art. 6 (1) (b) GDPR (initiation or performance of a contract) or Art. 6 (1) (f) GDPR (legitimate interest in processing inquiries). The data is deleted once your inquiry has been conclusively processed and no statutory retention periods apply.</p>
+      <h3>Contact via WhatsApp</h3>
+      <p>Where a WhatsApp contact is offered on this website, it is an external link to the WhatsApp service (WhatsApp Ireland Ltd.). Communication only takes place if you actively click the link and use WhatsApp; WhatsApp's privacy policy then applies. No data is transmitted to WhatsApp through this website itself.</p>
+    }
+    @case ('tr') {
+      <p class="legal-note"><em>Bu &ccedil;eviri bilgilendirme ama&ccedil;l&#305;d&#305;r. Hukuken ba&#287;lay&#305;c&#305; olan <a routerLink="/privacy-policy">Almanca s&uuml;r&uuml;md&uuml;r</a>.</em></p>
+
+      <h2>1. Gizlili&#287;e genel bak&#305;&#351;</h2>
+      <h3>Genel bilgiler</h3>
+      <p>A&#351;a&#287;&#305;daki bilgiler, bu web sitesini ziyaret etti&#287;inizde ki&#351;isel verilerinize ne oldu&#287;una dair basit bir genel bak&#305;&#351; sunar.</p>
+      <h3>Bu web sitesinde veri toplama</h3>
+      <h4>Kim sorumlu?</h4>
+      <p>Veri i&#351;leme, web sitesi i&#351;letmecisi taraf&#305;ndan yap&#305;l&#305;r. &#304;leti&#351;im bilgileri i&ccedil;in &ldquo;Veri sorumlusu&rdquo; b&ouml;l&uuml;m&uuml;ne bak&#305;n.</p>
+      <h4>Verilerinizi nas&#305;l topluyoruz?</h4>
+      <p>Bir yandan sizin girdilerinizle (&ouml;rn. ileti&#351;im veya talep formu). Di&#287;er yandan, siteyi ziyaret etti&#287;inizde teknik veriler otomatik olarak kaydedilir.</p>
+      <h4>Verilerinizi ne i&ccedil;in kullan&#305;yoruz?</h4>
+      <p>Yaln&#305;zca web sitesinin hatas&#305;z sunulmas&#305; ve taleplerinizin i&#351;lenmesi i&ccedil;in. Kullan&#305;c&#305; davran&#305;&#351;&#305; analizi (takip/tracking) yap&#305;lmaz.</p>
+      <h4>Hangi haklara sahipsiniz?</h4>
+      <p>Kaydedilen ki&#351;isel verileriniz hakk&#305;nda her zaman bilgi alma, d&uuml;zeltme, silme ve i&#351;lemeyi k&#305;s&#305;tlama hakk&#305;na, veri ta&#351;&#305;nabilirli&#287;i hakk&#305;na, verilmi&#351; bir r&#305;zay&#305; geri &ccedil;ekme hakk&#305;na ve GDPR (DSGVO) Madde 21 uyar&#305;nca itiraz hakk&#305;na sahipsiniz. Ayr&#305;ca yetkili veri koruma denetim makam&#305;na &#351;ikayette bulunma hakk&#305;n&#305;z vard&#305;r.</p>
+      <h4>&Ccedil;erez yok, takip yok</h4>
+      <p>Bu web sitesi &ccedil;erez, analiz veya takip hizmeti kullanmaz. &Uuml;&ccedil;&uuml;nc&uuml; taraf sa&#287;lay&#305;c&#305;lara (&ouml;rn. Google Fonts, CDN'ler) ba&#287;lant&#305; kurulmaz &mdash; t&uuml;m yaz&#305; tipleri ve kaynaklar sunucumuzdan yerel olarak y&uuml;klenir. Yaln&#305;zca dil ve renk &#351;emas&#305; tercihleriniz, iste&#287;iniz &uuml;zerine taray&#305;c&#305;n&#305;z&#305;n yerel deposunda (localStorage) saklan&#305;r. Bu saklama teknik olarak gereklidir, ki&#351;isel veri i&ccedil;ermez ve bize veya &uuml;&ccedil;&uuml;nc&uuml; taraflara aktar&#305;lmaz.</p>
+
+      <h2>2. Hosting</h2>
+      <h3>IONOS</h3>
+      <p>Sa&#287;lay&#305;c&#305;: IONOS SE, Elgendorfer Str. 57, 56410 Montabaur, Almanya. Detaylar: <a href="https://www.ionos.de/terms-gtc/terms-privacy" target="_blank" rel="noopener noreferrer">ionos.de/terms-gtc/terms-privacy</a>.</p>
+      <p>Sa&#287;lay&#305;c&#305; ile veri koruma hukukunun &ouml;ng&ouml;rd&uuml;&#287;&uuml; bir veri i&#351;leme s&ouml;zle&#351;mesi (AVV/DPA) imzalad&#305;k. Bu s&ouml;zle&#351;me, sa&#287;lay&#305;c&#305;n&#305;n web sitesi ziyaret&ccedil;ilerimizin ki&#351;isel verilerini yaln&#305;zca talimatlar&#305;m&#305;z do&#287;rultusunda ve GDPR'a uygun olarak i&#351;lemesini g&uuml;vence alt&#305;na al&#305;r.</p>
+      <h3>Sunucu log dosyalar&#305;</h3>
+      <p>Hosting sa&#287;lay&#305;c&#305;s&#305;, taray&#305;c&#305;n&#305;z&#305;n otomatik olarak iletti&#287;i bilgileri sunucu log dosyalar&#305;nda toplar ve saklar: taray&#305;c&#305; t&uuml;r&uuml; ve s&uuml;r&uuml;m&uuml;, kullan&#305;lan i&#351;letim sistemi, y&ouml;nlendiren URL, sunucu iste&#287;inin saati ve IP adresi. Bu veriler ba&#351;ka veri kaynaklar&#305;yla birle&#351;tirilmez. Toplama, GDPR Madde 6 (1) (f) temelinde yap&#305;l&#305;r &mdash; web sitesi i&#351;letmecisinin, sitesinin teknik olarak hatas&#305;z sunumu ve g&uuml;venli&#287;i konusunda me&#351;ru menfaati vard&#305;r.</p>
+
+      <h2>3. Genel bilgiler ve zorunlu bilgilendirmeler</h2>
+      <h3>Veri korumas&#305;</h3>
+      <p>Ki&#351;isel verilerinizi gizli tutar&#305;z ve yasal veri koruma d&uuml;zenlemelerine uygun olarak i&#351;leriz.</p>
+      <h3>Veri sorumlusu</h3>
+      <p>B&uuml;nyamin Ilhan<br />Beethovenstr. 13<br />53721 Siegburg, Almanya<br />
+        Telefon: +49 173 2856136<br />E-posta: mail&#64;ilhan-buenyamin.com</p>
+      <h3>Saklama s&uuml;resi</h3>
+      <p>Ki&#351;isel veriler, saklama amac&#305; ortadan kalkt&#305;&#287;&#305;nda silinir; yasal saklama y&uuml;k&uuml;ml&uuml;l&uuml;kleri sakl&#305;d&#305;r.</p>
+      <h3>SSL/TLS &#351;ifrelemesi</h3>
+      <p>Bu site, g&uuml;venlik nedeniyle gizli i&ccedil;eriklerin aktar&#305;m&#305;nda SSL/TLS &#351;ifrelemesi kullan&#305;r.</p>
+
+      <h2>4. Bu web sitesinde veri toplama</h2>
+      <h3>Talep ve ileti&#351;im formlar&#305;, e-posta ileti&#351;imi</h3>
+      <p>Bize bu web sitesindeki bir form &uuml;zerinden veya e-posta ile bir talep g&ouml;nderirseniz, bilgileriniz talebin i&#351;lenmesi ve olas&#305; takip sorular&#305; i&ccedil;in taraf&#305;m&#305;zda saklan&#305;r. Forma g&ouml;re bunlar: ad, e-posta adresi, se&ccedil;ilen proje t&uuml;r&uuml;, b&uuml;t&ccedil;e ve zaman plan&#305; bilgileri, mesaj&#305;n&#305;z ve &mdash; &uuml;cretsiz web sitesi analizinde &mdash; belirtti&#287;iniz web sitesi adresidir. Bu verileri r&#305;zan&#305;z olmadan ba&#351;kalar&#305;na aktarmay&#305;z. &#304;&#351;leme, GDPR Madde 6 (1) (b) (s&ouml;zle&#351;me &ouml;ncesi ili&#351;ki veya s&ouml;zle&#351;menin ifas&#305;) veya Madde 6 (1) (f) (taleplerin i&#351;lenmesindeki me&#351;ru menfaat) temelinde yap&#305;l&#305;r. Veriler, talebiniz kesin olarak sonu&ccedil;land&#305;&#287;&#305;nda ve yasal saklama s&uuml;releri engel olu&#351;turmad&#305;&#287;&#305;nda silinir.</p>
+      <h3>WhatsApp ile ileti&#351;im</h3>
+      <p>Bu web sitesinde bir WhatsApp ileti&#351;im imkan&#305; sunuluyorsa, bu, WhatsApp hizmetine (WhatsApp Ireland Ltd.) giden harici bir ba&#287;lant&#305;d&#305;r. &#304;leti&#351;im ancak ba&#287;lant&#305;ya aktif olarak t&#305;klay&#305;p WhatsApp'&#305; kulland&#305;&#287;&#305;n&#305;zda ger&ccedil;ekle&#351;ir; bu durumda WhatsApp'&#305;n gizlilik politikas&#305; ge&ccedil;erlidir. Bu web sitesi &uuml;zerinden WhatsApp'a veri aktar&#305;m&#305; yap&#305;lmaz.</p>
+
+      <h2>5. KVKK Ayd&#305;nlatma Metni (T&uuml;rkiye'deki ziyaret&ccedil;iler i&ccedil;in)</h2>
+      <p>6698 say&#305;l&#305; Ki&#351;isel Verilerin Korunmas&#305; Kanunu (&ldquo;KVKK&rdquo;) kapsam&#305;nda, T&uuml;rkiye'den bu web sitesini ziyaret eden ve hizmet talep eden ki&#351;iler i&ccedil;in a&#351;a&#287;&#305;daki bilgilendirme yap&#305;l&#305;r:</p>
+      <h3>Veri sorumlusu</h3>
+      <p>B&uuml;nyamin Ilhan, Beethovenstr. 13, 53721 Siegburg, Almanya &mdash; mail&#64;ilhan-buenyamin.com</p>
+      <h3>&#304;&#351;lenen ki&#351;isel veriler ve i&#351;leme amac&#305;</h3>
+      <p>&#304;leti&#351;im ve talep formlar&#305; &uuml;zerinden iletti&#287;iniz veriler (ad, e-posta adresi, proje t&uuml;r&uuml;, b&uuml;t&ccedil;e ve zaman plan&#305; bilgileri, mesaj, varsa web sitesi adresi) ile sunucu taraf&#305;nda otomatik olu&#351;an teknik kay&#305;tlar (IP adresi, taray&#305;c&#305; bilgileri); taleplerinizin yan&#305;tlanmas&#305;, teklif haz&#305;rlanmas&#305; ve web sitesinin g&uuml;venli i&#351;letimi amac&#305;yla i&#351;lenir.</p>
+      <h3>Hukuki sebep ve aktar&#305;m</h3>
+      <p>&#304;&#351;leme; KVKK m. 5/2 (c) (s&ouml;zle&#351;menin kurulmas&#305; veya ifas&#305;yla do&#287;rudan ilgili olmas&#305;) ve m. 5/2 (f) (me&#351;ru menfaat) hukuki sebeplerine dayan&#305;r. Verileriniz, Almanya'da bulunan hosting sa&#287;lay&#305;c&#305;m&#305;z IONOS SE'nin sunucular&#305;nda saklan&#305;r; talebinizi iletti&#287;inizde verilerinizin yurt d&#305;&#351;&#305;nda (Almanya/AB) i&#351;lenece&#287;ini kabul etmi&#351; olursunuz. &Uuml;&ccedil;&uuml;nc&uuml; taraflara sat&#305;&#351; veya pazarlama amac&#305;yla aktar&#305;m yap&#305;lmaz.</p>
+      <h3>Haklar&#305;n&#305;z (KVKK m. 11)</h3>
+      <p>KVKK'n&#305;n 11. maddesi uyar&#305;nca; ki&#351;isel verilerinizin i&#351;lenip i&#351;lenmedi&#287;ini &ouml;&#287;renme, i&#351;lenmi&#351;se buna ili&#351;kin bilgi talep etme, i&#351;leme amac&#305;n&#305; &ouml;&#287;renme, eksik veya yanl&#305;&#351; i&#351;lenmi&#351;se d&uuml;zeltilmesini isteme, silinmesini veya yok edilmesini isteme ve zarara u&#287;raman&#305;z halinde zarar&#305;n giderilmesini talep etme haklar&#305;na sahipsiniz. Taleplerinizi mail&#64;ilhan-buenyamin.com adresine iletebilirsiniz.</p>
+    }
+  }
 </div>

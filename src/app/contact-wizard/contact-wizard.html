@@ -1,0 +1,110 @@
+@if (sent()) {
+  <div class="success-msg">
+    <span class="success-icon">✓</span>
+    <h3>{{ lang.t().contact.successTitle }}</h3>
+    <p>{{ lang.t().contact.successSub }}</p>
+    <button class="btn-ghost" (click)="reset()">{{ lang.t().contact.sendAnother }}</button>
+  </div>
+} @else {
+  <div class="wizard">
+    <!-- Progress -->
+    <ol class="wizard-progress">
+      @for (label of lang.t().wizard.steps; track label; let i = $index) {
+        <li [class.active]="step() === i + 1" [class.done]="step() > i + 1">
+          <span class="step-num">{{ i + 1 }}</span>
+          <span class="step-label">{{ label }}</span>
+        </li>
+      }
+    </ol>
+
+    <!-- Step 1: project type -->
+    @if (step() === 1) {
+      <h3 class="wizard-title">{{ lang.t().wizard.typeTitle }}</h3>
+      <div class="type-grid">
+        @for (type of lang.t().wizard.types; track type.key) {
+          <button
+            type="button"
+            class="type-card"
+            [class.selected]="projectType() === type.key"
+            (click)="selectType(type.key)">
+            <span class="type-label">{{ type.label }}</span>
+            <span class="type-desc">{{ type.desc }}</span>
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Step 2: budget & timeline -->
+    @if (step() === 2) {
+      <h3 class="wizard-title">{{ lang.t().wizard.frameTitle }}</h3>
+
+      <p class="chip-label">{{ lang.t().wizard.budgetLabel }} <span class="optional">{{ lang.t().wizard.optional }}</span></p>
+      <div class="chip-row">
+        @for (option of lang.t().wizard.budgets; track option) {
+          <button type="button" class="chip" [class.selected]="budget() === option"
+            (click)="budget.set(budget() === option ? '' : option)">{{ option }}</button>
+        }
+      </div>
+
+      <p class="chip-label">{{ lang.t().wizard.timelineLabel }} <span class="optional">{{ lang.t().wizard.optional }}</span></p>
+      <div class="chip-row">
+        @for (option of lang.t().wizard.timelines; track option) {
+          <button type="button" class="chip" [class.selected]="timeline() === option"
+            (click)="timeline.set(timeline() === option ? '' : option)">{{ option }}</button>
+        }
+      </div>
+
+      <div class="field">
+        <label for="wizard-details">{{ lang.t().wizard.detailsLabel }} <span class="optional">{{ lang.t().wizard.optional }}</span></label>
+        <textarea id="wizard-details" rows="3" [placeholder]="lang.t().wizard.detailsPh"
+          [ngModel]="details()" (ngModelChange)="details.set($event)" name="details"></textarea>
+      </div>
+
+      <div class="wizard-nav">
+        <button type="button" class="btn-back" (click)="back()">{{ lang.t().wizard.back }}</button>
+        <button type="button" class="btn-next" (click)="next()">{{ lang.t().wizard.next }}</button>
+      </div>
+    }
+
+    <!-- Step 3: contact details -->
+    @if (step() === 3) {
+      <h3 class="wizard-title">{{ lang.t().wizard.contactTitle }}</h3>
+      <form (submit)="send()" ngNativeValidate>
+        <div class="field">
+          <label for="wizard-name">{{ lang.t().contact.name }}</label>
+          <input id="wizard-name" type="text" required [placeholder]="lang.t().contact.namePh"
+            [ngModel]="name()" (ngModelChange)="name.set($event)" name="name" />
+        </div>
+        <div class="field">
+          <label for="wizard-email">{{ lang.t().contact.email }}</label>
+          <input id="wizard-email" type="email" required [placeholder]="lang.t().contact.emailPh"
+            [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
+        </div>
+        <div class="field hp-field" aria-hidden="true">
+          <label for="wizard-website">Website</label>
+          <input id="wizard-website" type="text" tabindex="-1" autocomplete="off"
+            [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="website" />
+        </div>
+        <div class="field">
+          <label for="wizard-message">{{ lang.t().contact.message }}</label>
+          <textarea id="wizard-message" required rows="5" [placeholder]="lang.t().contact.messagePh"
+            [ngModel]="message()" (ngModelChange)="message.set($event)" name="message"></textarea>
+        </div>
+
+        @if (error()) {
+          <p class="error-msg">
+            {{ lang.t().contact.error }}<br />
+            <a [href]="mailtoHref()">{{ lang.t().wizard.mailFallback }}</a>
+          </p>
+        }
+
+        <div class="wizard-nav">
+          <button type="button" class="btn-back" (click)="back()">{{ lang.t().wizard.back }}</button>
+          <button type="submit" class="btn-submit" [disabled]="sending()">
+            {{ sending() ? lang.t().contact.sending : lang.t().contact.send }}
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+}

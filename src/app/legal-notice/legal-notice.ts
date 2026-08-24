@@ -2,6 +2,7 @@ import { Component, inject, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
+import { urlPathsFor } from '../i18n/route-map';
 
 @Component({
   selector: 'app-legal-notice',
@@ -15,14 +16,13 @@ export class LegalNotice {
 
   constructor() {
     effect(() => {
-      const isDE = this.lang.current() === 'de';
-      this.seo.update(
-        isDE ? 'Impressum — Bünyamin Ilhan' : 'Legal Notice — Bünyamin Ilhan',
-        isDE
-          ? 'Impressum von Bünyamin Ilhan, Web- und Mobile-Entwickler aus Siegburg.'
-          : 'Legal notice of Bünyamin Ilhan, Web & Mobile Developer based in Siegburg.',
-        'legal-notice',
-      );
+      const t = this.lang.t();
+      this.seo.update({
+        title: t.meta.legalTitle,
+        description: t.meta.legalDesc,
+        lang: this.lang.current(),
+        paths: urlPathsFor('legal'),
+      });
     });
   }
 }

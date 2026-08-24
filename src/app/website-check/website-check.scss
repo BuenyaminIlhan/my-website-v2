@@ -1,0 +1,140 @@
+.website-check {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.check-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  font-family: "Overpass", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+
+  .label-line { display: block; width: 40px; height: 1px; background: var(--accent); }
+}
+
+.section-title {
+  font-family: "Syne", sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+
+  .accent { color: var(--accent); }
+}
+
+.check-sub {
+  font-family: "Overpass", sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.check-note {
+  font-family: "Overpass", sans-serif;
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+
+form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  input {
+    background: var(--bg);
+    border: 1px solid var(--border-2);
+    color: var(--text);
+    font-family: "Overpass", sans-serif;
+    font-size: 1rem;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 200ms;
+
+    &::placeholder { color: var(--border-2); }
+    &:focus { border-color: var(--accent); }
+  }
+}
+
+.hp-field {
+  position: absolute !important;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.btn-submit {
+  align-self: flex-start;
+  padding: 14px 40px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, transform 150ms;
+
+  &:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-2px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.error-msg {
+  font-size: 0.85rem;
+  color: #ff4444;
+  font-family: "Overpass", sans-serif;
+}
+
+.success-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 2.5rem;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+
+  .success-icon { font-size: 2rem; color: var(--accent); }
+
+  h3 {
+    font-family: "Syne", sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  p { font-family: "Overpass", sans-serif; color: var(--muted); }
+}
+
+@media (max-width: 900px) {
+  .check-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+}

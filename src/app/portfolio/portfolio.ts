@@ -1,13 +1,12 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { LangService } from '../services/lang.service';
+import { LangService, Lang } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 
 interface Project {
   index: string;
   title: string;
   stack: string[];
-  description: string;
-  descriptionDe: string;
+  descriptions: Record<Lang, string>;
   image: string;
   demoUrl?: string;
   pitchUrl?: string;
@@ -30,8 +29,11 @@ export class Portfolio {
     {
       index: '01', title: 'HausVio',
       stack: ['Angular', 'TypeScript', 'SaaS', 'DSGVO'],
-      description: 'Property management software for German homeowner associations (WEG) — annual statements at the push of a button, income and expense tracking, cost allocation keys. A complete SaaS product, live in production: from concept and design to development, hosting and operations.',
-      descriptionDe: 'Hausverwaltungs-Software für Wohnungseigentümergemeinschaften — Jahresabrechnung auf Knopfdruck, Einnahmen- und Ausgabenverwaltung, Umlageschlüssel. Ein komplettes SaaS-Produkt, live im Einsatz: von Konzept und Design über Entwicklung bis zu Hosting und Betrieb.',
+      descriptions: {
+        en: 'Property management software for German homeowner associations (WEG) — annual statements at the push of a button, income and expense tracking, cost allocation keys. A complete SaaS product, live in production: from concept and design to development, hosting and operations.',
+        de: 'Hausverwaltungs-Software für Wohnungseigentümergemeinschaften — Jahresabrechnung auf Knopfdruck, Einnahmen- und Ausgabenverwaltung, Umlageschlüssel. Ein komplettes SaaS-Produkt, live im Einsatz: von Konzept und Design über Entwicklung bis zu Hosting und Betrieb.',
+        tr: 'Almanya’daki konut sahipleri birlikleri (WEG) için emlak yönetim yazılımı — tek tuşla yıllık hesap özeti, gelir-gider yönetimi, gider dağıtım anahtarları. Eksiksiz bir SaaS ürünü, aktif kullanımda: konsept ve tasarımdan geliştirme, hosting ve işletmeye kadar.',
+      },
       image: 'assets/img/HausVio.webp',
       demoUrl: 'https://hausvio.de/',
       isLiveProduct: true,
@@ -39,8 +41,11 @@ export class Portfolio {
     {
       index: '02', title: 'Badeo',
       stack: ['Web-App', 'Digitale Unterschrift', 'Foto-Dokumentation'],
-      description: 'Quotation app for a bathroom renovation company — create professional quotes on site at the customer\'s home, document with photos and have them signed digitally on the spot. From survey to signature in a single appointment. Built as a customer project, live in daily use.',
-      descriptionDe: 'Angebots-App für einen Badumbau-Betrieb — Angebote direkt beim Kunden vor Ort erstellen, mit Fotos dokumentieren und sofort digital unterschreiben lassen. Vom Aufmaß bis zur Unterschrift in einem einzigen Termin. Als Kundenprojekt entwickelt, täglich im Einsatz.',
+      descriptions: {
+        en: 'Quotation app for a bathroom renovation company — create professional quotes on site at the customer\'s home, document with photos and have them signed digitally on the spot. From survey to signature in a single appointment. Built as a customer project, live in daily use.',
+        de: 'Angebots-App für einen Badumbau-Betrieb — Angebote direkt beim Kunden vor Ort erstellen, mit Fotos dokumentieren und sofort digital unterschreiben lassen. Vom Aufmaß bis zur Unterschrift in einem einzigen Termin. Als Kundenprojekt entwickelt, täglich im Einsatz.',
+        tr: 'Banyo tadilat firması için teklif uygulaması — teklifleri doğrudan müşterinin evinde oluşturun, fotoğraflarla belgeleyin ve anında dijital olarak imzalatın. Ölçümden imzaya tek randevuda. Müşteri projesi olarak geliştirildi, her gün aktif kullanımda.',
+      },
       image: 'assets/img/Badeo.webp',
       demoUrl: 'https://badeo.net/',
       isLiveProduct: true,
@@ -48,8 +53,11 @@ export class Portfolio {
     {
       index: '03', title: 'Labbayk',
       stack: ['Kotlin', 'Jetpack Compose', 'Room DB'],
-      description: 'The Quran in Different Languages. Always free and available offline in 90 languages for recitation and reference.',
-      descriptionDe: 'Der Quran in verschiedenen Sprachen. Immer kostenlos und offline in 90 Sprachen verfügbar.',
+      descriptions: {
+        en: 'The Quran in Different Languages. Always free and available offline in 90 languages for recitation and reference.',
+        de: 'Der Quran in verschiedenen Sprachen. Immer kostenlos und offline in 90 Sprachen verfügbar.',
+        tr: 'Kur’an-ı Kerim 90 dilde — her zaman ücretsiz ve çevrimdışı kullanılabilir Android uygulaması.',
+      },
       image: 'assets/img/Labbayk.webp',
       pitchUrl: 'https://www.figma.com/proto/C6KuxVx0iJFaaBsa6aapvH/Labbayk?page-id=31%3A50&node-id=31-74&p=f&viewport=696%2C-2210%2C0.54&t=wEXwGIiS4lfyWauH-1&scaling=contain&content-scaling=fixed',
       githubUrl: 'https://github.com/BuenyaminIlhan/Labbayk/tree/master',
@@ -57,8 +65,11 @@ export class Portfolio {
     {
       index: '04', title: 'Join',
       stack: ['JavaScript', 'HTML', 'CSS'],
-      description: 'Task manager inspired by the Kanban System. Create and organise tasks using drag and drop, assign users and categories.',
-      descriptionDe: 'Aufgaben-Manager nach dem Kanban-Prinzip. Aufgaben per Drag & Drop erstellen, Nutzer und Kategorien zuweisen.',
+      descriptions: {
+        en: 'Task manager inspired by the Kanban System. Create and organise tasks using drag and drop, assign users and categories.',
+        de: 'Aufgaben-Manager nach dem Kanban-Prinzip. Aufgaben per Drag & Drop erstellen, Nutzer und Kategorien zuweisen.',
+        tr: 'Kanban prensibine göre görev yöneticisi. Görevleri sürükle-bırak ile oluşturun, kullanıcı ve kategori atayın.',
+      },
       image: 'assets/img/Join-Kanban.webp',
       demoUrl: 'https://ilhan-buenyamin.com/Join-Kanban/',
       githubUrl: 'https://github.com/BuenyaminIlhan/Join-Kanban',
@@ -66,8 +77,11 @@ export class Portfolio {
     {
       index: '05', title: 'Sharkie',
       stack: ['JavaScript', 'HTML', 'CSS'],
-      description: "Embark on a simple game driven by an object-oriented approach. Join Sharkie's adventure to uncover poisons and take on the enraged Shark End Boss.",
-      descriptionDe: 'Ein einfaches Spiel mit objektorientiertem Ansatz. Begleite Sharkie auf seinem Abenteuer gegen den wütenden Hai-Endboss.',
+      descriptions: {
+        en: "Embark on a simple game driven by an object-oriented approach. Join Sharkie's adventure to uncover poisons and take on the enraged Shark End Boss.",
+        de: 'Ein einfaches Spiel mit objektorientiertem Ansatz. Begleite Sharkie auf seinem Abenteuer gegen den wütenden Hai-Endboss.',
+        tr: 'Nesne yönelimli yaklaşımla geliştirilmiş basit bir oyun. Sharkie’nin öfkeli köpekbalığı final patronuna karşı macerasına eşlik edin.',
+      },
       image: 'assets/img/Sharkie.webp',
       demoUrl: 'https://ilhan-buenyamin.com/Sharkie/',
       githubUrl: 'https://github.com/BuenyaminIlhan/Sharkie',
@@ -75,8 +89,11 @@ export class Portfolio {
     {
       index: '06', title: 'DA-Bubble',
       stack: ['Angular', 'TypeScript', 'Firebase', 'SCSS'],
-      description: 'Slack Clone — authentication via Google, chatting in channels, replying in threads. Google Firebase as the backend.',
-      descriptionDe: 'Slack-Klon — Google-Authentifizierung, Chatten in Channels, Antworten in Threads. Google Firebase als Backend.',
+      descriptions: {
+        en: 'Slack Clone — authentication via Google, chatting in channels, replying in threads. Google Firebase as the backend.',
+        de: 'Slack-Klon — Google-Authentifizierung, Chatten in Channels, Antworten in Threads. Google Firebase als Backend.',
+        tr: 'Slack klonu — Google ile giriş, kanallarda sohbet, thread’lerde yanıt. Backend olarak Google Firebase.',
+      },
       image: 'assets/img/DA-Bubble.webp',
       demoUrl: 'https://da-bubble.ilhan-buenyamin.com/',
       githubUrl: 'https://github.com/BuenyaminIlhan/Da-Bubble',
@@ -84,11 +101,7 @@ export class Portfolio {
   ];
 
   activeProject = computed(() => this.projects[this.activeIndex()]);
-  activeDescription = computed(() =>
-    this.lang.current() === 'de'
-      ? this.activeProject().descriptionDe
-      : this.activeProject().description
-  );
+  activeDescription = computed(() => this.activeProject().descriptions[this.lang.current()]);
 
   setActive(index: number): void {
     if (index === this.activeIndex()) return;

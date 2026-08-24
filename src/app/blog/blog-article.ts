@@ -1,7 +1,10 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
+import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
-import { blogArticles, BlogArticle } from './blog-data';
+import { blogArticleUrlPaths, blogArticleUrlPath } from '../i18n/route-map';
+import { blogArticles, BlogArticleContent } from './blog-data';
+import { SITE_CONFIG } from '../config/site.config';
 
 @Component({
   selector: 'app-blog-article',
@@ -10,25 +13,36 @@ import { blogArticles, BlogArticle } from './blog-data';
   styleUrl: './blog.scss',
 })
 export class BlogArticlePage implements OnDestroy {
+  lang = inject(LangService);
   private seo = inject(SeoService);
   private route = inject(ActivatedRoute);
 
-  article: BlogArticle = blogArticles.find(a => a.slug === this.route.snapshot.data['slug'])!;
+  private articleId = this.route.snapshot.data['articleId'] as string;
+  private meta = blogArticles.find(a => a.id === this.articleId)!;
+
+  article: BlogArticleContent = this.meta.locales[this.lang.current()]!;
+  dateIso = this.meta.dateIso;
 
   constructor() {
-    const a = this.article;
-    this.seo.update(a.metaTitle, a.metaDescription, 'blog/' + a.slug);
+    const currentLang = this.lang.current();
+    const url = SITE_CONFIG.baseUrl + '/' + blogArticleUrlPath(this.articleId, currentLang)!;
+    this.seo.update({
+      title: this.article.metaTitle,
+      description: this.article.metaDescription,
+      lang: currentLang,
+      paths: blogArticleUrlPaths(this.articleId),
+    });
     this.seo.setJsonLd({
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
-      headline: a.title,
-      description: a.metaDescription,
-      datePublished: a.dateIso,
-      inLanguage: 'de',
-      url: 'https://ilhan-buenyamin.com/blog/' + a.slug,
-      author: { '@id': 'https://ilhan-buenyamin.com/#person' },
-      publisher: { '@id': 'https://ilhan-buenyamin.com/#person' },
-      mainEntityOfPage: 'https://ilhan-buenyamin.com/blog/' + a.slug,
+      headline: this.article.title,
+      description: this.article.metaDescription,
+      datePublished: this.dateIso,
+      inLanguage: currentLang,
+      url,
+      author: { '@id': SITE_CONFIG.baseUrl + '/#person' },
+      publisher: { '@id': SITE_CONFIG.baseUrl + '/#person' },
+      mainEntityOfPage: url,
     });
   }
 
