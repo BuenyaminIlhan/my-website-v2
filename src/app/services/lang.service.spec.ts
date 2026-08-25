@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
@@ -17,7 +17,19 @@ describe('LangService', () => {
     service = TestBed.inject(LangService);
     document = TestBed.inject(DOCUMENT);
     localStorage.clear();
+    // index.html ships a manifest link on every prerendered route.
+    const manifest = document.createElement('link');
+    manifest.setAttribute('rel', 'manifest');
+    manifest.setAttribute('href', 'manifest.json');
+    document.head.appendChild(manifest);
   });
+
+  afterEach(() => {
+    document.head.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
+  });
+
+  const manifestHref = () =>
+    document.head.querySelector('link[rel="manifest"]')?.getAttribute('href');
 
   describe('applyRoute', () => {
     it('takes the language from the route and reflects it on <html lang>', () => {
@@ -25,6 +37,17 @@ describe('LangService', () => {
 
       expect(service.current()).toBe('tr');
       expect(document.documentElement.getAttribute('lang')).toBe('tr');
+    });
+
+    it('points each locale at its own web app manifest', () => {
+      service.applyRoute('tr', 'home');
+      expect(manifestHref()).toBe('manifest.tr.json');
+
+      service.applyRoute('en', 'home');
+      expect(manifestHref()).toBe('manifest.en.json');
+
+      service.applyRoute('de', 'home');
+      expect(manifestHref()).toBe('manifest.json');
     });
 
     it('swaps the translation bundle the rest of the app reads', () => {

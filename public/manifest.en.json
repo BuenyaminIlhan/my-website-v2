@@ -1,0 +1,28 @@
+{
+  "name": "Bünyamin Ilhan — Web & App Developer",
+  "short_name": "Bünyamin Ilhan",
+  "description": "Web & app developer based in Siegburg, Germany. Modern websites, web apps and native iOS & Android apps built with Angular, Swift & Kotlin.",
+  "start_url": "/en",
+  "display": "standalone",
+  "background_color": "#f5f3ee",
+  "theme_color": "#ff9900",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

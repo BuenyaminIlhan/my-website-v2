@@ -36,6 +36,16 @@ export class LangService {
     if (this.current() !== lang) this.current.set(lang);
     // Imperative so the prerendered HTML of every locale carries the right <html lang>.
     this.document.documentElement.setAttribute('lang', lang);
+    this.setManifest(lang);
+  }
+
+  /**
+   * index.html ships the German manifest for every prerendered route; point each
+   * locale at its own so an installed PWA gets the right name and start URL.
+   */
+  private setManifest(lang: Lang) {
+    const link = this.document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+    link?.setAttribute('href', lang === 'de' ? 'manifest.json' : `manifest.${lang}.json`);
   }
 
   /** Prefixes an absolute in-app link ('/blog', '/') with the current locale ('' for de). */

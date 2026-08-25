@@ -1,0 +1,28 @@
+{
+  "name": "Bünyamin Ilhan — Web & Mobil Uygulama Geliştirme",
+  "short_name": "Bünyamin Ilhan",
+  "description": "Almanya Siegburg merkezli web ve uygulama geliştirici. Angular, Swift ve Kotlin ile modern web siteleri, web uygulamaları ve yerel iOS & Android uygulamaları.",
+  "start_url": "/tr",
+  "display": "standalone",
+  "background_color": "#f5f3ee",
+  "theme_color": "#ff9900",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
