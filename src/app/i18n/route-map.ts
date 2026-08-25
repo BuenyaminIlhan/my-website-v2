@@ -6,7 +6,10 @@ export type PageKey = keyof typeof routesJson.pages;
 
 /** URL slug of a page in a locale, undefined if the page does not exist there (e.g. blog in en). */
 export function slugFor(key: PageKey, lang: Lang): string | undefined {
-  return (routesJson.pages[key] as Partial<Record<Lang, string>>)[lang];
+  // Callers may pass an unvalidated string (see LangService.pagePath) — an unknown
+  // key must fall through to the caller's fallback, not throw.
+  const page = routesJson.pages[key] as Partial<Record<Lang, string>> | undefined;
+  return page?.[lang];
 }
 
 /**
