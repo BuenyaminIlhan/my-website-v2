@@ -57,17 +57,10 @@
                 "glob": "favicon.svg",
                 "input": "src",
                 "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@taiga-ui/icons/src",
-                "output": "assets/taiga-ui/icons"
               }
             ],
             "styles": [
               "src/tailwind.css",
-              "node_modules/@taiga-ui/styles/taiga-ui-theme.less",
-              "node_modules/@taiga-ui/styles/taiga-ui-fonts.less",
               "src/styles.scss"
             ]
           },

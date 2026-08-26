@@ -1,4 +1,3 @@
-import { provideTaiga } from '@taiga-ui/core';
 import { ApplicationConfig } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
@@ -12,6 +11,5 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'top' }),
     ),
     provideClientHydration(withEventReplay()),
-    provideTaiga(),
   ],
 };

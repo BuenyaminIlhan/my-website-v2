@@ -44,5 +44,10 @@ __screenshots__/
 Thumbs.db
 
 # Claude Code
-.claude/
+# .claude/* rather than .claude/ so git descends into the directory and the
+# negation below is reached at all.
+.claude/*
 CLAUDE.md
+# The Guardian project config is versioned: it whitelists @eslint/js, which the
+# install guard otherwise flags as a typosquat, so every machine needs it.
+!.claude/guardian.json

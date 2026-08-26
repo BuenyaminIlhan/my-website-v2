@@ -1,0 +1,5 @@
+{
+  "trustedPackages": [
+    "@eslint/js"
+  ]
+}

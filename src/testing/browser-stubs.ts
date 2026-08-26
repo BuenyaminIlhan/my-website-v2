@@ -58,39 +58,6 @@ export function stubIntersectionObserver(): IntersectionObserverStub {
   };
 }
 
-export interface MatchMediaStub {
-  restore(): void;
-}
-
-/**
- * jsdom ships no matchMedia. Taiga UI's dark-mode token calls it during
- * provideTaiga(), so any spec that mounts <tui-root> needs this. Mirrors the
- * SSR stub in app.config.server.ts: nothing matches, listeners go nowhere.
- */
-export function stubMatchMedia(): MatchMediaStub {
-  const target = globalThis as unknown as Record<string, unknown>;
-  const original = target['matchMedia'];
-
-  const noop = () => undefined;
-  target['matchMedia'] = (media: string) =>
-    ({
-      matches: false,
-      media,
-      onchange: null,
-      addListener: noop,
-      removeListener: noop,
-      addEventListener: noop,
-      removeEventListener: noop,
-      dispatchEvent: noop,
-    }) as unknown as MediaQueryList;
-
-  return {
-    restore: () => {
-      target['matchMedia'] = original;
-    },
-  };
-}
-
 export interface AnimationFrameStub {
   /** Runs every queued frame callback with `timestamp`, repeatedly, until the queue drains. */
   flush(timestamp: number): void;

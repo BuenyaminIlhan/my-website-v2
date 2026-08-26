@@ -2,10 +2,9 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Type } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { provideTaiga } from '@taiga-ui/core';
 import { LangService } from './services/lang.service';
 import { InquiryService } from './services/inquiry.service';
-import { stubIntersectionObserver, stubAnimationFrame, stubMatchMedia } from '../testing/browser-stubs';
+import { stubIntersectionObserver, stubAnimationFrame } from '../testing/browser-stubs';
 import { host, text } from '../testing/fixture';
 
 import { App } from './app';
@@ -29,21 +28,16 @@ import { WhatsappButton } from './whatsapp-button/whatsapp-button';
 describe('page components', () => {
   let io: ReturnType<typeof stubIntersectionObserver>;
   let raf: ReturnType<typeof stubAnimationFrame>;
-  let media: ReturnType<typeof stubMatchMedia>;
 
   beforeEach(() => {
     io = stubIntersectionObserver();
     raf = stubAnimationFrame();
-    media = stubMatchMedia();
-    // App hosts <tui-root>, which resolves TUI_OPTIONS — the same provider set
-    // the real app installs in appConfig.
-    TestBed.configureTestingModule({ providers: [provideRouter([]), provideTaiga()] });
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
   });
 
   afterEach(() => {
     io.restore();
     raf.restore();
-    media.restore();
   });
 
   const mount = <T,>(component: Type<T>): ComponentFixture<T> => {
