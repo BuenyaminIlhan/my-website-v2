@@ -333,9 +333,23 @@ const contents: Record<string, Partial<Record<Lang, BlogArticleContent>>> = {
 export const blogArticles: BlogArticle[] = registryJson.articles.map(entry => ({
   id: entry.id,
   dateIso: entry.dateIso,
-  slugs: entry.slugs as Partial<Record<Lang, string>>,
+  slugs: entry.slugs,
   locales: contents[entry.id] ?? {},
 }));
+
+/** Article by id — an unknown id means the route tree and the registry disagree. */
+export function articleById(id: string): BlogArticle {
+  const article = blogArticles.find(a => a.id === id);
+  if (article === undefined) throw new Error(`Unknown blog article id "${id}"`);
+  return article;
+}
+
+/** Localized content of an article — routes exist only for locales the article has. */
+export function articleContent(article: BlogArticle, lang: Lang): BlogArticleContent {
+  const content = article.locales[lang];
+  if (content === undefined) throw new Error(`Blog article "${article.id}" has no content for locale "${lang}"`);
+  return content;
+}
 
 /** Articles available in a locale, newest first. */
 export function articlesFor(lang: Lang): BlogArticle[] {

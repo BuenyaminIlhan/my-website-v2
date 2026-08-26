@@ -5,7 +5,7 @@ import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 export class ThemeService {
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
-  isDark = signal<boolean>(false);
+  readonly isDark = signal<boolean>(false);
 
   constructor() {
     if (isPlatformBrowser(this.platformId)) {

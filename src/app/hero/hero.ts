@@ -1,4 +1,4 @@
-import { Component, signal, computed, effect, inject, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, effect, inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LangService } from '../services/lang.service';
 
@@ -7,13 +7,14 @@ import { LangService } from '../services/lang.service';
   imports: [],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Hero implements OnDestroy {
   lang = inject(LangService);
   private platformId = inject(PLATFORM_ID);
 
-  displayed = signal('');
-  cursorVisible = signal(true);
+  readonly displayed = signal('');
+  readonly cursorVisible = signal(true);
 
   private typeTimer?: ReturnType<typeof setInterval>;
   private cursorTimer?: ReturnType<typeof setInterval>;

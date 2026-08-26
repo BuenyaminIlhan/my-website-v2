@@ -1,4 +1,4 @@
-import { Component, signal, inject, PLATFORM_ID, ElementRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject, PLATFORM_ID, ElementRef, AfterViewInit } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
@@ -14,13 +14,14 @@ interface Skill {
   imports: [RevealDirective],
   templateUrl: './skills.html',
   styleUrl: './skills.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Skills implements AfterViewInit {
   lang = inject(LangService);
   private platformId = inject(PLATFORM_ID);
-  private el = inject(ElementRef);
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  barWidths = signal<number[]>([]);
+  readonly barWidths = signal<number[]>([]);
   private animated = false;
 
   readonly web: Skill[] = [

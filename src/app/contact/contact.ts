@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 import { ContactWizard } from '../contact-wizard/contact-wizard';
@@ -8,6 +8,7 @@ import { ContactWizard } from '../contact-wizard/contact-wizard';
   imports: [RevealDirective, ContactWizard],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Contact {
   lang = inject(LangService);

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { LangService } from '../services/lang.service';
 import { SITE_CONFIG } from '../config/site.config';
 
@@ -11,13 +11,14 @@ import { SITE_CONFIG } from '../config/site.config';
   imports: [],
   templateUrl: './whatsapp-button.html',
   styleUrl: './whatsapp-button.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WhatsappButton {
   lang = inject(LangService);
 
   readonly number = SITE_CONFIG.whatsappNumber;
 
-  href = computed(() =>
+  readonly href = computed(() =>
     `https://wa.me/${this.number}?text=${encodeURIComponent(this.lang.t().whatsapp.prefill)}`,
   );
 }

@@ -1,4 +1,4 @@
-import { Component, signal, HostListener, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, HostListener, inject } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { ThemeService } from '../services/theme.service';
 import { LangService } from '../services/lang.service';
@@ -8,14 +8,15 @@ import { LangService } from '../services/lang.service';
   imports: [RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   private router = inject(Router);
   theme = inject(ThemeService);
   lang = inject(LangService);
 
-  menuOpen = signal(false);
-  scrolled = signal(false);
+  readonly menuOpen = signal(false);
+  readonly scrolled = signal(false);
 
   @HostListener('window:scroll')
   onScroll() {
@@ -23,7 +24,7 @@ export class Header {
   }
 
   navigateTo(fragment: string) {
-    this.router.navigate([this.lang.link('/')], { fragment });
+    void this.router.navigate([this.lang.link('/')], { fragment });
     this.closeMenu();
   }
 

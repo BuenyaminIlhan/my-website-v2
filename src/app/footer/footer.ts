@@ -1,4 +1,4 @@
-import { Component, signal, computed, HostListener, inject, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, HostListener, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser, NgStyle } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
@@ -14,20 +14,21 @@ const DRAG_THRESHOLD = 5;
   imports: [RouterLink, NgStyle],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {
   lang = inject(LangService);
   private platformId = inject(PLATFORM_ID);
   readonly year = new Date().getFullYear();
 
-  scrolled = signal(false);
-  dragging = signal(false);
+  readonly scrolled = signal(false);
+  readonly dragging = signal(false);
 
   // null = default CSS position (bottom-right via stylesheet)
-  private fabLeft = signal<number | null>(null);
-  private fabTop  = signal<number | null>(null);
+  private readonly fabLeft = signal<number | null>(null);
+  private readonly fabTop  = signal<number | null>(null);
 
-  fabStyle = computed(() => {
+  readonly fabStyle = computed(() => {
     const x = this.fabLeft();
     const y = this.fabTop();
     if (x === null || y === null) return {};

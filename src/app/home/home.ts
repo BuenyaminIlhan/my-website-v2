@@ -1,4 +1,4 @@
-import { Component, inject, effect, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect, OnDestroy } from '@angular/core';
 import { Hero } from '../hero/hero';
 import { Offerings } from '../offerings/offerings';
 import { Process } from '../process/process';
@@ -20,6 +20,7 @@ import { buildSiteGraph } from '../i18n/jsonld';
   imports: [Hero, Offerings, Process, AboutMe, Stats, Skills, Portfolio, Testimonials, Faq, WebsiteCheck, Contact],
   templateUrl: './home.html',
   styleUrl: './home.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home implements OnDestroy {
   private lang = inject(LangService);

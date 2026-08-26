@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, inject, input, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Directive({
@@ -6,16 +6,16 @@ import { isPlatformBrowser } from '@angular/common';
   standalone: true,
 })
 export class RevealDirective implements OnInit, OnDestroy {
-  @Input('appReveal') delay: number = 0;
+  readonly delay = input(0, { alias: 'appReveal' });
 
-  private el = inject(ElementRef);
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
   private platformId = inject(PLATFORM_ID);
   private observer?: IntersectionObserver;
 
   ngOnInit() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const el = this.el.nativeElement as HTMLElement;
+    const el = this.el.nativeElement;
     let initialized = false;
 
     this.observer = new IntersectionObserver(
@@ -29,7 +29,8 @@ export class RevealDirective implements OnInit, OnDestroy {
           }
           el.style.opacity = '0';
           el.style.transform = 'translateY(28px)';
-          el.style.transition = `opacity 650ms ease ${this.delay}ms, transform 650ms ease ${this.delay}ms`;
+          const delay = this.delay();
+          el.style.transition = `opacity 650ms ease ${delay}ms, transform 650ms ease ${delay}ms`;
           return;
         }
         if (entry.isIntersecting) {

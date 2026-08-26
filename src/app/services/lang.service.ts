@@ -6,7 +6,7 @@ import { Lang, LangTranslations, SUPPORTED_LOCALES } from '../i18n/translations'
 import { de } from '../i18n/de';
 import { en } from '../i18n/en';
 import { tr } from '../i18n/tr';
-import { PageKey, urlPathFor, blogArticleUrlPath } from '../i18n/route-map';
+import { PageKey, urlPathFor, homePathFor, blogArticleUrlPath } from '../i18n/route-map';
 
 export type { Lang, LangTranslations, OfferItem, ServicePageContent, TestimonialItem } from '../i18n/translations';
 
@@ -25,10 +25,10 @@ export class LangService {
   private router = inject(Router);
 
   readonly locales = SUPPORTED_LOCALES;
-  current = signal<Lang>('de');
-  t = computed<LangTranslations>(() => translations[this.current()]);
+  readonly current = signal<Lang>('de');
+  readonly t = computed<LangTranslations>(() => translations[this.current()]);
 
-  private routeCtx = signal<RouteContext | null>(null);
+  private readonly routeCtx = signal<RouteContext | null>(null);
 
   /** Called by the langGuard on every navigation. The URL is the source of truth for the language. */
   applyRoute(lang: Lang, pageKey: PageKey, articleId?: string) {
@@ -57,7 +57,7 @@ export class LangService {
 
   /** Localized URL of a service/legal/blog page for the current locale. */
   pagePath(key: string): string {
-    const p = urlPathFor(key as PageKey, this.current()) ?? urlPathFor('home', this.current())!;
+    const p = urlPathFor(key as PageKey, this.current()) ?? homePathFor(this.current());
     return '/' + p;
   }
 
@@ -68,8 +68,8 @@ export class LangService {
     let path: string | undefined;
     if (ctx?.articleId) path = blogArticleUrlPath(ctx.articleId, target);
     else if (ctx) path = urlPathFor(ctx.pageKey, target);
-    if (path === undefined) path = urlPathFor('home', target)!;
-    this.router.navigateByUrl('/' + path);
+    if (path === undefined) path = homePathFor(target);
+    void this.router.navigateByUrl('/' + path);
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('lang', target);
     }

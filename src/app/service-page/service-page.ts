@@ -1,4 +1,4 @@
-import { Component, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
@@ -18,6 +18,7 @@ const PROJECT_TYPE_BY_SLUG: Record<string, string> = {
   imports: [RouterLink],
   templateUrl: './service-page.html',
   styleUrl: './service-page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicePage {
   lang = inject(LangService);

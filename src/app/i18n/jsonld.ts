@@ -24,6 +24,125 @@ const APP_OFFER: Record<Lang, { name: string; description: string }> = {
 
 const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services', tr: 'Hizmetler' };
 
+const ADDRESS = {
+  '@type': 'PostalAddress',
+  addressLocality: 'Siegburg',
+  addressRegion: 'Nordrhein-Westfalen',
+  addressCountry: 'DE',
+};
+
+const PROJECTS = [
+  { pos: 1, type: 'WebApplication', name: 'HausVio', url: 'https://hausvio.de/', category: 'BusinessApplication' },
+  { pos: 2, type: 'WebApplication', name: 'Badeo', url: 'https://badeo.net/', category: 'BusinessApplication' },
+  { pos: 3, type: 'SoftwareApplication', name: 'Labbayk', url: undefined, category: 'LifestyleApplication' },
+  { pos: 4, type: 'WebApplication', name: 'Join', url: `${BASE}/Join-Kanban/`, category: undefined },
+  { pos: 5, type: 'WebApplication', name: 'Sharkie', url: `${BASE}/Sharkie/`, category: undefined },
+  { pos: 6, type: 'WebApplication', name: 'DA-Bubble', url: 'https://da-bubble.ilhan-buenyamin.com/', category: undefined },
+];
+
+function personNode(lang: Lang): object {
+  return {
+    '@type': 'Person',
+    '@id': `${BASE}/#person`,
+    name: 'Bünyamin Ilhan',
+    url: BASE,
+    email: SITE_CONFIG.email,
+    jobTitle: 'Web- & App-Entwickler',
+    description: PERSON_DESC[lang],
+    image: `${BASE}/assets/img/Profile_2.jpg`,
+    knowsAbout: ['Webentwicklung', 'App-Entwicklung', 'Web-App-Entwicklung', 'Angular', 'TypeScript', 'Swift', 'Kotlin', 'iOS', 'Android', 'Frontend-Entwicklung'],
+    knowsLanguage: ['de', 'en', 'tr'],
+    address: ADDRESS,
+    sameAs: [
+      'https://github.com/BuenyaminIlhan',
+      'https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/',
+    ],
+  };
+}
+
+function serviceNode(lang: Lang, t: LangTranslations): object {
+  return {
+    '@type': 'ProfessionalService',
+    '@id': `${BASE}/#service`,
+    name: 'Bünyamin Ilhan — Web- & App-Entwicklung',
+    url: BASE,
+    founder: { '@id': `${BASE}/#person` },
+    description: SERVICE_DESC[lang],
+    areaServed: ['DE', 'TR'],
+    knowsLanguage: ['de', 'en', 'tr'],
+    address: ADDRESS,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: CATALOG_NAME[lang],
+      itemListElement: [
+        ...t.offers.items.map(item => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: item.title, description: item.desc },
+        })),
+        {
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: APP_OFFER[lang].name, description: APP_OFFER[lang].description },
+        },
+      ],
+    },
+  };
+}
+
+function faqNode(homeUrl: string, t: LangTranslations): object {
+  return {
+    '@type': 'FAQPage',
+    '@id': `${homeUrl}#faq`,
+    mainEntity: t.faq.items.map(item => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
+}
+
+function websiteNode(lang: Lang): object {
+  return {
+    '@type': 'WebSite',
+    '@id': `${BASE}/#website`,
+    url: BASE,
+    name: 'Bünyamin Ilhan — Portfolio',
+    author: { '@id': `${BASE}/#person` },
+    inLanguage: lang,
+  };
+}
+
+function profilePageNode(homeUrl: string, lang: Lang): object {
+  return {
+    '@type': 'ProfilePage',
+    '@id': `${homeUrl}#profilepage`,
+    url: homeUrl,
+    name: 'Bünyamin Ilhan — Web- & App-Entwickler',
+    isPartOf: { '@id': `${BASE}/#website` },
+    mainEntity: { '@id': `${BASE}/#person` },
+    inLanguage: lang,
+  };
+}
+
+function projectsNode(): object {
+  return {
+    '@type': 'ItemList',
+    '@id': `${BASE}/#projects`,
+    name: 'Portfolio',
+    author: { '@id': `${BASE}/#person` },
+    itemListElement: PROJECTS.map(p => ({
+      '@type': 'ListItem',
+      position: p.pos,
+      item: {
+        '@type': p.type,
+        name: p.name,
+        ...(p.url ? { url: p.url } : {}),
+        ...(p.category ? { applicationCategory: p.category } : {}),
+        author: { '@id': `${BASE}/#person` },
+      },
+    })),
+  };
+}
+
 /** Localized site-wide JSON-LD @graph, injected on the home page of each locale. */
 export function buildSiteGraph(lang: Lang, t: LangTranslations): object {
   const homeUrl = BASE + '/' + (urlPathFor('home', lang) || '');
@@ -31,108 +150,12 @@ export function buildSiteGraph(lang: Lang, t: LangTranslations): object {
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      {
-        '@type': 'Person',
-        '@id': `${BASE}/#person`,
-        name: 'Bünyamin Ilhan',
-        url: BASE,
-        email: SITE_CONFIG.email,
-        jobTitle: 'Web- & App-Entwickler',
-        description: PERSON_DESC[lang],
-        image: `${BASE}/assets/img/Profile_2.jpg`,
-        knowsAbout: ['Webentwicklung', 'App-Entwicklung', 'Web-App-Entwicklung', 'Angular', 'TypeScript', 'Swift', 'Kotlin', 'iOS', 'Android', 'Frontend-Entwicklung'],
-        knowsLanguage: ['de', 'en', 'tr'],
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: 'Siegburg',
-          addressRegion: 'Nordrhein-Westfalen',
-          addressCountry: 'DE',
-        },
-        sameAs: [
-          'https://github.com/BuenyaminIlhan',
-          'https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/',
-        ],
-      },
-      {
-        '@type': 'ProfessionalService',
-        '@id': `${BASE}/#service`,
-        name: 'Bünyamin Ilhan — Web- & App-Entwicklung',
-        url: BASE,
-        founder: { '@id': `${BASE}/#person` },
-        description: SERVICE_DESC[lang],
-        areaServed: ['DE', 'TR'],
-        knowsLanguage: ['de', 'en', 'tr'],
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: 'Siegburg',
-          addressRegion: 'Nordrhein-Westfalen',
-          addressCountry: 'DE',
-        },
-        hasOfferCatalog: {
-          '@type': 'OfferCatalog',
-          name: CATALOG_NAME[lang],
-          itemListElement: [
-            ...t.offers.items.map(item => ({
-              '@type': 'Offer',
-              itemOffered: { '@type': 'Service', name: item.title, description: item.desc },
-            })),
-            {
-              '@type': 'Offer',
-              itemOffered: { '@type': 'Service', name: APP_OFFER[lang].name, description: APP_OFFER[lang].description },
-            },
-          ],
-        },
-      },
-      {
-        '@type': 'FAQPage',
-        '@id': `${homeUrl}#faq`,
-        mainEntity: t.faq.items.map(item => ({
-          '@type': 'Question',
-          name: item.q,
-          acceptedAnswer: { '@type': 'Answer', text: item.a },
-        })),
-      },
-      {
-        '@type': 'WebSite',
-        '@id': `${BASE}/#website`,
-        url: BASE,
-        name: 'Bünyamin Ilhan — Portfolio',
-        author: { '@id': `${BASE}/#person` },
-        inLanguage: lang,
-      },
-      {
-        '@type': 'ProfilePage',
-        '@id': `${homeUrl}#profilepage`,
-        url: homeUrl,
-        name: 'Bünyamin Ilhan — Web- & App-Entwickler',
-        isPartOf: { '@id': `${BASE}/#website` },
-        mainEntity: { '@id': `${BASE}/#person` },
-        inLanguage: lang,
-      },
-      {
-        '@type': 'ItemList',
-        '@id': `${BASE}/#projects`,
-        name: 'Portfolio',
-        author: { '@id': `${BASE}/#person` },
-        itemListElement: [
-          { pos: 1, type: 'WebApplication', name: 'HausVio', url: 'https://hausvio.de/', category: 'BusinessApplication' },
-          { pos: 2, type: 'WebApplication', name: 'Badeo', url: 'https://badeo.net/', category: 'BusinessApplication' },
-          { pos: 3, type: 'SoftwareApplication', name: 'Labbayk', url: undefined, category: 'LifestyleApplication' },
-          { pos: 4, type: 'WebApplication', name: 'Join', url: `${BASE}/Join-Kanban/`, category: undefined },
-          { pos: 5, type: 'WebApplication', name: 'Sharkie', url: `${BASE}/Sharkie/`, category: undefined },
-          { pos: 6, type: 'WebApplication', name: 'DA-Bubble', url: 'https://da-bubble.ilhan-buenyamin.com/', category: undefined },
-        ].map(p => ({
-          '@type': 'ListItem',
-          position: p.pos,
-          item: {
-            '@type': p.type,
-            name: p.name,
-            ...(p.url ? { url: p.url } : {}),
-            ...(p.category ? { applicationCategory: p.category } : {}),
-            author: { '@id': `${BASE}/#person` },
-          },
-        })),
-      },
+      personNode(lang),
+      serviceNode(lang, t),
+      faqNode(homeUrl, t),
+      websiteNode(lang),
+      profilePageNode(homeUrl, lang),
+      projectsNode(),
     ],
   };
 }

@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LangService } from '../services/lang.service';
 import { InquiryService } from '../services/inquiry.service';
@@ -9,23 +9,24 @@ import { SITE_CONFIG } from '../config/site.config';
   imports: [FormsModule],
   templateUrl: './contact-wizard.html',
   styleUrl: './contact-wizard.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactWizard {
   lang = inject(LangService);
   private inquiry = inject(InquiryService);
 
-  step        = signal<1 | 2 | 3>(1);
-  projectType = signal<string>('');
-  budget      = signal<string>('');
-  timeline    = signal<string>('');
-  details     = signal('');
-  name        = signal('');
-  email       = signal('');
-  message     = signal('');
-  honeypot    = signal('');
-  sending     = signal(false);
-  sent        = signal(false);
-  error       = signal(false);
+  readonly step        = signal<1 | 2 | 3>(1);
+  readonly projectType = signal<string>('');
+  readonly budget      = signal<string>('');
+  readonly timeline    = signal<string>('');
+  readonly details     = signal('');
+  readonly name        = signal('');
+  readonly email       = signal('');
+  readonly message     = signal('');
+  readonly honeypot    = signal('');
+  readonly sending     = signal(false);
+  readonly sent        = signal(false);
+  readonly error       = signal(false);
 
   constructor() {
     effect(() => {
@@ -35,7 +36,7 @@ export class ContactWizard {
   }
 
   /** Localized label of the selected project type (goes into the mail as topic). */
-  private typeLabel = computed(() => {
+  private readonly typeLabel = computed(() => {
     const type = this.lang.t().wizard.types.find(t => t.key === this.projectType());
     return type?.label ?? this.lang.t().contact.topicGeneral;
   });
@@ -54,7 +55,7 @@ export class ContactWizard {
   }
 
   /** Mailto fallback with the wizard content prefilled, shown when sending fails. */
-  mailtoHref = computed(() => {
+  readonly mailtoHref = computed(() => {
     const t = this.lang.t();
     const lines = [
       `${t.contact.topic}: ${this.typeLabel()}`,

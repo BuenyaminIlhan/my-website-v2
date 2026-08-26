@@ -131,7 +131,7 @@ describe('SeoService', () => {
 
       const script = document.getElementById('page-jsonld') as HTMLScriptElement;
       expect(script.type).toBe('application/ld+json');
-      expect(JSON.parse(script.textContent!)).toEqual({ '@type': 'BlogPosting', headline: 'Test' });
+      expect(JSON.parse(script.textContent)).toEqual({ '@type': 'BlogPosting', headline: 'Test' });
     });
 
     it('keeps a single slot — a second call replaces the first', () => {
@@ -140,7 +140,7 @@ describe('SeoService', () => {
 
       const scripts = document.head.querySelectorAll('script[type="application/ld+json"]');
       expect(scripts).toHaveLength(1);
-      expect(JSON.parse(scripts[0].textContent!)).toEqual({ headline: 'Second' });
+      expect(JSON.parse(scripts[0].textContent)).toEqual({ headline: 'Second' });
     });
 
     it('clearJsonLd removes the script and is safe to call twice', () => {

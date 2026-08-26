@@ -1,4 +1,4 @@
-import { Component, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
@@ -9,6 +9,7 @@ import { urlPathsFor } from '../i18n/route-map';
   imports: [RouterLink],
   templateUrl: './not-found.html',
   styleUrl: './not-found.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotFound {
   lang = inject(LangService);

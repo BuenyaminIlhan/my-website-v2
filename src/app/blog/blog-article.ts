@@ -1,9 +1,9 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
-import { blogArticleUrlPaths, blogArticleUrlPath } from '../i18n/route-map';
-import { blogArticles, BlogArticleContent } from './blog-data';
+import { blogArticleUrlPaths, blogArticleUrlPath, homePathFor } from '../i18n/route-map';
+import { articleById, articleContent, BlogArticleContent } from './blog-data';
 import { SITE_CONFIG } from '../config/site.config';
 
 @Component({
@@ -11,6 +11,7 @@ import { SITE_CONFIG } from '../config/site.config';
   imports: [RouterLink],
   templateUrl: './blog-article.html',
   styleUrl: './blog.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlogArticlePage implements OnDestroy {
   lang = inject(LangService);
@@ -18,14 +19,15 @@ export class BlogArticlePage implements OnDestroy {
   private route = inject(ActivatedRoute);
 
   private articleId = this.route.snapshot.data['articleId'] as string;
-  private meta = blogArticles.find(a => a.id === this.articleId)!;
+  private meta = articleById(this.articleId);
 
-  article: BlogArticleContent = this.meta.locales[this.lang.current()]!;
+  article: BlogArticleContent = articleContent(this.meta, this.lang.current());
   dateIso = this.meta.dateIso;
 
   constructor() {
     const currentLang = this.lang.current();
-    const url = SITE_CONFIG.baseUrl + '/' + blogArticleUrlPath(this.articleId, currentLang)!;
+    const path = blogArticleUrlPath(this.articleId, currentLang) ?? homePathFor(currentLang);
+    const url = SITE_CONFIG.baseUrl + '/' + path;
     this.seo.update({
       title: this.article.metaTitle,
       description: this.article.metaDescription,

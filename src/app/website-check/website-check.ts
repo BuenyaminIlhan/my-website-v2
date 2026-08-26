@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
@@ -8,17 +8,18 @@ import { RevealDirective } from '../directives/scroll-reveal.directive';
   imports: [FormsModule, RevealDirective],
   templateUrl: './website-check.html',
   styleUrl: './website-check.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebsiteCheck {
   lang = inject(LangService);
 
-  url      = signal('');
-  name     = signal('');
-  email    = signal('');
-  honeypot = signal('');
-  sending  = signal(false);
-  sent     = signal(false);
-  error    = signal(false);
+  readonly url      = signal('');
+  readonly name     = signal('');
+  readonly email    = signal('');
+  readonly honeypot = signal('');
+  readonly sending  = signal(false);
+  readonly sent     = signal(false);
+  readonly error    = signal(false);
 
   async send() {
     if (this.sending()) return;

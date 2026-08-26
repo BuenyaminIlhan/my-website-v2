@@ -13,6 +13,16 @@ export function slugFor(key: PageKey, lang: Lang): string | undefined {
 }
 
 /**
+ * Slug of a page that exists in every locale. A missing entry is a routing bug in
+ * routes.json, not a runtime case — failing here beats shipping a broken route tree.
+ */
+export function requiredSlug(key: PageKey, lang: Lang): string {
+  const slug = slugFor(key, lang);
+  if (slug === undefined) throw new Error(`routes.json has no "${key}" slug for locale "${lang}"`);
+  return slug;
+}
+
+/**
  * URL path (relative to the site root, no leading slash) of a page in a locale.
  * '' = German home, 'tr' = Turkish home, 'en/website-development', …
  */
@@ -21,6 +31,11 @@ export function urlPathFor(key: PageKey, lang: Lang): string | undefined {
   if (slug === undefined) return undefined;
   const prefix = lang === 'de' ? '' : lang;
   return [prefix, slug].filter(Boolean).join('/');
+}
+
+/** Home path of a locale — '' for German, the locale prefix otherwise. Always defined, unlike urlPathFor. */
+export function homePathFor(lang: Lang): string {
+  return urlPathFor('home', lang) ?? (lang === 'de' ? '' : lang);
 }
 
 /** URL paths of a page in every locale where it exists — input for canonical + hreflang. */

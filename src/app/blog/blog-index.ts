@@ -1,4 +1,4 @@
-import { Component, inject, effect, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
@@ -10,17 +10,21 @@ import { articlesFor } from './blog-data';
   imports: [RouterLink],
   templateUrl: './blog-index.html',
   styleUrl: './blog.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BlogIndex {
   lang = inject(LangService);
   private seo = inject(SeoService);
 
-  articles = computed(() =>
-    articlesFor(this.lang.current()).map(article => ({
-      slug: article.slugs[this.lang.current()]!,
-      content: article.locales[this.lang.current()]!,
-    })),
-  );
+  readonly articles = computed(() => {
+    const lang = this.lang.current();
+    return articlesFor(lang).flatMap(article => {
+      const slug = article.slugs[lang];
+      const content = article.locales[lang];
+      // articlesFor already filtered these out; the guard keeps the types honest.
+      return slug !== undefined && content !== undefined ? [{ slug, content }] : [];
+    });
+  });
 
   constructor() {
     effect(() => {

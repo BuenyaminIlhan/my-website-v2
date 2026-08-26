@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject } from '@angular/core';
 import { LangService, Lang } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 
@@ -19,11 +19,12 @@ interface Project {
   imports: [RevealDirective],
   templateUrl: './portfolio.html',
   styleUrl: './portfolio.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Portfolio {
   lang = inject(LangService);
-  activeIndex = signal<number>(0);
-  fading = signal<boolean>(false);
+  readonly activeIndex = signal<number>(0);
+  readonly fading = signal<boolean>(false);
 
   readonly projects: Project[] = [
     {
@@ -100,8 +101,8 @@ export class Portfolio {
     },
   ];
 
-  activeProject = computed(() => this.projects[this.activeIndex()]);
-  activeDescription = computed(() => this.activeProject().descriptions[this.lang.current()]);
+  readonly activeProject = computed(() => this.projects[this.activeIndex()]);
+  readonly activeDescription = computed(() => this.activeProject().descriptions[this.lang.current()]);
 
   setActive(index: number): void {
     if (index === this.activeIndex()) return;

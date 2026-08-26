@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, PLATFORM_ID, ElementRef, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, PLATFORM_ID, ElementRef, AfterViewInit } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
@@ -8,19 +8,20 @@ import { RevealDirective } from '../directives/scroll-reveal.directive';
   imports: [RevealDirective],
   templateUrl: './stats.html',
   styleUrl: './stats.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Stats implements AfterViewInit {
   private platformId = inject(PLATFORM_ID);
-  private el = inject(ElementRef);
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
   lang = inject(LangService);
 
-  counters = signal([0, 0, 0, 0]);
+  readonly counters = signal([0, 0, 0, 0]);
   private animated = false;
 
   readonly targets = [5, 3, 2, 100];
   readonly suffixes = ['+', '', '+', '%'];
 
-  items = computed(() => {
+  readonly items = computed(() => {
     const labels = this.lang.t().stats.labels;
     return this.targets.map((_, i) => ({
       value: this.counters()[i],

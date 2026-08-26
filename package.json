@@ -27,7 +27,6 @@
     "@ng-web-apis/resize-observer": "^5.3.0",
     "@ng-web-apis/screen-orientation": "^5.3.0",
     "@spartan-ng/brain": "^0.0.1-alpha.702",
-    "@spartan-ng/cli": "^0.0.1-alpha.702",
     "@taiga-ui/cdk": "^5.9.0",
     "@taiga-ui/core": "^5.9.0",
     "@taiga-ui/design-tokens": "^0.302.0",
@@ -38,20 +37,26 @@
     "@taiga-ui/kit": "^5.9.0",
     "@taiga-ui/polymorpheus": "^5.0.1",
     "@taiga-ui/styles": "^5.9.0",
-    "@tailwindcss/postcss": "^4.3.0",
-    "less": "^4.6.4",
-    "postcss": "^8.5.15",
     "rxjs": "~7.8.0",
-    "tailwindcss": "^4.3.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^21.2.5",
     "@angular/cli": "^21.2.5",
     "@angular/compiler-cli": "^21.2.0",
+    "@eslint/js": "^10.0.1",
+    "@spartan-ng/cli": "^0.0.1-alpha.702",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "angular-eslint": "^21.4.0",
+    "eslint": "^10.9.1",
     "jsdom": "^30.0.1",
+    "less": "^4.6.4",
+    "postcss": "^8.5.15",
     "prettier": "^3.8.1",
+    "tailwindcss": "^4.3.0",
     "typescript": "~5.9.2",
+    "typescript-eslint": "^8.68.0",
     "vitest": "^4.1.11"
   }
 }

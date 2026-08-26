@@ -13,15 +13,16 @@ const mockMatchMedia = (): MediaQueryList => {
     addListener: () => {},
     removeListener: () => {},
     addEventListener: (type: string, listener: EventListenerOrEventListenerObject) => {
-      if (!listeners.has(type)) listeners.set(type, []);
-      listeners.get(type)!.push(listener);
+      const list = listeners.get(type) ?? [];
+      list.push(listener);
+      listeners.set(type, list);
     },
     removeEventListener: (type: string, listener: EventListenerOrEventListenerObject) => {
       const list = listeners.get(type);
       if (list) listeners.set(type, list.filter(l => l !== listener));
     },
     dispatchEvent: () => false,
-  } as unknown as MediaQueryList;
+  };
 };
 
 const BROWSER_API_STUBS: Record<string, unknown> = {
@@ -42,7 +43,7 @@ const serverConfig: ApplicationConfig = {
       useFactory: (doc: Document) => {
         const win = doc.defaultView ?? {};
         return new Proxy(win as Window & typeof globalThis, {
-          get: (target, key: string) =>
+          get: (target, key: string): unknown =>
             key in BROWSER_API_STUBS && !Reflect.get(target, key)
               ? BROWSER_API_STUBS[key]
               : Reflect.get(target, key),

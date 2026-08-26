@@ -76,13 +76,18 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "600kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "400kB",
+                  "maximumError": "600kB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kB",
-                  "maximumError": "10kB"
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                },
+                {
+                  "type": "bundle",
+                  "name": "main",
+                  "maximumError": "500kB"
                 }
               ],
               "outputHashing": "all"
@@ -113,8 +118,30 @@
             "buildTarget": "my-website-v2:build:development",
             "tsConfig": "tsconfig.spec.json",
             "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
             "include": [
               "src/**/*.spec.ts"
+            ],
+            "coverageReporters": [
+              "text-summary",
+              "json",
+              "lcov"
+            ],
+            "coverageExclude": [
+              "src/**/*.spec.ts",
+              "src/main.ts",
+              "src/main.server.ts",
+              "src/server.ts",
+              "src/**/*.d.ts"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }

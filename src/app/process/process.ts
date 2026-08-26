@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 
@@ -7,6 +7,7 @@ import { RevealDirective } from '../directives/scroll-reveal.directive';
   imports: [RevealDirective],
   templateUrl: './process.html',
   styleUrl: './process.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Process {
   lang = inject(LangService);
