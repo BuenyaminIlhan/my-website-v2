@@ -101,8 +101,8 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
     transition: border-color 200ms;
 
     /* --muted, not --border-2: a border colour as text gave 1.35:1 against
-       the field, which is invisible. --muted is 5.33:1 dark / 5.14:1 light
-       and still far weaker than typed input (16.6:1). */
+       the field, which is invisible. Measured after the change: 5.48:1 dark
+       and 5.18:1 light, still far weaker than typed input (16.6:1). */
     &::placeholder { color: var(--muted); }
     &:focus { border-color: var(--accent); }
   }
@@ -180,7 +180,14 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
   }
 }
 
-@media (max-width: 900px) {
+/* 1000, not 900: `1fr 1.4fr` has no minmax(0, …), so both tracks sit on their
+   min-content floor and the 6rem gap tips the sum over the available width.
+   Measured: 346 + 333 + 96 = 775 in a 757px content box at 901px, an 18px
+   overhang that only clears at ~940. Stacking from 1000 leaves the right track
+   about 101px above its floor at 1001 — 940 would be the edge with none.
+   minmax(0, …) was the other option and was rejected: it trades a visible
+   18px overhang for content clipped inside its own column. */
+@media (max-width: 1000px) {
   .contact-grid { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
 }
 

@@ -30,6 +30,12 @@ const VIEWPORTS = [
      worth sampling (~60px of slack there against ~110px at 760). */
   [610, 900], [701, 900],
   [900, 900],
+  /* 910 is the witness inside the band where the contact grid used to overhang
+     (901-939); after the fix it is stacked there, and it is what makes a
+     reverted breakpoint fail loudly. 1001 is the tightest two-column width,
+     same principle as 701 for the stats band: a grid with a min-content floor
+     binds at the LOWER bound of its mode, never in the middle of it. */
+  [910, 900], [1001, 900],
   [1181, 900], [1245, 900], [1291, 900],
   [1280, 800], [1366, 768], [1440, 900], [1536, 864], [1920, 1080],
   /* Beyond the 1728px content cap: without it the measure just kept
@@ -224,6 +230,31 @@ const PROBE = `(async () => {
     hintOverflow: hintEl ? Math.round(hintEl.getBoundingClientRect().bottom - window.innerHeight) : null,
     fabOverBand: overlap(fab?.getBoundingClientRect(), bandText?.getBoundingClientRect()),
     pageOverflow: measureOverflow(),
+    /* A grid track whose column has no minmax(0, …) floor can push a child
+       past the grid's OWN content box without anything being clipped, and
+       body's overflow-x:hidden then clamps the rect so measureOverflow()
+       above sees nothing. Proved by mutation: the contact grid overhung by
+       18px at 901 and the guard stayed green.
+       A named list rather than every grid on the page: article.project
+       overflows by 86-93px on purpose (the .devices breakout), so a generic
+       rule would need an exemption list on day one. */
+    gridOverflow: (() => {
+      let worst = null;
+      for (const sel of ['.contact-grid']) {
+        for (const grid of document.querySelectorAll(sel)) {
+          const cs = getComputedStyle(grid);
+          const edge = grid.getBoundingClientRect().right
+            - parseFloat(cs.paddingRight) - parseFloat(cs.borderRightWidth);
+          for (const kid of grid.children) {
+            const over = Math.round(kid.getBoundingClientRect().right - edge);
+            if (over > 2 && (!worst || over > worst.px)) {
+              worst = { px: over, sel, kid: kid.tagName + '.' + (kid.className || '').toString().split(' ')[0] };
+            }
+          }
+        }
+      }
+      return worst;
+    })(),
     /* The stats band is full-bleed by design, so the 1440px content check
        cannot see it — and it was the one section whose numbers still sat at
        the window edge while every heading around it had moved inwards.
@@ -339,6 +370,8 @@ async function run() {
         failures.push(`${at}: stats band starts ${m.statsAlign.left}px off the content column`);
       if (m.statsAlign && Math.abs(m.statsAlign.right) > 2)
         failures.push(`${at}: stats band ends ${m.statsAlign.right}px off the content column`);
+      if (m.gridOverflow)
+        failures.push(`${at}: ${m.gridOverflow.kid} sticks ${m.gridOverflow.px}px past its ${m.gridOverflow.sel} content box`);
       if (m.navRight !== null && m.navRight > m.controlsLeft) {
         failures.push(`${at}: nav overlaps the controls by ${m.navRight - m.controlsLeft}px`);
       }
