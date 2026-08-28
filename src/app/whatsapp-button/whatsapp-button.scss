@@ -1,21 +1,89 @@
 .wa-fab {
   position: fixed;
+  /* The hero's marquee band fades out beneath this corner (hero.scss), so
+     the button sits in cleared space rather than on top of moving text. */
   bottom: 24px;
   left: 24px;
   z-index: 90;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
+  gap: 0.6rem;
+  height: 60px;
+  padding: 0 22px 0 16px;
+  border-radius: 999px;
   background: #25d366;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  transition: transform 150ms, box-shadow 150ms;
+  /* Dark on green: white on #25d366 is 1.98:1 and fails AA outright. */
+  color: #0b2e18;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  transition: transform 150ms, box-shadow 150ms, padding 250ms ease, gap 250ms ease;
+
+  .wa-mark { flex-shrink: 0; }
+
+  .wa-label {
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    max-width: 7rem;
+    overflow: hidden;
+    transition: max-width 250ms ease, opacity 200ms ease;
+  }
 
   &:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.32);
+  }
+
+  /* Past the first screen the label has done its job. */
+  &.collapsed {
+    gap: 0;
+    padding: 0 16px;
+
+    .wa-label {
+      max-width: 0;
+      opacity: 0;
+    }
+  }
+}
+
+/* A slow ring leaving the button — an attention anchor, not a blinker. */
+.wa-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 2px solid #25d366;
+  animation: waPulse 3.2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes waPulse {
+  0%   { transform: scale(1); opacity: 0.55; }
+  70%  { transform: scale(1.28); opacity: 0; }
+  100% { transform: scale(1.28); opacity: 0; }
+}
+
+@media (max-width: 600px) {
+  .wa-fab {
+    bottom: 20px;
+    left: 16px;
+    height: 54px;
+
+    /* On a phone the thumb reaches the circle; the label would only
+       cover content. */
+    gap: 0;
+    padding: 0 14px;
+
+    .wa-label { max-width: 0; opacity: 0; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-pulse { animation: none; opacity: 0; }
+
+  .wa-fab {
+    transition: none;
+    &:hover { transform: none; }
+    .wa-label { transition: none; }
   }
 }

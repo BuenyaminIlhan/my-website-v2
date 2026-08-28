@@ -9,6 +9,7 @@
   --dim:          #8f8f8f;
   --accent:       #ff9900;
   --accent-h:     #ffb033;
+  --brand:        #ff9d1f;
   --bg-glass:     rgba(13, 13, 13, 0.92);
   --bg-overlay:   rgba(13, 13, 13, 0.88);
 }
@@ -23,6 +24,7 @@ body.light {
   --dim:          #6e6e6e;
   --accent:       #9c5f00;
   --accent-h:     #b06a00;
+  --brand:        #a86a0e;
   --bg-glass:     rgba(245, 243, 238, 0.92);
   --bg-overlay:   rgba(245, 243, 238, 0.88);
 }
@@ -40,6 +42,24 @@ body.light {
   src: url("/fonts/Overpass/Overpass-VariableFont_wght.ttf") format("truetype");
   font-weight: 100 900;
   font-display: swap;
+}
+
+/* Brand face ("softlyx_", terminal, marquee) — latin + latin-ext
+   subsets, single weight. latin-ext carries ş/ğ/İ for Turkish copy. */
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/IBMPlexMono/IBMPlexMono-Medium-latin.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/IBMPlexMono/IBMPlexMono-Medium-latin-ext.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* Global resets */
@@ -141,8 +161,34 @@ app-root {
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
 /* Section padding */
+/* The side padding tops out at 9rem, so without a cap only the CONTENT kept
+   growing: at 2170px the measure was ~1880px, far past readable line length.
+   1728 = 1440 content + 2 x 144 gutter. The two formulas cross at ~1714px
+   (where (W-1440)/2 overtakes 8vw), so below 1714px nothing moves at all and
+   between 1714 and 1728 the content loses at most ~11px — above that the
+   gutter grows instead of the text.
+   The cap lives in the PADDING, not in max-width: these elements paint their
+   own section background, border-top and the hero's glow, and a max-width
+   would shrink those decorations into a floating panel with 416px gaps at
+   2560px while .stats-row still ran full-bleed. Padding keeps every element
+   edge to edge and stops only the content. */
 .section-padding {
-  padding: 0 clamp(1rem, 8vw, 9rem);
+  /* padding-block stays explicit: the shorthand it replaced zeroed it. */
+  padding-block: 0;
+  padding-inline: max(clamp(1rem, 8vw, 9rem), (100% - 1440px) / 2);
+}
+
+/* These three set their own max-width: 860px. Percentage padding resolves
+   against the viewport, not against that cap, so the gutter above would
+   exceed 860px past ~2300px and collapse the text column to zero width —
+   a privacy policy one word per line. They keep the plain gutter and centre
+   themselves, which is also what the cap is for. Must stay AFTER
+   .section-padding: same specificity, so source order decides. */
+.legal-page,
+.blog-page,
+.service-page {
+  padding-inline: clamp(1rem, 8vw, 9rem);
+  margin-inline: auto;
 }
 
 /* Legal pages */
@@ -170,6 +216,14 @@ app-root {
     font-weight: 800;
     color: var(--text);
     margin-bottom: 2.5rem;
+    /* "Datenschutz" is one unbreakable word, and Syne ExtraBold at 32px
+       makes even 11 characters 331px wide — in a 269px column at a 320px
+       viewport it was simply cut off (62px), and "Impressum" by 20px.
+       `overflow-wrap` is the guarantee, `hyphens` only improves the break
+       where the browser has patterns for documentElement.lang. Found only
+       after the layout guard started loading these routes at all. */
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   h2 {

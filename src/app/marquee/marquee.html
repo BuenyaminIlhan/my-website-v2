@@ -1,0 +1,17 @@
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-copy">
+      @for (item of copy(); track $index) {
+        <span class="marquee-item">{{ item }}</span>
+        <span class="marquee-sep">·</span>
+      }
+    </span>
+    <span class="marquee-copy">
+      @for (item of copy(); track $index) {
+        <span class="marquee-item">{{ item }}</span>
+        <span class="marquee-sep">·</span>
+      }
+    </span>
+  </div>
+</div>
+<span class="sr-only">{{ items().join(', ') }}</span>

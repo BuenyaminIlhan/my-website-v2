@@ -11,6 +11,30 @@ export const en: LangTranslations = {
     sub: 'I build websites and business web apps that move your company forward — personal, tailor-made, and with genuine attention to detail.',
     cta1: 'View services', cta2: 'Free consultation', scroll: 'Scroll down',
     badges: ['100% custom — no website builders', 'SEO & performance included', 'Reply within 24 hours'],
+    marquee: ['Web design', 'Business web apps', 'SEO', 'Performance', 'Modernisation', 'Redesign'],
+    terminal: {
+      title: 'softlyx — project-start',
+      cmd: 'softlyx init --project "your-website"',
+      steps: [
+        { label: 'Concept & design', note: 'custom, no site builders' },
+        { label: 'Development', note: 'Angular · TypeScript' },
+        { label: 'SEO & performance', note: 'optimised' },
+        { label: 'GDPR-compliant', note: 'hosted in Germany' },
+      ],
+      deploy: 'deploy -> live',
+      live: 'live',
+      visitorCmd: 'visitor', visitorDevice: 'device', visitorTime: 'time',
+      visitorRegion: 'region', visitorNet: 'network',
+      loadTime: 'loadtime', loadTimeNote: 'measured on your device',
+      requests: 'requests', requestsForeign: 'third-party hosts',
+      themeDetected: 'theme', themeDark: 'dark', themeLight: 'light', themeApplied: 'detected and applied',
+      langDetected: 'language', langSwitch: 'switch?', langAria: 'Switch language to',
+      ipCmd: 'my-ip', ipShow: 'show', ipHide: 'hide',
+      ipNote: 'straight from my own server, no third party',
+      ipFailed: 'server did not answer',
+      ipAria: 'Show my public IP address',
+      ipAriaHide: 'Hide my public IP address again',
+    },
   },
   offers: {
     label: 'What I can do for you',
@@ -48,6 +72,7 @@ export const en: LangTranslations = {
     mailHint: 'Or reach me directly:',
     cardCta: 'Inquire',
     moreInfo: 'Learn more',
+    core: 'Core service',
   },
   process: {
     label: 'Simple & transparent',
@@ -113,12 +138,20 @@ export const en: LangTranslations = {
     label: 'Selected work', title: 'My portfolio',
     sub: 'A selection of my projects — see for yourself what your solution could look like.',
     demo: 'Live Demo', pitch: 'Pitch', github: 'GitHub', liveProduct: 'Live product',
+    responsive: 'Runs on desktop, tablet and phone — the same app, usable everywhere.',
   },
   testimonials: {
     label: 'Client voices',
     title: 'What clients say',
     sub: 'Real feedback from real projects.',
     items: [],
+  },
+  reviews: {
+    label: 'Google reviews',
+    title: 'Reviews',
+    sub: 'Honest feedback matters more to me than a pretty score — write how the collaboration really went.',
+    empty: 'No reviews yet — be the first voice.',
+    cta: 'Review on Google',
   },
   contact: {
     label: 'Get in touch', title: "Let's talk about", titleAccent: 'your project',
@@ -128,6 +161,10 @@ export const en: LangTranslations = {
     send: 'Send message', sending: 'Sending…',
     successTitle: 'Message received!', successSub: 'Thank you for your trust — I will get back to you as soon as possible.',
     sendAnother: 'Send another', error: 'Something went wrong. Please email me directly at mail@ilhan-buenyamin.com.',
+    waTitle: 'WhatsApp — the fastest way',
+    waNote: 'Message me directly — I usually reply within minutes.',
+    mailNote: 'Or the classic way, by email:',
+    formNote: 'Prefer to go into detail? The form walks you through it.',
   },
   footer: {
     legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!',
@@ -141,7 +178,7 @@ export const en: LangTranslations = {
   },
   servicePages: {
     'website-erstellen-lassen': {
-      metaTitle: 'Website Development — Custom & SEO-Optimised | Bünyamin Ilhan',
+      metaTitle: 'Website Development — Custom & SEO-Optimised | Softlyx',
       metaDescription: 'Custom website development for businesses in Siegburg, Cologne, Bonn and NRW: modern, fast and search-engine-optimised — no website builders. Get a free quote.',
       eyebrow: 'Service 01',
       h1: 'Website development',
@@ -160,7 +197,7 @@ export const en: LangTranslations = {
       overviewLink: '← All services',
     },
     'web-app-entwicklung': {
-      metaTitle: 'Web App Development — Custom Business Software | Bünyamin Ilhan',
+      metaTitle: 'Web App Development — Custom Business Software | Softlyx',
       metaDescription: 'Custom web apps built with Angular & TypeScript: digitise processes, save time, grow. Development from Siegburg for clients in Cologne, Bonn and NRW.',
       eyebrow: 'Service 02',
       h1: 'Web app development',
@@ -179,7 +216,7 @@ export const en: LangTranslations = {
       overviewLink: '← All services',
     },
     'website-optimierung': {
-      metaTitle: 'Website Optimisation & SEO — Modernise Your Site | Bünyamin Ilhan',
+      metaTitle: 'Website Optimisation & SEO — Modernise Your Site | Softlyx',
       metaDescription: 'Slow loading times, dated design or poor Google rankings? I analyse and modernise existing websites — for better rankings and more inquiries.',
       eyebrow: 'Service 03',
       h1: 'Website optimisation & modernisation',
@@ -198,7 +235,7 @@ export const en: LangTranslations = {
       overviewLink: '← All services',
     },
     'sorglos-paket': {
-      metaTitle: 'All-in-One Care-Free Package — Website Support | Bünyamin Ilhan',
+      metaTitle: 'All-in-One Care-Free Package — Website Support | Softlyx',
       metaDescription: 'Complete website care from a single source: concept, design, development, ongoing maintenance and updates — one personal contact, no ticket system.',
       eyebrow: 'Service 04',
       h1: 'All-in-one care-free package',
@@ -218,15 +255,15 @@ export const en: LangTranslations = {
     },
   },
   meta: {
-    homeTitle: 'Bünyamin Ilhan — Web & App Developer | Websites, Web Apps & Mobile Apps',
+    homeTitle: 'Softlyx — Websites, Web Apps & Mobile Apps | Bünyamin Ilhan',
     homeDesc: 'Websites, business web apps and all-in-one care from a single source — individually built, not off the shelf. Personal, transparent, fair. Get in touch!',
-    blogTitle: 'Blog — Websites & digital tips for businesses | Bünyamin Ilhan',
+    blogTitle: 'Blog — Websites & digital tips for businesses | Softlyx',
     blogDesc: 'Honest answers to the questions businesses ask before commissioning a website — from costs to SEO. No jargon.',
     legalTitle: 'Legal Notice — Bünyamin Ilhan',
     legalDesc: 'Legal notice of Bünyamin Ilhan, Web & Mobile Developer based in Siegburg.',
     privacyTitle: 'Privacy Policy — Bünyamin Ilhan',
     privacyDesc: 'Privacy policy of Bünyamin Ilhan in accordance with GDPR.',
-    notFoundTitle: 'Page not found — Bünyamin Ilhan',
+    notFoundTitle: 'Page not found — Softlyx',
     notFoundDesc: 'This page does not exist. Back to the home page of Bünyamin Ilhan — web & app development.',
   },
   blogUi: {
@@ -246,6 +283,8 @@ export const en: LangTranslations = {
   whatsapp: {
     aria: 'Chat on WhatsApp',
     prefill: 'Hello, I would like to talk about a web project.',
+    cta: 'Chat on WhatsApp',
+    short: 'WhatsApp',
   },
   websiteCheck: {
     label: 'Free & without obligation',

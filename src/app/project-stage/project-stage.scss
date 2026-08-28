@@ -1,0 +1,298 @@
+/* A contained stage, at every width. The panel is always drawn SMALLER
+   than the screenshots' native 1424px, so it stays sharp — full bleed did
+   the opposite and blurred everything. Text never sits on the image. */
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  /* 46rem = 736px shown from 1424px source — roughly 2× density. */
+  max-width: 46rem;
+  margin-left: auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(255, 153, 0, 0.35);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.55);
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  /* Leaving: collapses toward the right edge. The incoming panel already
+     sits underneath at full size, so the swap reads as one surface being
+     drawn away from another — no fade, no blur. */
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    display: block;
+  }
+
+  &.is-active {
+    z-index: 2;
+    clip-path: inset(0);
+  }
+
+  /* Waits underneath, fully laid out, revealed by the wipe. */
+  &.is-next {
+    z-index: 1;
+    clip-path: inset(0);
+  }
+}
+
+/* A light sweeping across the active panel once per turn — the cue that
+   this is running software, not a photograph of it. */
+.scan {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.14) 50%,
+    transparent 58%
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slide.is-active .scan {
+  animation: scanSweep 6000ms ease-in-out infinite;
+}
+
+@keyframes scanSweep {
+  0%   { opacity: 0; transform: translateX(-55%); }
+  8%   { opacity: 1; }
+  32%  { opacity: 0; transform: translateX(55%); }
+  100% { opacity: 0; transform: translateX(55%); }
+}
+
+/* The exhibit label: what it is, who it is for, what it is built from.
+   It overlaps the panel's lower edge — the label belongs to the exhibit —
+   but never the panel's content area with text on imagery. */
+.stage-meta {
+  position: relative;
+  z-index: 3;
+  width: min(27rem, 100%);
+  margin-left: auto;
+  margin-top: -3.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem 1.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border-2);
+  border-left: 2px solid var(--accent);
+  box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.45);
+}
+
+/* Captions are stacked, so the box reserves room for the tallest. */
+.stage-captions {
+  position: relative;
+  min-height: 12.5rem;
+}
+
+.stage-caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  opacity: 0;
+  transition: opacity 420ms ease-in;
+
+  &.is-active {
+    opacity: 1;
+    transition: opacity 900ms cubic-bezier(0.16, 1, 0.3, 1) 300ms;
+  }
+}
+
+.caption-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
+  margin: 0;
+}
+
+.stage-num {
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.stage-title {
+  font-family: "Syne", sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.live-pill {
+  font-family: "Overpass", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 2px 7px;
+}
+
+.stage-role {
+  margin: 0;
+  font-family: "Overpass", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.stage-note {
+  margin: 0;
+  font-family: "Overpass", sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.stage-tags {
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  li {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.63rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border: 1px solid var(--border-2);
+    padding: 3px 8px;
+  }
+}
+
+/* ── Controls ── */
+
+.stage-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.stage-arrow {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border-2);
+  color: var(--muted);
+  font-family: "Syne", sans-serif;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 150ms, color 150ms;
+
+  &:hover { border-color: var(--accent); color: var(--accent); }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+
+.stage-dots {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.stage-dot {
+  position: relative;
+  flex: 1;
+  max-width: 46px;
+  height: 12px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    height: 2px;
+    background: var(--border-2);
+    transition: background 150ms;
+  }
+
+  &:hover::before { background: var(--accent); }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* Keep this duration equal to SLIDE_DWELL_MS in project-stage.ts, or the
+     dash stops describing how long the panel actually stays. */
+  &.is-running::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    height: 2px;
+    background: var(--accent);
+    transform-origin: left center;
+    animation: dotFill 6000ms linear forwards;
+  }
+
+  /* Once a visitor steers, the dash stops counting and simply marks
+     where they are. */
+  &.is-active:not(.is-running)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5px;
+    height: 2px;
+    background: var(--accent);
+  }
+}
+
+@keyframes dotFill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Stacked below the text from 1180 down: full width, label under panel. */
+@media (max-width: 1180px) {
+  .stage { max-width: 100%; margin-left: 0; }
+  .stage-meta { width: 100%; margin-left: 0; margin-top: 1.25rem; }
+}
+
+@media (max-width: 760px) {
+  .stage-meta { padding: 1.15rem 1.15rem 1rem; }
+  .stage-captions { min-height: 14.5rem; }
+  .stage-title { font-size: 1.2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan { animation: none; }
+  .slide, .stage-caption, .stage-caption.is-active { transition: none; }
+  .stage-dot.is-running::after { animation: none; transform: scaleX(1); }
+}

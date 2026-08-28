@@ -6,51 +6,95 @@
   <h2 class="section-title" [appReveal]="100">{{ lang.t().portfolio.title }}</h2>
   <p class="section-sub" [appReveal]="160">{{ lang.t().portfolio.sub }}</p>
 
-  <div class="portfolio-split">
-    <div class="project-list" [appReveal]="200">
-      @for (project of projects; track project.index) {
-        <div class="project-item" [class.active]="activeIndex() === $index" (mouseenter)="setActive($index)">
-          <span class="item-num">{{ project.index }}</span>
-          <span class="item-title">{{ project.title }}</span>
-          <span class="item-arrow">→</span>
+  @for (project of projects; track project.index) {
+    <article class="project" [class.flipped]="$index % 2 === 1" [appReveal]="120">
+      <div class="project-text">
+        <div class="project-head">
+          <span class="project-num">{{ project.index }}</span>
+          <h3 class="project-title">{{ project.title }}</h3>
         </div>
-      }
-    </div>
 
-    <div class="preview-panel" [class.fading]="fading()" [appReveal]="280">
-      <a class="preview-image"
-         [href]="activeProject().demoUrl ?? activeProject().githubUrl ?? '#'"
-         target="_blank"
-         rel="noopener"
-         [attr.aria-label]="activeProject().title">
-        <img [src]="activeProject().image" [alt]="activeProject().title" loading="lazy" decoding="async" />
-        <div class="preview-overlay">
-          <span class="overlay-icon">↗</span>
-          <span class="overlay-text">{{ activeProject().demoUrl ? lang.t().portfolio.demo : lang.t().portfolio.github }}</span>
-        </div>
-      </a>
-      <div class="preview-body">
-        <div class="preview-stack">
-          @if (activeProject().isLiveProduct) {
+        <div class="project-tags">
+          @if (project.isLiveProduct) {
             <span class="tag tag-live">{{ lang.t().portfolio.liveProduct }}</span>
           }
-          @for (tag of activeProject().stack; track tag) {
+          @for (tag of project.stack; track tag) {
             <span class="tag">{{ tag }}</span>
           }
         </div>
-        <p class="preview-desc">{{ activeDescription() }}</p>
-        <div class="preview-links">
-          @if (activeProject().demoUrl) {
-            <a [href]="activeProject().demoUrl" target="_blank" class="link-btn">{{ lang.t().portfolio.demo }}</a>
+
+        <p class="project-desc">{{ description(project) }}</p>
+
+        @if (project.phoneImage) {
+          <p class="responsive-note">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="4" width="14" height="10" rx="1"></rect>
+              <rect x="18" y="9" width="4" height="11" rx="1"></rect>
+              <line x1="2" y1="18" x2="14" y2="18"></line>
+            </svg>
+            {{ lang.t().portfolio.responsive }}
+          </p>
+        }
+
+        <div class="project-links">
+          @if (project.demoUrl) {
+            <a [href]="project.demoUrl" target="_blank" rel="noopener" class="link-btn">{{ lang.t().portfolio.demo }}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </a>
           }
-          @if (activeProject().pitchUrl) {
-            <a [href]="activeProject().pitchUrl" target="_blank" class="link-btn">{{ lang.t().portfolio.pitch }}</a>
+          @if (project.pitchUrl) {
+            <a [href]="project.pitchUrl" target="_blank" rel="noopener" class="link-btn link-ghost">{{ lang.t().portfolio.pitch }}</a>
           }
-          @if (activeProject().githubUrl; as githubUrl) {
-            <a [href]="githubUrl" target="_blank" class="link-btn link-ghost">{{ lang.t().portfolio.github }}</a>
+          @if (project.githubUrl; as githubUrl) {
+            <a [href]="githubUrl" target="_blank" rel="noopener" class="link-btn link-ghost">{{ lang.t().portfolio.github }}</a>
           }
         </div>
       </div>
-    </div>
-  </div>
+
+      <!-- Same app, three screens: the responsive promise, shown rather
+           than claimed. -->
+      <div class="devices">
+        <div class="device laptop">
+          <div class="screen">
+            @if (project.imageDark; as imageDark) {
+              <img class="capture-light" [src]="project.image" [alt]="project.title" loading="lazy" decoding="async"
+                   [width]="project.imageWidth" [height]="project.imageHeight" />
+              <img class="capture-dark" [src]="imageDark" [alt]="project.title" loading="lazy" decoding="async"
+                   [width]="project.imageWidth" [height]="project.imageHeight" />
+            } @else {
+              <img [src]="project.image" [alt]="project.title" loading="lazy" decoding="async"
+                   [width]="project.imageWidth" [height]="project.imageHeight" />
+            }
+          </div>
+          <span class="laptop-base" aria-hidden="true"></span>
+        </div>
+
+        @if (project.tabletImage; as tabletImage) {
+          <div class="device tablet">
+            <div class="screen">
+              @if (project.tabletImageDark; as tabletImageDark) {
+                <img class="capture-light" [src]="tabletImage" alt="" loading="lazy" decoding="async" width="598" height="846" />
+                <img class="capture-dark" [src]="tabletImageDark" alt="" loading="lazy" decoding="async" width="598" height="846" />
+              } @else {
+                <img [src]="tabletImage" alt="" loading="lazy" decoding="async" width="598" height="846" />
+              }
+            </div>
+          </div>
+        }
+
+        @if (project.phoneImage; as phoneImage) {
+          <div class="device phone">
+            <div class="screen">
+              @if (project.phoneImageDark; as phoneImageDark) {
+                <img class="capture-light" [src]="phoneImage" alt="" loading="lazy" decoding="async" width="280" height="590" />
+                <img class="capture-dark" [src]="phoneImageDark" alt="" loading="lazy" decoding="async" width="280" height="590" />
+              } @else {
+                <img [src]="phoneImage" alt="" loading="lazy" decoding="async" width="280" height="590" />
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  }
 </section>

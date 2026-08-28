@@ -51,3 +51,7 @@ CLAUDE.md
 # The Guardian project config is versioned: it whitelists @eslint/js, which the
 # install guard otherwise flags as a typosquat, so every machine needs it.
 !.claude/guardian.json
+
+# Local scratch (screenshots, dev-server logs)
+/.tmp-shots
+/.tmp-serve*.log

@@ -21,7 +21,8 @@
 
 .section-title {
   font-family: "Syne", sans-serif;
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.6rem, 4vw, 3.5rem);
+  overflow-wrap: break-word;
   font-weight: 800;
   line-height: 1.1;
   color: var(--text);
@@ -107,6 +108,6 @@
 }
 
 @media (max-width: 800px) {
-  .skills-split { grid-template-columns: 1fr; gap: 2.5rem; }
+  .skills-split { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
   .skill-meta { width: 130px; }
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LangService } from '../services/lang.service';
+import { WhatsappService } from '../services/whatsapp.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 import { ContactWizard } from '../contact-wizard/contact-wizard';
 
@@ -12,4 +13,8 @@ import { ContactWizard } from '../contact-wizard/contact-wizard';
 })
 export class Contact {
   lang = inject(LangService);
+  private whatsapp = inject(WhatsappService);
+
+  readonly hasWhatsapp = this.whatsapp.available;
+  readonly waHref = this.whatsapp.href;
 }

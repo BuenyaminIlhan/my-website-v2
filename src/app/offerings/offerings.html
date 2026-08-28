@@ -6,17 +6,42 @@
   <h2 class="section-title" [appReveal]="100">{{ lang.t().offers.title }}</h2>
   <p class="section-sub" [appReveal]="150">{{ lang.t().offers.sub }}</p>
 
-  <div class="offer-grid">
+  <!-- Bento: the core service takes the big tile, two compact tiles sit
+       beside it, the care package runs as a band underneath. -->
+  <div class="offer-bento">
     @for (item of lang.t().offers.items; track item.title; let i = $index) {
-      <article class="offer-card" [appReveal]="180 + i * 60">
-        <span class="offer-num">{{ i + 1 < 10 ? '0' + (i + 1) : i + 1 }}</span>
+      <article
+        class="offer-card"
+        [class.is-core]="isCore(item.slug)"
+        [class.is-band]="isBand(item.slug)"
+        [appReveal]="180 + i * 60">
+
+        <span class="sweep" aria-hidden="true"></span>
+
+        <div class="offer-head">
+          <span class="offer-num">
+            {{ i + 1 < 10 ? '0' + (i + 1) : i + 1 }}@if (isCore(item.slug)) {<span> — {{ lang.t().offers.core }}</span>}
+          </span>
+        </div>
+
         <h3>{{ item.title }}</h3>
         <p class="offer-desc">{{ item.desc }}</p>
+
         <ul>
           @for (point of item.points; track point) {
             <li><span class="tick">→</span>{{ point }}</li>
           }
         </ul>
+
+        @if (isCore(item.slug)) {
+          <div class="signature" aria-hidden="true">
+            <span class="bar b1"></span>
+            <span class="bar b2"></span>
+            <span class="bar b3"></span>
+            <span class="bar b4"></span>
+          </div>
+        }
+
         <div class="offer-card-links">
           <a [routerLink]="lang.pagePath(item.slug)" class="card-more">{{ lang.t().offers.moreInfo }}</a>
           <a href="#contact" class="card-cta" (click)="prefill(item.slug)">

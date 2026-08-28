@@ -29,7 +29,8 @@
 
 .section-title {
   font-family: "Syne", sans-serif;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  overflow-wrap: break-word;
   font-weight: 800;
   color: var(--text);
   margin-bottom: 1.5rem;
@@ -77,7 +78,8 @@ form { display: flex; flex-direction: column; gap: 1.25rem; }
     outline: none;
     transition: border-color 200ms;
 
-    &::placeholder { color: var(--border-2); }
+    /* See contact.scss — a border token as text colour was unreadable. */
+    &::placeholder { color: var(--muted); }
     &:focus { border-color: var(--accent); }
   }
 }
@@ -136,5 +138,5 @@ form { display: flex; flex-direction: column; gap: 1.25rem; }
 }
 
 @media (max-width: 900px) {
-  .check-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .check-inner { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
 }

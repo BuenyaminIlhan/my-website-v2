@@ -26,6 +26,37 @@ describe('Header', () => {
     expect(text(fixture)).toContain(lang.t().nav.contact);
   });
 
+  it('offers WhatsApp in the menu, with the shared link', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    const menuEntry = el.querySelector('.nav-links .nav-wa');
+
+    expect(menuEntry?.getAttribute('href')).toBe(header.whatsapp.href());
+    expect(menuEntry?.textContent).toContain(header.lang.t().whatsapp.cta);
+    expect(menuEntry?.getAttribute('rel')).toContain('noopener');
+    // The dense control row has no space for a fourth control.
+    expect(el.querySelector('.header-wa')).toBeNull();
+  });
+
+  it('keeps the closed menu out of the tab order', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    const overlay = el.querySelector('.nav-overlay');
+
+    expect(header.menuOpen()).toBe(false);
+    expect(overlay?.hasAttribute('inert')).toBe(true);
+
+    header.toggleMenu();
+    fixture.detectChanges();
+
+    expect(overlay?.hasAttribute('inert')).toBe(false);
+  });
+
+  it('brands the logo as Softlyx while keeping the person for assistive tech', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    expect(el.querySelector('.logo .logo-word')?.textContent).toBe('softlyx_');
+    expect(el.querySelector('.logo .logo-mark')).not.toBeNull();
+    expect(el.querySelector('.logo .sr-only')?.textContent).toBe('Softlyx – Bünyamin Ilhan');
+  });
+
   it('opens and closes the mobile menu', () => {
     expect(header.menuOpen()).toBe(false);
 

@@ -3,8 +3,14 @@
 <header [class.scrolled]="scrolled()">
   <div class="header-inner section-padding">
     <a [routerLink]="lang.link('/')" (click)="scrollToTop()" class="logo">
-      <span class="logo-bracket" aria-hidden="true">[</span><span class="logo-b">B</span><span class="logo-i">I</span><span class="logo-bracket" aria-hidden="true">]</span>
-      <span class="sr-only"> – Bünyamin Ilhan</span>
+      <svg class="logo-mark" viewBox="0 0 128 128" width="26" height="26" aria-hidden="true">
+        <g transform="translate(60,64) scale(1.05)">
+          <rect x="-8" y="-46" width="16" height="52" rx="8" transform="rotate(-52)"></rect>
+          <rect x="-8" y="-6" width="16" height="52" rx="8" transform="rotate(52)"></rect>
+        </g>
+      </svg>
+      <span class="logo-word" aria-hidden="true">softlyx_</span>
+      <span class="sr-only">Softlyx – Bünyamin Ilhan</span>
     </a>
 
     <!-- Desktop navigation -->
@@ -17,6 +23,11 @@
     </nav>
 
     <div class="header-controls">
+      <!-- No WhatsApp icon here: the control row (CTA, language switcher,
+           theme toggle, burger) has no room left between 1101 and 1379 px
+           without pushing the theme toggle out of reach. WhatsApp lives in
+           the hero, the mobile menu and the always-visible floating button. -->
+
       <!-- Header CTA -->
       <button class="header-cta" (click)="navigateTo('contact')">{{ lang.t().nav.cta }}</button>
 
@@ -50,7 +61,9 @@
 </header>
 
 <!-- Mobile overlay -->
-<div class="nav-overlay" [class.open]="menuOpen()">
+<!-- Closed, the overlay is only moved off-screen — without `inert` its
+     links stay in the tab order and a keyboard user falls into them. -->
+<div class="nav-overlay" [class.open]="menuOpen()" [attr.inert]="menuOpen() ? null : ''">
   <nav class="nav-links">
     <a [routerLink]="lang.link('/')" fragment="offers" (click)="closeMenu()"><span class="num">01</span>{{ lang.t().nav.offers }}</a>
     <a [routerLink]="lang.link('/')" fragment="about" (click)="closeMenu()"><span class="num">02</span>{{ lang.t().nav.about }}</a>
@@ -59,6 +72,15 @@
     <a [routerLink]="lang.link('/')" fragment="contact" (click)="closeMenu()"><span class="num">05</span>{{ lang.t().nav.contact }}</a>
     <a [routerLink]="lang.pagePath('legal')" (click)="closeMenu()"><span class="num">06</span>{{ lang.t().nav.legal }}</a>
     <a [routerLink]="lang.pagePath('privacy')" (click)="closeMenu()"><span class="num">07</span>{{ lang.t().nav.privacy }}</a>
+
+    @if (whatsapp.available) {
+      <a class="nav-wa" [href]="whatsapp.href()" target="_blank" rel="noopener" (click)="closeMenu()">
+        <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" fill="currentColor">
+          <path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.1.6 4.1 1.6 5.9L4 29l8.4-1.6c1.7.9 3.6 1.4 5.6 1.4 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.3l-.4-.2-5 1 1-4.8-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.5 4.5-9.9 10.1-9.9s10.1 4.4 10.1 9.9-4.5 9.9-10.1 9.9zm5.5-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.6-.1-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/>
+        </svg>
+        {{ lang.t().whatsapp.cta }}
+      </a>
+    }
   </nav>
 
   <div class="nav-footer">

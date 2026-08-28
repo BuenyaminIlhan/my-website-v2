@@ -1,0 +1,88 @@
+<!-- The build-log lines are an animation, so those blocks stay out of the
+     accessibility tree and the same content is offered once, plainly, in the
+     sr-only list below. The two lines with a button do NOT get aria-hidden:
+     a focusable control inside such a subtree is unreachable for assistive
+     tech. -->
+<div class="terminal">
+  <div class="terminal-bar" aria-hidden="true">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="bar-title">{{ lang.t().hero.terminal.title }}</span>
+    <span class="bar-live"><span class="live-dot"></span>{{ lang.t().hero.terminal.live }}</span>
+  </div>
+
+  <div class="terminal-body">
+    <div aria-hidden="true">
+      @if (visitorInfo(); as visitor) {
+        <p class="term-line visitor-line" [style.animation-delay]="visitorDelay()">
+          <span class="prompt">$</span> {{ visitor }}
+        </p>
+      }
+
+      @if (loadTimeInfo(); as loadTime) {
+        <p class="term-line load-line" [style.animation-delay]="loadTimeDelay()">
+          <span class="prompt">$</span> {{ loadTime }} <span class="note">— {{ lang.t().hero.terminal.loadTimeNote }}</span>
+        </p>
+      }
+
+      @if (requestInfo(); as requests) {
+        <p class="term-line req-line" [style.animation-delay]="requestDelay()">
+          <span class="prompt">$</span> {{ requests }}
+        </p>
+      }
+
+      @if (themeInfo(); as theme) {
+        <p class="term-line theme-line" [style.animation-delay]="themeDelay()">
+          <span class="prompt">$</span> {{ theme }}
+        </p>
+      }
+    </div>
+
+    @if (langOffer(); as offer) {
+      <p class="term-line lang-line" [style.animation-delay]="langDelay()">
+        <span class="prompt" aria-hidden="true">$</span>
+        {{ lang.t().hero.terminal.langDetected }} {{ langName(offer) }} —
+        <button type="button" class="term-action"
+                [attr.aria-label]="lang.t().hero.terminal.langAria + ' ' + langName(offer)"
+                (click)="lang.switchTo(offer)">{{ lang.t().hero.terminal.langSwitch }}</button>
+      </p>
+    }
+
+    @if (ipVisible()) {
+      <!-- The button is never removed or disabled: taking away the element
+           that has focus drops the visitor back to the top of the document,
+           and the result would be announced by nothing. -->
+      <p class="term-line ip-line" [style.animation-delay]="ipDelay()">
+        <span class="prompt" aria-hidden="true">$</span>
+        {{ lang.t().hero.terminal.ipCmd }}
+        <button type="button" class="term-action"
+                [attr.aria-label]="ipButtonAria()"
+                [attr.aria-busy]="ipState() === 'loading'"
+                (click)="toggleIp()">{{ ipButtonLabel() }}</button>
+        <span class="ip-status" role="status">{{ ipStatus() }}</span>
+      </p>
+    }
+
+    <div aria-hidden="true">
+      <p class="term-line" [style.animation-delay]="cmdDelay()"><span class="prompt">$</span> {{ lang.t().hero.terminal.cmd }}</p>
+
+      @for (step of lang.t().hero.terminal.steps; track step.label) {
+        <p class="term-line" [style.animation-delay]="stepDelay($index)">
+          <span class="ok">[ok]</span> {{ step.label }} <span class="note">— {{ step.note }}</span>
+        </p>
+      }
+
+      <p class="term-line" [style.animation-delay]="deployDelay()">
+        <span class="prompt">$</span> {{ lang.t().hero.terminal.deploy }}<span class="cursor">_</span>
+      </p>
+    </div>
+
+    <!-- What the animation above says, once and without the theatre. -->
+    <ul class="sr-only">
+      @for (step of lang.t().hero.terminal.steps; track step.label) {
+        <li>{{ step.label }} — {{ step.note }}</li>
+      }
+    </ul>
+  </div>
+</div>

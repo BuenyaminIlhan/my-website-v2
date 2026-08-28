@@ -24,6 +24,12 @@ const APP_OFFER: Record<Lang, { name: string; description: string }> = {
 
 const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services', tr: 'Hizmetler' };
 
+const SERVICE_NAME_SUFFIX: Record<Lang, string> = {
+  de: 'Web- & App-Entwicklung',
+  en: 'Web & App Development',
+  tr: 'Web & Mobil Uygulama Geliştirme',
+};
+
 const ADDRESS = {
   '@type': 'PostalAddress',
   addressLocality: 'Siegburg',
@@ -33,11 +39,8 @@ const ADDRESS = {
 
 const PROJECTS = [
   { pos: 1, type: 'WebApplication', name: 'HausVio', url: 'https://hausvio.de/', category: 'BusinessApplication' },
-  { pos: 2, type: 'WebApplication', name: 'Badeo', url: 'https://badeo.net/', category: 'BusinessApplication' },
-  { pos: 3, type: 'SoftwareApplication', name: 'Labbayk', url: undefined, category: 'LifestyleApplication' },
-  { pos: 4, type: 'WebApplication', name: 'Join', url: `${BASE}/Join-Kanban/`, category: undefined },
-  { pos: 5, type: 'WebApplication', name: 'Sharkie', url: `${BASE}/Sharkie/`, category: undefined },
-  { pos: 6, type: 'WebApplication', name: 'DA-Bubble', url: 'https://da-bubble.ilhan-buenyamin.com/', category: undefined },
+  { pos: 2, type: 'WebApplication', name: 'Zephir', url: 'https://badeo.net/', category: 'BusinessApplication' },
+  { pos: 3, type: 'WebApplication', name: 'Dachplaner', url: undefined, category: 'BusinessApplication' },
 ];
 
 function personNode(lang: Lang): object {
@@ -64,7 +67,9 @@ function serviceNode(lang: Lang, t: LangTranslations): object {
   return {
     '@type': 'ProfessionalService',
     '@id': `${BASE}/#service`,
-    name: 'Bünyamin Ilhan — Web- & App-Entwicklung',
+    name: `${SITE_CONFIG.brandName} — ${SERVICE_NAME_SUFFIX[lang]}`,
+    alternateName: 'softlyx_',
+    logo: `${BASE}/brand/avatar-square-dark.svg`,
     url: BASE,
     founder: { '@id': `${BASE}/#person` },
     description: SERVICE_DESC[lang],
@@ -105,7 +110,7 @@ function websiteNode(lang: Lang): object {
     '@type': 'WebSite',
     '@id': `${BASE}/#website`,
     url: BASE,
-    name: 'Bünyamin Ilhan — Portfolio',
+    name: `${SITE_CONFIG.brandName} — Portfolio`,
     author: { '@id': `${BASE}/#person` },
     inLanguage: lang,
   };

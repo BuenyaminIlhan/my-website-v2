@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <title>Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen</title>
+  <title>Softlyx — Websites, Web-Apps & Apps entwickeln lassen | Bünyamin Ilhan</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Websites, Business-Web-Apps und Rundum-Betreuung aus einer Hand — individuell entwickelt statt 08/15. Persönlich, transparent, fair. Jetzt unverbindlich anfragen!">
@@ -16,24 +16,25 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ilhan-buenyamin.com/">
-  <meta property="og:title" content="Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen">
+  <meta property="og:title" content="Softlyx — Websites, Web-Apps & Apps entwickeln lassen | Bünyamin Ilhan">
   <meta property="og:description" content="Websites, Business-Web-Apps und Rundum-Betreuung aus einer Hand — individuell entwickelt statt 08/15. Persönlich, transparent, fair.">
   <meta property="og:image" content="https://ilhan-buenyamin.com/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Bünyamin Ilhan — Web- & App-Entwickler: Websites, Web-Apps, iOS & Android">
   <meta property="og:locale" content="de_DE">
-  <meta property="og:site_name" content="Bünyamin Ilhan — Portfolio">
+  <meta property="og:site_name" content="Softlyx">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen">
+  <meta name="twitter:title" content="Softlyx — Websites, Web-Apps & Apps entwickeln lassen | Bünyamin Ilhan">
   <meta name="twitter:description" content="Websites, Business-Web-Apps und Rundum-Betreuung aus einer Hand — individuell entwickelt statt 08/15. Persönlich, transparent, fair.">
   <meta name="twitter:image" content="https://ilhan-buenyamin.com/assets/img/og-image.jpg">
 
 </head>
 <body class="light">
-  <script>try{if(localStorage.getItem('theme')==='dark')document.body.classList.remove('light')}catch(e){}</script>
+  <!-- Runs before paint so the system's dark mode does not flash light first. -->
+  <script>try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.body.classList.remove('light')}catch(e){}</script>
   <app-root></app-root>
 </body>
 </html>

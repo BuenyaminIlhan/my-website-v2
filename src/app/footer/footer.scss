@@ -17,7 +17,7 @@ footer {
   gap: 2.5rem;
   margin-bottom: 2.5rem;
 
-  @media (max-width: 760px) { grid-template-columns: 1fr; gap: 2rem; }
+  @media (max-width: 760px) { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
 }
 
 .footer-col {
@@ -67,19 +67,29 @@ footer {
 
 .footer-logo {
   display: flex;
-  align-items: baseline;
-  font-family: "Syne", sans-serif;
-  font-weight: 800;
-  font-size: 1.3rem;
-  gap: 1px;
+  align-items: center;
+  gap: 8px;
   opacity: 0.7;
   transition: opacity 150ms;
 
   &:hover { opacity: 1; }
 
-  .logo-bracket { color: var(--accent); }
-  .logo-b       { color: var(--text); }
-  .logo-i       { color: var(--accent); }
+  .logo-mark { fill: var(--brand); flex-shrink: 0; }
+
+  .logo-word {
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-weight: 500;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .brand-person {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.8rem;
+    color: var(--dim);
+    margin-left: 4px;
+  }
 }
 
 .scroll-fab {

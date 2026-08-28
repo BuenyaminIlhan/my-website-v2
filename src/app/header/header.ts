@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal, HostListener, inject } from
 import { RouterLink, Router } from '@angular/router';
 import { ThemeService } from '../services/theme.service';
 import { LangService } from '../services/lang.service';
+import { WhatsappService } from '../services/whatsapp.service';
 
 @Component({
   selector: 'app-header',
@@ -14,6 +15,7 @@ export class Header {
   private router = inject(Router);
   theme = inject(ThemeService);
   lang = inject(LangService);
+  whatsapp = inject(WhatsappService);
 
   readonly menuOpen = signal(false);
   readonly scrolled = signal(false);

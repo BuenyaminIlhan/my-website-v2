@@ -1,0 +1,55 @@
+<div class="stage">
+  @for (slide of slides; track slide.title; let i = $index) {
+    <div class="slide"
+         [class.is-active]="i === activeSlide()"
+         [class.is-next]="i === nextSlide()">
+      <img [src]="slide.image" alt="" width="1424" height="801"
+           decoding="async" fetchpriority="low" />
+      <span class="scan" aria-hidden="true"></span>
+    </div>
+  }
+</div>
+
+<div class="stage-meta">
+  <div class="stage-captions">
+    @for (slide of slides; track slide.title; let i = $index) {
+      <div class="stage-caption" [class.is-active]="i === activeSlide()"
+           [attr.aria-hidden]="i === activeSlide() ? null : 'true'"
+           [attr.inert]="i === activeSlide() ? null : ''">
+        <p class="caption-head">
+          <span class="stage-num">{{ slide.index }}</span>
+          <span class="stage-title">{{ slide.title }}</span>
+          @if (slide.live) {
+            <span class="live-pill">{{ lang.t().portfolio.liveProduct }}</span>
+          }
+        </p>
+        <p class="stage-role">{{ copyFor(slide).role }}</p>
+        <p class="stage-note">{{ copyFor(slide).note }}</p>
+        <ul class="stage-tags">
+          @for (tag of copyFor(slide).tags; track tag) {
+            <li>{{ tag }}</li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+
+  <div class="stage-controls">
+    <button type="button" class="stage-arrow" (click)="goPrev()"
+            [attr.aria-label]="slides[prevSlide()].title">‹</button>
+
+    <div class="stage-dots">
+      @for (slide of slides; track slide.title; let i = $index) {
+        <button type="button" class="stage-dot"
+                [class.is-active]="i === activeSlide()"
+                [class.is-running]="i === activeSlide() && autoplay()"
+                [attr.aria-current]="i === activeSlide() ? 'true' : null"
+                [attr.aria-label]="slide.title"
+                (click)="select(i)"></button>
+      }
+    </div>
+
+    <button type="button" class="stage-arrow" (click)="goNext()"
+            [attr.aria-label]="slides[nextSlide()].title">›</button>
+  </div>
+</div>

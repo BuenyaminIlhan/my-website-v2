@@ -20,27 +20,48 @@ header {
   justify-content: space-between;
   height: 100%;
   gap: 2rem;
+
+  /* 320 px phones: logo plus controls are wider than the screen, and both
+     sides refuse to shrink — the page scrolled sideways. The section's
+     8vw side padding is the biggest single contributor at this width. */
+  @media (max-width: 380px) {
+    gap: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
 
-/* ── Logo ── */
+/* ── Logo: Softlyx chevron + terminal wordmark ── */
 .logo {
   display: flex;
-  align-items: baseline;
-  font-family: "Syne", sans-serif;
-  font-weight: 800;
-  font-size: 1.5rem;
-  line-height: 1;
+  align-items: center;
+  gap: 9px;
   text-decoration: none;
-  letter-spacing: -0.02em;
-  gap: 1px;
-  flex-shrink: 0;
+  /* Yields before the page does: at 320 px the controls cannot shrink, so
+     the wordmark is what gives way rather than the layout overflowing. */
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
 
-  .logo-bracket { color: var(--accent); font-size: 1.7rem; transition: color 200ms; }
-  .logo-b       { color: var(--text);   transition: color 200ms; }
-  .logo-i       { color: var(--accent); transition: color 200ms; }
+  /* Brand orange from the logo set, not the site accent. */
+  .logo-mark { fill: var(--brand); transition: fill 200ms; }
 
-  &:hover .logo-b       { color: var(--accent); }
-  &:hover .logo-bracket { color: var(--text); }
+  .logo-word {
+    font-family: "IBM Plex Mono", Consolas, monospace;
+    font-weight: 500;
+    font-size: clamp(0.85rem, 4.2vw, 1.25rem);
+    line-height: 1;
+    color: var(--text);
+    transition: color 200ms;
+  }
+
+  &:hover .logo-word { color: var(--accent); }
+
+  @media (max-width: 380px) {
+    gap: 6px;
+    .logo-word { font-size: 0.8rem; }
+    .logo-mark { width: 20px; height: 20px; }
+  }
 }
 
 /* ── Desktop nav ── */
@@ -58,6 +79,9 @@ header {
     text-transform: uppercase;
     color: var(--muted);
     position: relative;
+    /* A wrapped nav item is a layout failure, not a fallback — this makes
+       it show up as overflow instead of quietly doubling the row height. */
+    white-space: nowrap;
     transition: color 200ms;
     cursor: pointer;
 
@@ -79,7 +103,10 @@ header {
   }
 }
 
-@media (max-width: 1100px) {
+/* 1290 px: below it "Über mich" wraps to two lines and, further down, the
+   controls push the theme toggle past the right edge. The burger menu
+   covers everything from here down. */
+@media (max-width: 1290px) {
   .desktop-nav { display: none; }
 }
 
@@ -89,6 +116,8 @@ header {
   align-items: center;
   gap: 1rem;
   flex-shrink: 0;
+
+  @media (max-width: 380px) { gap: 0.5rem; }
 }
 
 .header-cta {
@@ -106,7 +135,7 @@ header {
 
   &:hover { background: var(--accent-h); transform: translateY(-1px); }
 
-  @media (max-width: 1100px) { display: none; }
+  @media (max-width: 1290px) { display: none; }
 }
 
 /* Language switcher: "DE / EN / TR" text style */
@@ -135,6 +164,14 @@ header {
   }
 
   .lang-sep { color: var(--border); }
+
+  /* The slashes are pure decoration; at 320 px they are the difference
+     between fitting and a sideways-scrolling page. */
+  @media (max-width: 380px) {
+    gap: 2px;
+    .lang-sep { display: none; }
+    .lang-opt { padding-left: 2px; padding-right: 2px; }
+  }
 
   .lang-active,
   .lang-opt.lang-active:hover { color: var(--accent); }
@@ -199,7 +236,7 @@ header {
   &:hover span { background: var(--accent); }
 }
 
-@media (min-width: 1101px) {
+@media (min-width: 1291px) {
   .burger { display: none; }
   .nav-overlay { display: none !important; }
 }
@@ -213,7 +250,9 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 100px clamp(1rem, 8vw, 9rem) 2rem;
+  /* 8vw of side padding is 25 px at 320 px and pushed the longest label
+     ("Datenschutz") past the edge — the menu is not the place to spend it. */
+  padding: 100px clamp(1rem, 5vw, 9rem) 2rem;
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -227,12 +266,44 @@ header {
   gap: 0;
   margin-bottom: 3rem;
 
+  /* Sits below the page links, in brand green and at reading size —
+     it is a contact action, not another destination. */
+  a.nav-wa {
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1.5rem;
+    padding: 0.9rem 1.4rem;
+    border-bottom: none;
+    border-radius: 999px;
+    background: #25d366;
+    color: #0b2e18;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    align-self: flex-start;
+
+    &:hover { color: #0b2e18; padding-left: 1.4rem; }
+    svg { flex-shrink: 0; }
+
+    /* Small phones: shrink rather than force one line — nowrap turned the
+       wrap into overflow that clipped the label at 320-375 px. */
+    @media (max-width: 520px) {
+      padding: 0.7rem 1rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.02em;
+      max-width: 100%;
+    }
+  }
+
   a {
     display: flex;
     align-items: baseline;
     gap: 1rem;
     font-family: "Syne", sans-serif;
-    font-size: clamp(2rem, 5vw, 4rem);
+    /* 1.35rem floor, not 2rem: at 320-360 px the old floor pushed
+       "Datenschutz" past the edge and made the open menu scroll sideways. */
+    font-size: clamp(1.35rem, 5vw, 4rem);
+    overflow-wrap: break-word;
     font-weight: 800;
     color: var(--muted);
     padding: 0.6rem 0;

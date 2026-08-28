@@ -11,6 +11,30 @@ export const tr: LangTranslations = {
     sub: 'İşletmenizi ileriye taşıyan web siteleri ve kurumsal web uygulamaları geliştiriyorum — size özel, ihtiyacınıza göre tasarlanmış ve detaylara gerçek bir özenle.',
     cta1: 'Hizmetleri inceleyin', cta2: 'Ücretsiz ön görüşme', scroll: 'Aşağı kaydırın',
     badges: ['%100 özel tasarım — hazır şablon yok', 'SEO & performans dahil', '24 saat içinde yanıt'],
+    marquee: ['Web tasarımı', 'Kurumsal web uygulamaları', 'SEO', 'Performans', 'Modernizasyon', 'Yeniden tasarım'],
+    terminal: {
+      title: 'softlyx — proje-başlangıcı',
+      cmd: 'softlyx init --proje "web-siteniz"',
+      steps: [
+        { label: 'Konsept & tasarım', note: 'size özel, hazır şablon yok' },
+        { label: 'Geliştirme', note: 'Angular · TypeScript' },
+        { label: 'SEO & performans', note: 'optimize edildi' },
+        { label: 'GDPR uyumlu', note: 'Almanya’da hosting' },
+      ],
+      deploy: 'deploy -> live',
+      live: 'canlı',
+      visitorCmd: 'ziyaretçi', visitorDevice: 'cihaz', visitorTime: 'saat',
+      visitorRegion: 'bölge', visitorNet: 'ağ',
+      loadTime: 'yükleme', loadTimeNote: 'cihazınızda ölçüldü',
+      requests: 'istek', requestsForeign: 'yabancı sunucu',
+      themeDetected: 'tema', themeDark: 'koyu', themeLight: 'açık', themeApplied: 'algılandı ve uygulandı',
+      langDetected: 'dil', langSwitch: 'geçilsin mi?', langAria: 'Dili şuna değiştir:',
+      ipCmd: 'ip-adresim', ipShow: 'göster', ipHide: 'gizle',
+      ipNote: 'doğrudan kendi sunucumdan, üçüncü taraf yok',
+      ipFailed: 'sunucu yanıt vermedi',
+      ipAria: 'Genel IP adresimi göster',
+      ipAriaHide: 'Genel IP adresimi tekrar gizle',
+    },
   },
   offers: {
     label: 'Sizin için neler yapabilirim',
@@ -48,6 +72,7 @@ export const tr: LangTranslations = {
     mailHint: 'Veya doğrudan e-posta ile:',
     cardCta: 'Talep gönder',
     moreInfo: 'Detaylı bilgi',
+    core: 'Ana hizmet',
   },
   process: {
     label: 'Basit & şeffaf',
@@ -113,12 +138,20 @@ export const tr: LangTranslations = {
     label: 'Seçilmiş projeler', title: 'Portfolyom',
     sub: 'Projelerimden bir seçki — sizin çözümünüzün nasıl görünebileceğini kendiniz görün.',
     demo: 'Canlı Demo', pitch: 'Sunum', github: 'GitHub', liveProduct: 'Aktif kullanımda',
+    responsive: 'Masaüstü, tablet ve telefonda çalışır — aynı uygulama, her yerde kullanılabilir.',
   },
   testimonials: {
     label: 'Müşteri yorumları',
     title: 'Müşteriler ne diyor',
     sub: 'Gerçek projelerden gerçek geri bildirimler.',
     items: [],
+  },
+  reviews: {
+    label: 'Google değerlendirmeleri',
+    title: 'Değerlendirmeler',
+    sub: 'Benim için güzel bir puandan çok dürüst geri bildirim önemli — iş birliğinin gerçekte nasıl geçtiğini yazın.',
+    empty: 'Henüz değerlendirme yok — ilk sesi siz olun.',
+    cta: "Google'da değerlendirin",
   },
   contact: {
     label: 'İletişim', title: 'Projeniz hakkında', titleAccent: 'konuşalım',
@@ -128,6 +161,10 @@ export const tr: LangTranslations = {
     send: 'Mesajı gönder', sending: 'Gönderiliyor…',
     successTitle: 'Mesajınız alındı!', successSub: 'Güveniniz için teşekkürler — en kısa sürede size dönüş yapacağım.',
     sendAnother: 'Yeni mesaj', error: 'Bir şeyler ters gitti. Lütfen doğrudan mail@ilhan-buenyamin.com adresine yazın.',
+    waTitle: 'WhatsApp — en hızlı yol',
+    waNote: 'Doğrudan yazın — genellikle birkaç dakika içinde yanıtlıyorum.',
+    mailNote: 'Ya da klasik yöntemle, e-posta ile:',
+    formNote: 'Detaylı anlatmayı mı tercih edersiniz? Form size adım adım yol gösterir.',
   },
   footer: {
     legal: 'Künye', privacy: 'Gizlilik', back: '← Geri', sayHi: 'Merhaba deyin!',
@@ -141,7 +178,7 @@ export const tr: LangTranslations = {
   },
   servicePages: {
     'website-erstellen-lassen': {
-      metaTitle: 'Web Sitesi Yaptırma — Özel Tasarım & SEO Uyumlu | Bünyamin Ilhan',
+      metaTitle: 'Web Sitesi Yaptırma — Özel Tasarım & SEO Uyumlu | Softlyx',
       metaDescription: 'Kurumsal web sitesi yaptırmak mı istiyorsunuz? Modern, hızlı ve SEO uyumlu web siteleri — %100 özel tasarım, hazır şablon yok. Almanya merkezli, Türkçe hizmet. Ücretsiz teklif alın.',
       eyebrow: 'Hizmet 01',
       h1: 'Web sitesi yaptırma',
@@ -160,7 +197,7 @@ export const tr: LangTranslations = {
       overviewLink: '← Tüm hizmetler',
     },
     'web-app-entwicklung': {
-      metaTitle: 'Web Uygulaması Geliştirme — Kurumsal Yazılım Çözümleri | Bünyamin Ilhan',
+      metaTitle: 'Web Uygulaması Geliştirme — Kurumsal Yazılım Çözümleri | Softlyx',
       metaDescription: 'Angular & TypeScript ile özel web uygulamaları: Süreçlerinizi dijitalleştirin, zaman kazanın, büyüyün. Almanya merkezli geliştirme, Türkçe iletişim.',
       eyebrow: 'Hizmet 02',
       h1: 'Web uygulaması geliştirme',
@@ -179,7 +216,7 @@ export const tr: LangTranslations = {
       overviewLink: '← Tüm hizmetler',
     },
     'website-optimierung': {
-      metaTitle: 'Web Sitesi Optimizasyonu & SEO — Sitenizi Yenileyin | Bünyamin Ilhan',
+      metaTitle: 'Web Sitesi Optimizasyonu & SEO — Sitenizi Yenileyin | Softlyx',
       metaDescription: 'Yavaş yükleme, eskimiş tasarım veya Google’da kötü sıralama mı? Mevcut web sitenizi analiz ediyor ve yeniliyorum — daha iyi sıralamalar ve daha fazla müşteri talebi için.',
       eyebrow: 'Hizmet 03',
       h1: 'Web sitesi optimizasyonu & yenileme',
@@ -198,7 +235,7 @@ export const tr: LangTranslations = {
       overviewLink: '← Tüm hizmetler',
     },
     'sorglos-paket': {
-      metaTitle: 'Her Şey Dahil Paket — Tek Elden Web Sitesi Bakımı | Bünyamin Ilhan',
+      metaTitle: 'Her Şey Dahil Paket — Tek Elden Web Sitesi Bakımı | Softlyx',
       metaDescription: 'Web siteniz için komple hizmet: konseptten tasarım ve geliştirmeye, sürekli bakım ve güncellemelere kadar — her şey tek elden, tek muhatap.',
       eyebrow: 'Hizmet 04',
       h1: 'Her Şey Dahil paket',
@@ -218,15 +255,15 @@ export const tr: LangTranslations = {
     },
   },
   meta: {
-    homeTitle: 'Bünyamin Ilhan — Web Sitesi, Web Uygulaması & Mobil Uygulama Geliştirme',
+    homeTitle: 'Softlyx — Web Sitesi, Web Uygulaması & Mobil Uygulama Geliştirme | Bünyamin Ilhan',
     homeDesc: 'Web siteleri, kurumsal web uygulamaları ve tek elden komple hizmet — hazır kalıp değil, size özel geliştirilir. Almanya merkezli, Türkçe hizmet. Hemen ücretsiz teklif alın!',
-    blogTitle: 'Blog — İşletmeler için web sitesi & dijital ipuçları | Bünyamin Ilhan',
+    blogTitle: 'Blog — İşletmeler için web sitesi & dijital ipuçları | Softlyx',
     blogDesc: 'İşletmelerin web sitesi yaptırmadan önce sorduğu sorulara dürüst yanıtlar — maliyetlerden SEO’ya kadar. Teknik jargon olmadan.',
     legalTitle: 'Künye — Bünyamin Ilhan',
     legalDesc: 'Bünyamin Ilhan’ın künyesi — Almanya/Siegburg merkezli web ve mobil uygulama geliştiricisi.',
     privacyTitle: 'Gizlilik Politikası — Bünyamin Ilhan',
     privacyDesc: 'Bünyamin Ilhan’ın GDPR (DSGVO) ve KVKK kapsamındaki gizlilik politikası ve aydınlatma metni.',
-    notFoundTitle: 'Sayfa bulunamadı — Bünyamin Ilhan',
+    notFoundTitle: 'Sayfa bulunamadı — Softlyx',
     notFoundDesc: 'Bu sayfa mevcut değil. Bünyamin Ilhan’ın ana sayfasına dönün — web & uygulama geliştirme.',
   },
   blogUi: {
@@ -246,6 +283,8 @@ export const tr: LangTranslations = {
   whatsapp: {
     aria: 'WhatsApp üzerinden yazın',
     prefill: 'Merhaba, bir web projesi hakkında görüşmek istiyorum.',
+    cta: 'WhatsApp’tan yazın',
+    short: 'WhatsApp',
   },
   websiteCheck: {
     label: 'Ücretsiz & yükümlülük yok',

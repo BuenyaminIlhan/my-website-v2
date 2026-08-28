@@ -41,6 +41,17 @@ describe('Footer', () => {
     expect(text(fixture)).toContain(String(footer.year));
   });
 
+  it('brands the footer logo as Softlyx with one clean accessible name', () => {
+    create();
+    const el: HTMLElement = fixture.nativeElement;
+    const logo = el.querySelector('.footer-logo');
+    expect(logo?.querySelector('.logo-word')?.textContent).toBe('softlyx_');
+
+    // Everything visible is aria-hidden; only the sr-only span may speak.
+    const spoken = Array.from(logo?.querySelectorAll('span:not([aria-hidden="true"])') ?? []);
+    expect(spoken.map(s => s.textContent)).toEqual(['Softlyx – Bünyamin Ilhan']);
+  });
+
   it('leaves the FAB at its stylesheet position until it is dragged', () => {
     create();
     expect(footer.fabStyle()).toEqual({});

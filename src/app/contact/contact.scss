@@ -21,7 +21,9 @@
 
 .section-title {
   font-family: "Syne", sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(1.75rem, 5vw, 4rem);
+  overflow-wrap: break-word;
+
   font-weight: 800;
   color: var(--text);
   margin-bottom: 1.5rem;
@@ -98,7 +100,10 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
     resize: vertical;
     transition: border-color 200ms;
 
-    &::placeholder { color: var(--border-2); }
+    /* --muted, not --border-2: a border colour as text gave 1.35:1 against
+       the field, which is invisible. --muted is 5.33:1 dark / 5.14:1 light
+       and still far weaker than typed input (16.6:1). */
+    &::placeholder { color: var(--muted); }
     &:focus { border-color: var(--accent); }
   }
 
@@ -176,5 +181,66 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
 }
 
 @media (max-width: 900px) {
-  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-grid { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
+}
+
+/* ── Contact channels: WhatsApp first, mail second, form third ── */
+
+.wa-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  transition: transform 150ms, box-shadow 150ms;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255, 153, 0, 0.15);
+
+    .wa-arrow { transform: translateX(4px); }
+  }
+
+  /* Brand green, like every other WhatsApp mark on the page. */
+  .wa-icon { color: #25d366; flex-shrink: 0; }
+
+  .wa-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .wa-title {
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+  }
+
+  .wa-note {
+    font-family: "Overpass", sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .wa-arrow {
+    margin-left: auto;
+    color: var(--accent);
+    font-size: 1.2rem;
+    transition: transform 150ms;
+  }
+}
+
+.channel-note {
+  font-family: "Overpass", sans-serif;
+  font-size: 0.85rem;
+  color: var(--dim);
+  margin: 0 0 0.5rem;
+}
+
+.form-note {
+  margin-bottom: 1rem;
 }

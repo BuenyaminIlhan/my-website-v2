@@ -23,6 +23,17 @@ export class Offerings {
   lang = inject(LangService);
   inquiry = inject(InquiryService);
 
+  /* Bento positions are chosen by slug, not by index: the locales are
+     free to reorder or add offers without silently moving the big tile
+     onto the wrong service. */
+  isCore(slug: string): boolean {
+    return slug === 'web-app-entwicklung';
+  }
+
+  isBand(slug: string): boolean {
+    return slug === 'sorglos-paket';
+  }
+
   prefill(slug: string) {
     this.inquiry.projectType.set(PROJECT_TYPE_BY_SLUG[slug] ?? '');
   }

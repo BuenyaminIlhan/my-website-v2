@@ -7,6 +7,7 @@ import { AboutMe } from '../about-me/about-me';
 import { Stats } from '../stats/stats';
 import { Skills } from '../skills/skills';
 import { Portfolio } from '../portfolio/portfolio';
+import { Reviews } from '../reviews/reviews';
 import { Testimonials } from '../testimonials/testimonials';
 import { Contact } from '../contact/contact';
 import { WebsiteCheck } from '../website-check/website-check';
@@ -17,9 +18,8 @@ import { buildSiteGraph } from '../i18n/jsonld';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Offerings, Process, AboutMe, Stats, Skills, Portfolio, Testimonials, Faq, WebsiteCheck, Contact],
+  imports: [Hero, Offerings, Process, AboutMe, Stats, Skills, Portfolio, Reviews, Testimonials, Faq, WebsiteCheck, Contact],
   templateUrl: './home.html',
-  styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home implements OnDestroy {

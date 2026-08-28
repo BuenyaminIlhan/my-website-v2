@@ -1,106 +1,72 @@
+/* Kinetic-editorial hero: the type is the layout. Full-width headline,
+   staggered line reveal, a slanted marquee band underneath. */
 .hero {
   position: relative;
-  min-height: 100vh;
+  /* svh, not vh: on iPad the browser chrome would otherwise push the
+     bottom of the hero below the fold. Height is a minimum, never a cap. */
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 80px;
+  padding-top: 7rem;
+  padding-bottom: 5rem;
   overflow: hidden;
+  isolation: isolate;
 }
 
-.glow {
+@media (max-width: 1244px) {
+  .hero {
+    padding-top: 5.5rem;
+    /* Room for the centered scroll hint below the band. */
+    padding-bottom: 7.5rem;
+  }
+
+  .hero-label { margin-bottom: 1.25rem; }
+  .hero-name  { margin-bottom: 1.25rem; }
+}
+
+/* ── Layer 0 · atmosphere ──────────────────────────────────────
+   A static technical grid plus one soft glow — the kinetic energy
+   lives in the type now, so the background stays quiet (and cheap:
+   the old orb/plane layer was ~2 kB of compiled CSS). */
+
+.ambient {
   position: absolute;
-  top: 20%;
-  left: 30%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255, 153, 0, 0.12) 0%, transparent 70%);
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
-  animation: glowPulse 4s ease-in-out infinite;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(255, 153, 0, 0.10), transparent 70%),
+    repeating-linear-gradient(to right, var(--border) 0 1px, transparent 1px 96px),
+    repeating-linear-gradient(to bottom, var(--border) 0 1px, transparent 1px 96px);
+  opacity: 0.55;
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
 }
 
-@keyframes glowPulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%       { opacity: 1;   transform: scale(1.1); }
-}
+/* ── Layer 2 · the words, in front ─────────────────────────────── */
 
 .hero-grid {
   position: relative;
-  z-index: 1;
+  z-index: 3;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 3rem;
+  grid-template-columns: minmax(0, 52fr) minmax(0, 48fr);
+  gap: clamp(2rem, 4vw, 4rem);
   align-items: center;
+  width: 100%;
+}
 
-  @media (max-width: 960px) { grid-template-columns: 1fr; }
+/* 1244 px: below it the text column drops under ~490 px, too narrow to
+   hold the primary and WhatsApp buttons side by side — the CTA block went
+   to three rows and pushed the scroll hint out of view. Stacked, the
+   column is full width and everything fits. */
+@media (max-width: 1244px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
 }
 
 .hero-content {
-  max-width: 640px;
-}
-
-.hero-visual {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-
-  .bracket {
-    font-family: "Syne", sans-serif;
-    font-weight: 800;
-    font-size: clamp(10rem, 24vh, 22rem);
-    line-height: 0.85;
-    color: var(--accent);
-    opacity: 0.16;
-    user-select: none;
-    pointer-events: none;
-  }
-
-  @media (max-width: 960px) {
-    margin-top: 1rem;
-    .bracket { display: none; }
-  }
-}
-
-.benefit-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-.benefit-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.05rem 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border-2);
-  font-family: "Overpass", sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  animation: chipFloat 5s ease-in-out infinite;
-
-  .tick {
-    color: var(--accent);
-    font-weight: 800;
-    font-size: 1.05rem;
-  }
-
-  &.chip-1 { transform: translateX(-16px); animation-delay: 0s; }
-  &.chip-2 { transform: translateX(20px);  animation-delay: 1.2s; }
-  &.chip-3 { transform: translateX(-6px);  animation-delay: 2.4s; }
-
-  @media (max-width: 960px) {
-    white-space: normal;
-    &.chip-1, &.chip-2, &.chip-3 { transform: none; animation: none; }
-  }
-}
-
-@keyframes chipFloat {
-  0%, 100% { translate: 0 0; }
-  50%       { translate: 0 -8px; }
+  position: relative;
+  min-width: 0;
 }
 
 .hero-label {
@@ -110,7 +76,7 @@
   margin-bottom: 2rem;
   font-size: 0.85rem;
   font-family: "Overpass", sans-serif;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--muted);
 
@@ -128,16 +94,43 @@
   50%       { opacity: 0.3; }
 }
 
+/* Two staggered lines rising out of their masks. Mixed case, not
+   uppercase: Syne ExtraBold capitals run ~0.9em per glyph, which
+   blows any column — review-measured, don't reintroduce. */
 .hero-title {
   font-family: "Syne", sans-serif;
-  font-size: clamp(2.2rem, 4.8vw, 4.4rem);
+  /* 1.7rem floor, not 2.2rem: at 320 px "Ergebnisse." alone was 44 px wider
+     than the screen and the masks cut it off. */
+  font-size: clamp(1.7rem, 3vw + 0.6rem, 3.8rem);
   font-weight: 800;
-  line-height: 1.08;
+  line-height: 1.06;
   letter-spacing: -0.02em;
   color: var(--text);
   margin-bottom: 1.5rem;
+  overflow-wrap: break-word;
+
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    /* A hair of headroom inside the mask so umlaut dots (Ö) and
+       descenders survive the tight leading. */
+    padding: 0.03em 0;
+  }
+
+  .line {
+    display: block;
+    animation: lineRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .line-1 .line { animation-delay: 0.05s; }
+  .line-2 .line { animation-delay: 0.18s; }
 
   .accent { color: var(--accent); }
+}
+
+@keyframes lineRise {
+  from { transform: translateY(115%); }
+  to   { transform: translateY(0); }
 }
 
 .hero-name {
@@ -182,13 +175,11 @@
   font-size: clamp(0.95rem, 1.5vw, 1.15rem);
   line-height: 1.7;
   color: var(--muted);
-  max-width: 560px;
-  margin-bottom: 3rem;
+  max-width: 34rem;
+  margin-bottom: 2.5rem;
 }
 
-.type-sizer {
-  visibility: hidden;
-}
+.type-sizer { visibility: hidden; }
 
 .type-display {
   position: absolute;
@@ -197,15 +188,20 @@
   right: 0;
 }
 
+/* Three actions in a 52 % column: the paddings above are trimmed so the
+   primary and the WhatsApp button share the first row instead of the
+   block growing to three rows and pushing the scroll hint below the fold. */
 .hero-cta {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 
   .btn-primary {
+    position: relative;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
-    padding: 14px 36px;
+    padding: 14px 28px;
     background: var(--accent);
     color: var(--bg);
     font-family: "Syne", sans-serif;
@@ -215,14 +211,55 @@
     text-transform: uppercase;
     transition: background 150ms, transform 150ms;
 
+    /* Cursor spotlight, fed by --mx/--my from the component. */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(110px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.35), transparent 60%);
+      opacity: 0;
+      transition: opacity 200ms;
+      pointer-events: none;
+    }
+
     &:hover { background: var(--accent-h); transform: translateY(-2px); }
+    &:hover::after { opacity: 1; }
+  }
+
+  /* WhatsApp keeps its own brand green — recoloured to the site accent it
+     would lose exactly the recognition that makes it worth showing. */
+  .btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 14px 24px;
+    background: #25d366;
+    color: #0b2e18;
+    font-family: "Syne", sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 150ms, transform 150ms;
+
+    &:hover { background: #1fbb59; transform: translateY(-2px); }
+
+    /* One line on a phone too — wrapped, the icon floats beside two rows
+       of text and the button stops reading as a single action. */
+    @media (max-width: 520px) {
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
   }
 
   .btn-ghost {
     display: inline-flex;
     align-items: center;
-    padding: 14px 36px;
+    padding: 14px 28px;
     border: 2px solid var(--border-2);
+    background: var(--bg-overlay);
     color: var(--text);
     font-family: "Syne", sans-serif;
     font-weight: 700;
@@ -235,31 +272,127 @@
   }
 }
 
+/* The two-column window: the text column tops out around 700 px, short of
+   holding three full-size buttons in two comfortable rows. Compact sizing
+   applies across the whole range — a max-width bound left a gap where the
+   third row came back and pushed the scroll hint below the fold. */
+@media (min-width: 1245px) {
+  .hero-cta {
+    .btn-primary,
+    .btn-ghost,
+    .btn-whatsapp {
+      padding: 12px 20px;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+
+.hero-points {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.75rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Overpass", sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    color: var(--dim);
+  }
+
+  .tick {
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.85rem;
+  }
+}
+
+/* Beside the terminal, it carries the three points as [ok] lines — the
+   list stays in the accessibility tree instead of disappearing. */
+@media (min-width: 1245px) {
+  .hero-points {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+}
+
+/* ── The quiet band: thin rules, muted mono type, no tilt ──────── */
+
+.hero-band {
+  position: relative;
+  z-index: 3;
+  margin: 3rem calc(clamp(1rem, 8vw, 9rem) * -1) 0;
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--dim);
+
+  /* The floating WhatsApp button parks in this corner at common desktop
+     sizes. The rules run edge to edge, but the moving text starts clear of
+     it — real space, not a mask, so the overlap is actually gone and a
+     layout check can see it. */
+  @media (min-width: 601px) {
+    /* Plus the band's own bleed past the content column, or the clearance
+       lands 100 px too far left. */
+    app-marquee {
+      display: block;
+      /* Button width plus its left offset, plus the band's own bleed past
+         the content column — measured, not guessed. */
+      padding-left: calc(210px + clamp(1rem, 8vw, 9rem));
+    }
+  }
+}
+
+/* ── Bottom rail ─────────────────────────────────────────────── */
+
 .hero-bottom {
   position: absolute;
-  bottom: 2rem;
+  z-index: 3;
+  /* Measured, not guessed: with 2rem the hint's label started at the exact
+     pixel the marquee text ended on. 1.25rem puts a visible gap between the
+     two and still leaves the hint clear of the fold. */
+  bottom: 1.25rem;
   left: clamp(1rem, 8vw, 9rem);
   right: clamp(1rem, 8vw, 9rem);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-end;
 }
 
+/* In the outer margin, left of the content column — sharing the left
+   edge with the buttons made it collide with them. */
 .hero-mail {
+  position: absolute;
+  z-index: 3;
+  left: clamp(0.5rem, 2.2vw, 2.75rem);
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
   font-size: 0.8rem;
   color: var(--dim);
   letter-spacing: 0.05em;
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
   transition: color 150ms;
   &:hover { color: var(--accent); }
+
+  @media (max-width: 1244px) { display: none; }
 }
 
 .scroll-hint {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   color: var(--dim);
   font-size: 0.75rem;
   letter-spacing: 0.1em;
@@ -267,32 +400,82 @@
   transition: color 150ms;
   &:hover { color: var(--accent); }
 
-  .scroll-track {
-    width: 2px;
-    height: 60px;
-    background: var(--border);
+  .scroll-chevrons {
+    display: block;
+    /* Holds the three chevrons plus the travel of the wave, so the hint's
+       height stays fixed: it has to clear the marquee band above it and
+       the fold below it at the same time. */
+    height: 26px;
+    width: 18px;
     position: relative;
-    overflow: hidden;
   }
 
-  .scroll-dot {
+  .chev {
     position: absolute;
-    top: 0;
     left: 0;
-    width: 2px;
-    height: 20px;
-    background: var(--accent);
-    animation: scrollDown 1.5s ease-in-out infinite;
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    opacity: 0;
+    animation: chevWave 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+
+    &:nth-child(1) { top: 0px; animation-delay: 0s; }
+    &:nth-child(2) { top: 7px; animation-delay: 0.15s; }
+    &:nth-child(3) { top: 14px; animation-delay: 0.3s; }
+  }
+
+  /* Hovering pulls the wave forward instead of just recolouring it. */
+  &:hover .chev { animation-duration: 1.1s; }
+}
+
+@keyframes chevWave {
+  0%       { opacity: 0; transform: rotate(45deg) translate(-4px, -4px); }
+  30%      { opacity: 1; transform: rotate(45deg) translate(0, 0); }
+  70%      { opacity: 0.35; transform: rotate(45deg) translate(2px, 2px); }
+  100%     { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+}
+
+/* Stacked, the hero is taller than any viewport — a "scroll down" hint
+   pinned to its bottom edge would sit hundreds of pixels below the fold,
+   where it can never do its job. */
+@media (max-width: 1244px) {
+  .hero-bottom { display: none; }
+}
+
+/* Short viewports — 1366×768 is still one of the most common laptop
+   screens — cannot hold the hero AND the hint. Reclaim what the padding
+   allows, then drop the hint rather than park it out of sight. */
+@media (max-height: 900px) {
+  .hero {
+    padding-top: 5.5rem;
+    padding-bottom: 3rem;
   }
 }
 
-@keyframes scrollDown {
-  0%   { top: -20px; opacity: 0; }
-  30%  { opacity: 1; }
-  100% { top: 60px;  opacity: 0; }
+@media (max-height: 860px) {
+  .hero-bottom { display: none; }
 }
 
-@media (max-width: 600px) {
-  .hero-bottom { bottom: 1.5rem; justify-content: center; }
-  .hero-mail   { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-label .dot, .name-line,
+  .hero-title .line { animation: none; }
+
+  /* Without the wave the chevrons must still be visible, not stuck at
+     the keyframe's opacity 0. */
+  .scroll-hint .chev {
+    animation: none;
+    opacity: 1;
+    &:nth-child(2) { opacity: 0.6; }
+    &:nth-child(3) { opacity: 0.3; }
+  }
+
+  .hero-cta .btn-primary {
+    transition: background 150ms;
+    &:hover { transform: none; }
+    &::after { display: none; }
+  }
+
+  .hero-cta .btn-whatsapp:hover { transform: none; }
 }

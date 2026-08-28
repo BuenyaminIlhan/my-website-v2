@@ -11,6 +11,30 @@ export const de: LangTranslations = {
     sub: 'Ich entwickle Websites und Business-Web-Apps, die Ihr Unternehmen voranbringen — persönlich, maßgeschneidert und mit echter Liebe zum Detail.',
     cta1: 'Leistungen ansehen', cta2: 'Kostenloses Erstgespräch', scroll: 'Nach unten',
     badges: ['100 % individuell — kein Baukasten', 'SEO & Performance inklusive', 'Antwort innerhalb von 24 Stunden'],
+    marquee: ['Webdesign', 'Business-Web-Apps', 'SEO', 'Performance', 'Modernisierung', 'Redesign'],
+    terminal: {
+      title: 'softlyx — projekt-start',
+      cmd: 'softlyx init --projekt "ihre-website"',
+      steps: [
+        { label: 'Konzept & Design', note: 'individuell, kein Baukasten' },
+        { label: 'Entwicklung', note: 'Angular · TypeScript' },
+        { label: 'SEO & Performance', note: 'optimiert' },
+        { label: 'DSGVO-konform', note: 'Hosting in Deutschland' },
+      ],
+      deploy: 'deploy -> live',
+      live: 'live',
+      visitorCmd: 'besucher', visitorDevice: 'gerät', visitorTime: 'zeit',
+      visitorRegion: 'region', visitorNet: 'netz',
+      loadTime: 'ladezeit', loadTimeNote: 'auf ihrem gerät gemessen',
+      requests: 'anfragen', requestsForeign: 'fremd-hosts',
+      themeDetected: 'theme', themeDark: 'dunkel', themeLight: 'hell', themeApplied: 'erkannt und angepasst',
+      langDetected: 'sprache', langSwitch: 'wechseln?', langAria: 'Sprache wechseln zu',
+      ipCmd: 'meine-ip', ipShow: 'anzeigen', ipHide: 'verbergen',
+      ipNote: 'direkt von meinem server, ohne drittanbieter',
+      ipFailed: 'server antwortet nicht',
+      ipAria: 'Meine öffentliche IP-Adresse anzeigen',
+      ipAriaHide: 'Meine öffentliche IP-Adresse wieder verbergen',
+    },
   },
   offers: {
     label: 'Was ich für Sie tun kann',
@@ -48,6 +72,7 @@ export const de: LangTranslations = {
     mailHint: 'Oder direkt per E-Mail:',
     cardCta: 'Anfragen',
     moreInfo: 'Mehr erfahren',
+    core: 'Kernleistung',
   },
   process: {
     label: 'Einfach & transparent',
@@ -113,12 +138,20 @@ export const de: LangTranslations = {
     label: 'Ausgewählte Projekte', title: 'Mein Portfolio',
     sub: 'Eine Auswahl meiner Projekte — sehen Sie selbst, wie Ihre Lösung aussehen könnte.',
     demo: 'Live-Demo', pitch: 'Pitch', github: 'GitHub', liveProduct: 'Live im Einsatz',
+    responsive: 'Läuft auf Desktop, Tablet und Smartphone — dieselbe App, überall bedienbar.',
   },
   testimonials: {
     label: 'Kundenstimmen',
     title: 'Was Kunden sagen',
     sub: 'Echtes Feedback aus echten Projekten.',
     items: [],
+  },
+  reviews: {
+    label: 'Google-Bewertungen',
+    title: 'Bewertungen',
+    sub: 'Ehrliches Feedback ist mir wichtiger als eine hübsche Zahl — schreiben Sie, wie die Zusammenarbeit wirklich war.',
+    empty: 'Noch keine Bewertungen — werden Sie die erste Stimme.',
+    cta: 'Auf Google bewerten',
   },
   contact: {
     label: 'Kontakt', title: 'Sprechen wir über', titleAccent: 'Ihr Projekt',
@@ -128,6 +161,10 @@ export const de: LangTranslations = {
     send: 'Nachricht senden', sending: 'Wird gesendet…',
     successTitle: 'Nachricht erhalten!', successSub: 'Vielen Dank für Ihr Vertrauen — ich melde mich schnellstmöglich bei Ihnen.',
     sendAnother: 'Weitere Nachricht', error: 'Etwas ist schiefgelaufen. Schreiben Sie mir gern direkt an mail@ilhan-buenyamin.com.',
+    waTitle: 'WhatsApp — der schnellste Weg',
+    waNote: 'Direkt schreiben, meist antworte ich innerhalb weniger Minuten.',
+    mailNote: 'Oder klassisch per E-Mail:',
+    formNote: 'Lieber ausführlich? Das Formular führt Sie Schritt für Schritt durch.',
   },
   footer: {
     legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!',
@@ -141,7 +178,7 @@ export const de: LangTranslations = {
   },
   servicePages: {
     'website-erstellen-lassen': {
-      metaTitle: 'Website erstellen lassen — individuell & SEO-optimiert | Bünyamin Ilhan',
+      metaTitle: 'Website erstellen lassen — individuell & SEO-optimiert | Softlyx',
       metaDescription: 'Website erstellen lassen in Siegburg, Köln & Bonn: modern, schnell und suchmaschinenoptimiert — 100% individuell, kein Baukasten. Jetzt unverbindlich anfragen.',
       eyebrow: 'Leistung 01',
       h1: 'Website erstellen lassen',
@@ -160,7 +197,7 @@ export const de: LangTranslations = {
       overviewLink: '← Alle Leistungen',
     },
     'web-app-entwicklung': {
-      metaTitle: 'Web-App entwickeln lassen — individuelle Business-Software | Bünyamin Ilhan',
+      metaTitle: 'Web-App entwickeln lassen — individuelle Business-Software | Softlyx',
       metaDescription: 'Individuelle Web-Apps mit Angular & TypeScript: Prozesse digitalisieren, Zeit sparen, wachsen. Entwicklung aus Siegburg für Kunden in Köln, Bonn und ganz NRW.',
       eyebrow: 'Leistung 02',
       h1: 'Web-App entwickeln lassen',
@@ -179,7 +216,7 @@ export const de: LangTranslations = {
       overviewLink: '← Alle Leistungen',
     },
     'website-optimierung': {
-      metaTitle: 'Website-Optimierung & SEO — bestehende Seite modernisieren | Bünyamin Ilhan',
+      metaTitle: 'Website-Optimierung & SEO — bestehende Seite modernisieren | Softlyx',
       metaDescription: 'Langsame Ladezeiten, veraltetes Design oder schlechte Google-Platzierung? Ich analysiere und modernisiere bestehende Websites — für bessere Rankings und mehr Anfragen.',
       eyebrow: 'Leistung 03',
       h1: 'Website-Optimierung & Modernisierung',
@@ -198,7 +235,7 @@ export const de: LangTranslations = {
       overviewLink: '← Alle Leistungen',
     },
     'sorglos-paket': {
-      metaTitle: 'All-in-One Sorglos-Paket — Website-Betreuung aus einer Hand | Bünyamin Ilhan',
+      metaTitle: 'All-in-One Sorglos-Paket — Website-Betreuung aus einer Hand | Softlyx',
       metaDescription: 'Komplettbetreuung für Ihre Website: von Konzept über Design und Entwicklung bis zu laufender Pflege und Updates — alles aus einer Hand, ein persönlicher Ansprechpartner.',
       eyebrow: 'Leistung 04',
       h1: 'All-in-One Sorglos-Paket',
@@ -218,15 +255,15 @@ export const de: LangTranslations = {
     },
   },
   meta: {
-    homeTitle: 'Bünyamin Ilhan — Websites, Web-Apps & Apps entwickeln lassen',
+    homeTitle: 'Softlyx — Websites, Web-Apps & Apps entwickeln lassen | Bünyamin Ilhan',
     homeDesc: 'Websites, Business-Web-Apps und Rundum-Betreuung aus einer Hand — individuell entwickelt statt 08/15. Persönlich, transparent, fair. Jetzt unverbindlich anfragen!',
-    blogTitle: 'Blog — Websites & digitale Tipps für Unternehmen | Bünyamin Ilhan',
+    blogTitle: 'Blog — Websites & digitale Tipps für Unternehmen | Softlyx',
     blogDesc: 'Ehrliche Antworten auf die Fragen, die sich Unternehmen vor dem Website-Projekt stellen — von Kosten über Baukasten-Vergleiche bis SEO. Ohne Fachchinesisch.',
     legalTitle: 'Impressum — Bünyamin Ilhan',
     legalDesc: 'Impressum von Bünyamin Ilhan, Web- und Mobile-Entwickler aus Siegburg.',
     privacyTitle: 'Datenschutz — Bünyamin Ilhan',
     privacyDesc: 'Datenschutzerklärung von Bünyamin Ilhan gemäß DSGVO.',
-    notFoundTitle: 'Seite nicht gefunden — Bünyamin Ilhan',
+    notFoundTitle: 'Seite nicht gefunden — Softlyx',
     notFoundDesc: 'Diese Seite gibt es nicht. Zurück zur Startseite von Bünyamin Ilhan — Web- & App-Entwicklung.',
   },
   blogUi: {
@@ -246,6 +283,8 @@ export const de: LangTranslations = {
   whatsapp: {
     aria: 'Per WhatsApp schreiben',
     prefill: 'Hallo, ich möchte über ein Web-Projekt sprechen.',
+    cta: 'WhatsApp schreiben',
+    short: 'WhatsApp',
   },
   websiteCheck: {
     label: 'Kostenlos & unverbindlich',
