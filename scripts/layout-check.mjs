@@ -21,7 +21,15 @@ const PORT = 9422;
    single height once made every assertion pass by accident. 1366×768 and
    1280×800 are the laptop sizes most visitors actually have. */
 const VIEWPORTS = [
-  [320, 720], [390, 844], [520, 900], [900, 900],
+  [320, 720], [390, 844], [520, 900],
+  /* 610 and 701 close a 380px hole between 520 and 900 that sat exactly on a
+     component breakpoint: the stats band overshot its column by 17px there and
+     every sampled width said it was fine. 701 rather than a comfortable width
+     like 760 on purpose — a grid with a min-content floor always binds at the
+     LOWER bound of its mode, so the tightest four-column width is the one
+     worth sampling (~60px of slack there against ~110px at 760). */
+  [610, 900], [701, 900],
+  [900, 900],
   [1181, 900], [1245, 900], [1291, 900],
   [1280, 800], [1366, 768], [1440, 900], [1536, 864], [1920, 1080],
   /* Beyond the 1728px content cap: without it the measure just kept
@@ -216,6 +224,27 @@ const PROBE = `(async () => {
     hintOverflow: hintEl ? Math.round(hintEl.getBoundingClientRect().bottom - window.innerHeight) : null,
     fabOverBand: overlap(fab?.getBoundingClientRect(), bandText?.getBoundingClientRect()),
     pageOverflow: measureOverflow(),
+    /* The stats band is full-bleed by design, so the 1440px content check
+       cannot see it — and it was the one section whose numbers still sat at
+       the window edge while every heading around it had moved inwards.
+       Measured against a real neighbour, not against a copy of the CSS. */
+    statsAlign: (() => {
+      const row = document.querySelector('.stats-row');
+      /* No band on this route means nothing to align — but a band without its
+         neighbour means the check would switch itself off silently, so that
+         case throws like every other missing selector in this file. */
+      if (!row) return null;
+      const skills = one('#skills');
+      const cs = getComputedStyle(skills);
+      const sr = skills.getBoundingClientRect();
+      const firstValue = row.querySelector('.stat-value');
+      const items = [...row.querySelectorAll('.stat-item')];
+      if (!firstValue || !items.length) return null;
+      return {
+        left: Math.round(firstValue.getBoundingClientRect().left - (sr.left + parseFloat(cs.paddingLeft))),
+        right: Math.round((sr.right - parseFloat(cs.paddingRight)) - items[items.length - 1].getBoundingClientRect().right),
+      };
+    })(),
     widestSection: (() => {
       /* The content box of a padded section IS the measure. Reported with
          its owner so a regression names the section, not just a number. */
@@ -306,6 +335,10 @@ async function run() {
       if (m.widestSection.narrowestShare !== null
           && m.widestSection.narrowestShare < 0.25 && m.widestSection.narrowestPx < 400)
         failures.push(`${at}: ${m.widestSection.narrowestWho} content is only ${m.widestSection.narrowestPx}px, ${Math.round(m.widestSection.narrowestShare * 100)}% of its own box — the padding ate it`);
+      if (m.statsAlign && Math.abs(m.statsAlign.left) > 2)
+        failures.push(`${at}: stats band starts ${m.statsAlign.left}px off the content column`);
+      if (m.statsAlign && Math.abs(m.statsAlign.right) > 2)
+        failures.push(`${at}: stats band ends ${m.statsAlign.right}px off the content column`);
       if (m.navRight !== null && m.navRight > m.controlsLeft) {
         failures.push(`${at}: nav overlaps the controls by ${m.navRight - m.controlsLeft}px`);
       }

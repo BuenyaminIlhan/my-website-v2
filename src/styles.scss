@@ -12,6 +12,15 @@
   --brand:        #ff9d1f;
   --bg-glass:     rgba(13, 13, 13, 0.92);
   --bg-overlay:   rgba(13, 13, 13, 0.88);
+
+  /* The one place the page gutter is defined. Written down as a token because
+     copying this formula by hand is what once collapsed the legal pages to a
+     zero-width text column. The percentage is NOT resolved here — a custom
+     property is substituted as text and `100%` resolves against whatever
+     element finally uses it. That makes it correct for full-bleed children of
+     the page container (.section-padding, .stats-row) and WRONG for anything
+     inside a narrower box — see the note at .legal-page below. */
+  --page-gutter: max(clamp(1rem, 8vw, 9rem), (100% - 1440px) / 2);
 }
 
 body.light {
@@ -175,15 +184,15 @@ app-root {
 .section-padding {
   /* padding-block stays explicit: the shorthand it replaced zeroed it. */
   padding-block: 0;
-  padding-inline: max(clamp(1rem, 8vw, 9rem), (100% - 1440px) / 2);
+  padding-inline: var(--page-gutter);
 }
 
-/* These three set their own max-width: 860px. Percentage padding resolves
-   against the viewport, not against that cap, so the gutter above would
-   exceed 860px past ~2300px and collapse the text column to zero width —
-   a privacy policy one word per line. They keep the plain gutter and centre
-   themselves, which is also what the cap is for. Must stay AFTER
-   .section-padding: same specificity, so source order decides. */
+/* These three set their own max-width: 860px and therefore must NOT use
+   --page-gutter. Percentage padding resolves against the viewport, not against
+   that cap, so the token would exceed 860px past ~2300px and collapse the text
+   column to zero width — a privacy policy one word per line. They keep the
+   plain gutter and centre themselves, which is also what the cap is for. Must
+   stay AFTER .section-padding: same specificity, so source order decides. */
 .legal-page,
 .blog-page,
 .service-page {

@@ -4,6 +4,15 @@
   grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  /* The band stays full-bleed — its two rules are meant to run edge to edge —
+     but its cells line up with every other section, so the first numeral sits
+     under the section headline instead of 519px to its left at 2560px.
+     Asymmetric on purpose. On the left the cell's own inset is subtracted, so
+     the TEXT lands on the gutter; on the right there is no text to align, only
+     the last cell's rule, so the full gutter applies. Subtracting on both
+     sides pushed that rule exactly one cell inset past the content edge
+     (measured: -32px at 1280 up to -40px at 2560). */
+  padding-inline: calc(var(--page-gutter) - clamp(1rem, 2.5vw, 2.5rem)) var(--page-gutter);
 }
 
 .stat-item {
@@ -46,9 +55,19 @@
   color: var(--dim);
 }
 
-@media (max-width: 600px) {
+/* 700, not 600: narrowing the row for the content column costs it
+   `gutter + (gutter - inset)` of width, and the four `1fr` tracks have an
+   automatic min-content floor they refuse to go below — the German labels need
+   538px. At 601px the content box is 521px, so the last cell's rule landed 17px
+   past the content edge; it only fits from ~630px. 700 leaves ~67px of slack so
+   a longer label cannot bring it back. */
+@media (max-width: 700px) {
   .stats-row {
     grid-template-columns: repeat(2, 1fr);
+    /* The cell inset changes below this breakpoint, so the amount subtracted
+       from the gutter has to change with it — otherwise the band is flush on
+       the desktop and off by 1rem on a phone. */
+    padding-inline: calc(var(--page-gutter) - 1rem) var(--page-gutter);
   }
 
   .stat-item {
