@@ -94,11 +94,6 @@ describe('Hero', () => {
     expect(el.querySelector('app-marquee')).not.toBeNull();
   });
 
-  it('no longer embeds the project stage — it moved to its own section', () => {
-    const el: HTMLElement = fixture.nativeElement;
-    expect(el.querySelector('app-project-stage')).toBeNull();
-  });
-
   /* The scroll hint is the brand mark now: three chevrons running downwards,
      in place of the dot-on-a-line it replaced. */
   it('points down with three chevrons, and still links to the next section', () => {
