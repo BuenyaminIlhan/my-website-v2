@@ -43,15 +43,15 @@ const VIEWPORTS = [
   [2560, 1440],
 ];
 
-/* All three locales: Turkish has the widest navigation, so a breakpoint
-   validated only in German proves nothing. */
+/* Both locales: the navigation labels differ in width between German and
+   English, so a breakpoint validated only in German proves nothing. */
 const ROUTES = [
-  '/', '/en', '/tr',
+  '/', '/en',
   /* One route per narrow-container class (.legal-page, .service-page,
      .blog-page). Measuring only the home page is how a privacy policy
      collapsed to one word per line at 2300px while the guard reported 39
      green combinations. The sibling routes of each class (/legal-notice,
-     the other three service pages, the blog articles) and the /en and /tr
+     the other three service pages, the blog articles) and the /en
      variants share the same CSS, so they are covered by construction —
      add a route here only when a NEW container class appears. */
   '/privacy-policy', '/sorglos-paket', '/blog',

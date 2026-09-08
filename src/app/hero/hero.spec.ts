@@ -39,13 +39,13 @@ describe('Hero', () => {
     vi.advanceTimersByTime(22 * 5);
     expect(hero.displayed().length).toBeGreaterThan(0);
 
-    lang.applyRoute('tr', 'home');
+    lang.applyRoute('en', 'home');
     fixture.detectChanges();
     expect(hero.displayed()).toBe('');
 
-    const turkish = lang.t().hero.sub;
-    vi.advanceTimersByTime(22 * (turkish.length + 1));
-    expect(hero.displayed()).toBe(turkish);
+    const english = lang.t().hero.sub;
+    vi.advanceTimersByTime(22 * (english.length + 1));
+    expect(hero.displayed()).toBe(english);
   });
 
   it('blinks the cursor', () => {

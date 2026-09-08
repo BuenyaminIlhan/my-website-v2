@@ -1,13 +1,13 @@
 {
   "pages": {
-    "home":     { "de": "", "en": "", "tr": "" },
-    "legal":    { "de": "legal-notice", "en": "legal-notice", "tr": "kunye" },
-    "privacy":  { "de": "privacy-policy", "en": "privacy-policy", "tr": "gizlilik-politikasi" },
-    "blog":     { "de": "blog", "tr": "blog" },
-    "notFound": { "de": "404", "en": "404", "tr": "404" },
-    "website-erstellen-lassen": { "de": "website-erstellen-lassen", "en": "website-development", "tr": "web-sitesi-yaptirma" },
-    "web-app-entwicklung":      { "de": "web-app-entwicklung", "en": "web-app-development", "tr": "web-uygulamasi-gelistirme" },
-    "website-optimierung":      { "de": "website-optimierung", "en": "website-optimisation", "tr": "web-sitesi-optimizasyonu" },
-    "sorglos-paket":            { "de": "sorglos-paket", "en": "care-free-package", "tr": "her-sey-dahil-paket" }
+    "home":     { "de": "", "en": "" },
+    "legal":    { "de": "legal-notice", "en": "legal-notice" },
+    "privacy":  { "de": "privacy-policy", "en": "privacy-policy" },
+    "blog":     { "de": "blog" },
+    "notFound": { "de": "404", "en": "404" },
+    "website-erstellen-lassen": { "de": "website-erstellen-lassen", "en": "website-development" },
+    "web-app-entwicklung":      { "de": "web-app-entwicklung", "en": "web-app-development" },
+    "website-optimierung":      { "de": "website-optimierung", "en": "website-optimisation" },
+    "sorglos-paket":            { "de": "sorglos-paket", "en": "care-free-package" }
   }
 }

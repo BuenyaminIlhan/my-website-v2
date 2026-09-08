@@ -52,6 +52,38 @@ describe('Footer', () => {
     expect(spoken.map(s => s.textContent)).toEqual(['Softlyx – Bünyamin Ilhan']);
   });
 
+  it('shows no country switcher while the Turkish site URL is not configured', () => {
+    create();
+    expect(footer.turkishSiteUrl()).toBe('');
+    expect((fixture.nativeElement as HTMLElement).querySelector('.site-switch')).toBeNull();
+    expect(text(fixture)).not.toContain('Türkçe');
+  });
+
+  it('links to the Turkish site as a plain country switcher once configured', () => {
+    create();
+    footer.turkishSiteUrl.set('https://softlyx.tr/');
+    fixture.detectChanges();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('.site-switch');
+    expect(link?.getAttribute('href')).toBe('https://softlyx.tr/');
+    expect(link?.getAttribute('hreflang')).toBe('tr');
+    expect(link?.getAttribute('lang')).toBe('tr');
+    expect(link?.textContent?.trim()).toBe('Türkçe');
+  });
+
+  it('shows the blog link only in German, the only locale with a blog', () => {
+    create();
+    const blogLink = () =>
+      Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.footer-nav a'))
+        .find(a => a.textContent?.trim() === 'Blog');
+
+    expect(blogLink()).toBeDefined();
+
+    footer.lang.applyRoute('en', 'home');
+    fixture.detectChanges();
+    expect(blogLink()).toBeUndefined();
+  });
+
   it('leaves the FAB at its stylesheet position until it is dragged', () => {
     create();
     expect(footer.fabStyle()).toEqual({});

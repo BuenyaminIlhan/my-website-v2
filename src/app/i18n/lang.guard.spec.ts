@@ -41,10 +41,10 @@ describe('langGuard', () => {
   });
 
   it('applies the locale of the route before the page is constructed', () => {
-    run({ lang: 'tr', pageKey: 'home' });
+    run({ lang: 'en', pageKey: 'home' });
 
-    expect(lang.current()).toBe('tr');
-    expect(document.documentElement.getAttribute('lang')).toBe('tr');
+    expect(lang.current()).toBe('en');
+    expect(document.documentElement.getAttribute('lang')).toBe('en');
   });
 
   it('lets the URL win over a stored preference', () => {
@@ -55,13 +55,14 @@ describe('langGuard', () => {
     expect(lang.current()).toBe('en');
   });
 
-  it('passes the article id on, so the language switch lands on the translated article', () => {
+  it('passes the article id on; without an English translation the switch falls back to the English home', () => {
     const navigateByUrl = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     run({ lang: 'de', pageKey: 'blog', articleId: 'website-kosten-handwerker' });
 
-    lang.switchTo('tr');
+    lang.switchTo('en');
 
-    expect(navigateByUrl).toHaveBeenCalledWith('/' + blogArticleUrlPath('website-kosten-handwerker', 'tr'));
+    expect(blogArticleUrlPath('website-kosten-handwerker', 'en')).toBeUndefined();
+    expect(navigateByUrl).toHaveBeenCalledWith('/en');
   });
 
   it('works without an article id on ordinary pages', () => {

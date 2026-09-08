@@ -34,8 +34,8 @@ describe('Portfolio', () => {
     const project = portfolio.projects[0];
     expect(portfolio.description(project)).toBe(project.descriptions.de);
 
-    lang.applyRoute('tr', 'home');
-    expect(portfolio.description(project)).toBe(project.descriptions.tr);
+    lang.applyRoute('en', 'home');
+    expect(portfolio.description(project)).toBe(project.descriptions.en);
   });
 
   it('renders link buttons only where a real URL exists — never a dead anchor', () => {

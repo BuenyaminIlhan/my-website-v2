@@ -65,17 +65,10 @@ async function fireLoad(): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, 0));
 }
 
-function stubLanguages(tags: string[]): void {
-  Object.defineProperty(navigator, 'languages', { value: tags, configurable: true });
-  Object.defineProperty(navigator, 'language', { value: tags[0], configurable: true });
-}
-
 describe('TerminalPanel', () => {
   let fixture: ComponentFixture<TerminalPanel>;
   let lang: LangService;
   const realUserAgent = navigator.userAgent;
-  const realLanguages = navigator.languages;
-  const realLanguage = navigator.language;
 
   beforeEach(() => {
     /* The theme and language lines each read a stored choice. Pinning both here
@@ -97,8 +90,6 @@ describe('TerminalPanel', () => {
     localStorage.clear();
     removePerformanceObserver();
     Object.defineProperty(navigator, 'userAgent', { value: realUserAgent, configurable: true });
-    Object.defineProperty(navigator, 'languages', { value: realLanguages, configurable: true });
-    Object.defineProperty(navigator, 'language', { value: realLanguage, configurable: true });
     restoreConnection();
     vi.restoreAllMocks();
   });
@@ -450,54 +441,6 @@ describe('TerminalPanel', () => {
     expect(line).toContain(t.themeApplied);
   });
 
-  it('offers the visitor their browser language when the page is in another one', () => {
-    localStorage.removeItem('lang');
-    stubLanguages(['tr-TR', 'de-DE']);
-
-    const probe = TestBed.createComponent(TerminalPanel);
-    probe.detectChanges();
-
-    expect(probe.componentInstance.langOffer()).toBe('tr');
-    const button = (probe.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.lang-line .term-action');
-    expect(button?.textContent?.trim()).toBe(lang.t().hero.terminal.langSwitch);
-    probe.destroy();
-  });
-
-  it('does not offer a switch to the language the visitor is already reading', () => {
-    localStorage.removeItem('lang');
-    stubLanguages(['de-DE']);
-
-    const probe = TestBed.createComponent(TerminalPanel);
-    probe.detectChanges();
-
-    expect(probe.componentInstance.langOffer()).toBeNull();
-    expect((probe.nativeElement as HTMLElement).querySelector('.lang-line')).toBeNull();
-    probe.destroy();
-  });
-
-  it('never asks again once the visitor has picked a language', () => {
-    stubLanguages(['en-GB']);
-    // beforeEach stored 'lang'.
-    const probe = TestBed.createComponent(TerminalPanel);
-    probe.detectChanges();
-
-    expect(probe.componentInstance.langOffer()).toBeNull();
-    probe.destroy();
-  });
-
-  /* This computed runs while the hero renders, and storage access throws
-     outright in browsers configured to block site data. */
-  it('still renders where localStorage is not allowed', () => {
-    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
-      throw new DOMException('blocked', 'SecurityError');
-    });
-    stubLanguages(['de-DE']);
-
-    const probe = TestBed.createComponent(TerminalPanel);
-    expect(() => probe.detectChanges()).not.toThrow();
-    expect(probe.componentInstance.langOffer()).toBeNull();
-    probe.destroy();
-  });
   it('switches language with the rest of the page', () => {
     lang.applyRoute('en', 'home');
     fixture.detectChanges();

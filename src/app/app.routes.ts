@@ -92,7 +92,7 @@ function localeRoutes(lang: Lang): Routes {
 
 export const routes: Routes = [
   { path: 'en', children: localeRoutes('en') },
-  { path: 'tr', children: localeRoutes('tr') },
+  // No 'tr' tree: the Turkish site has its own domain, /tr/... is redirected by the web server.
   // German is the unprefixed default tree; its '**' catch-all must come last.
   ...localeRoutes('de'),
 ];

@@ -5,6 +5,14 @@ RewriteRule (.*) https://ilhan-buenyamin.com/$1 [R=301,L]
 RewriteCond %{HTTPS} off
 RewriteRule (.*) https://ilhan-buenyamin.com%{REQUEST_URI} [R=301,L]
 
+# The Turkish site moved to its own domain (see SITE_CONFIG.turkishSiteUrl).
+# Every former /tr/... URL is redirected there permanently, keeping the slug.
+# A URL move only: no redirect by browser language or IP address — visitors
+# choose the country via the footer link, crawlers are never redirected.
+# Deploy this rule only once https://softlyx.tr/ answers (SITE_CONFIG.turkishSiteUrl
+# is set in the same commit): a 301 is cached by browsers, so the target must exist.
+RewriteRule ^tr(?:/(.*))?$ https://softlyx.tr/$1 [R=301,L,NC]
+
 # Unknown paths: real 404 status with branded error page
 ErrorDocument 404 /404/index.html
 

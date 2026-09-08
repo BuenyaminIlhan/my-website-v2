@@ -7,27 +7,23 @@ const BASE = SITE_CONFIG.baseUrl;
 const PERSON_DESC: Record<Lang, string> = {
   de: 'Web- und App-Entwickler aus Siegburg. Entwickelt moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift und Kotlin.',
   en: 'Web and app developer based in Siegburg, Germany. Builds modern websites, web apps and native iOS & Android apps with Angular, Swift and Kotlin.',
-  tr: 'Almanya/Siegburg merkezli web ve uygulama geliştiricisi. Angular, Swift ve Kotlin ile modern web siteleri, web uygulamaları ve native iOS & Android uygulamaları geliştirir.',
 };
 
 const SERVICE_DESC: Record<Lang, string> = {
   de: 'Entwicklung von Websites, Web-Apps und nativen Apps für iOS und Android — modern, performant und maßgeschneidert.',
   en: 'Development of websites, web apps and native apps for iOS and Android — modern, performant and tailor-made.',
-  tr: 'Web siteleri, web uygulamaları ve iOS/Android için native uygulama geliştirme — modern, yüksek performanslı ve size özel.',
 };
 
 const APP_OFFER: Record<Lang, { name: string; description: string }> = {
   de: { name: 'App entwickeln (iOS & Android)', description: 'Native Mobile Apps mit Swift (iOS) und Kotlin (Android) — inklusive Veröffentlichung im App Store und Play Store.' },
   en: { name: 'Mobile app development (iOS & Android)', description: 'Native mobile apps with Swift (iOS) and Kotlin (Android) — including App Store and Play Store publishing.' },
-  tr: { name: 'Mobil uygulama geliştirme (iOS & Android)', description: 'Swift (iOS) ve Kotlin (Android) ile native mobil uygulamalar — App Store ve Play Store yayını dahil.' },
 };
 
-const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services', tr: 'Hizmetler' };
+const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services' };
 
 const SERVICE_NAME_SUFFIX: Record<Lang, string> = {
   de: 'Web- & App-Entwicklung',
   en: 'Web & App Development',
-  tr: 'Web & Mobil Uygulama Geliştirme',
 };
 
 const ADDRESS = {
@@ -54,6 +50,7 @@ function personNode(lang: Lang): object {
     description: PERSON_DESC[lang],
     image: `${BASE}/assets/img/Profile_2.jpg`,
     knowsAbout: ['Webentwicklung', 'App-Entwicklung', 'Web-App-Entwicklung', 'Angular', 'TypeScript', 'Swift', 'Kotlin', 'iOS', 'Android', 'Frontend-Entwicklung'],
+    // A fact about the person, not site content: Turkish-speaking clients in Germany are served too.
     knowsLanguage: ['de', 'en', 'tr'],
     address: ADDRESS,
     sameAs: [
@@ -73,7 +70,8 @@ function serviceNode(lang: Lang, t: LangTranslations): object {
     url: BASE,
     founder: { '@id': `${BASE}/#person` },
     description: SERVICE_DESC[lang],
-    areaServed: ['DE', 'TR'],
+    // The Turkish market is served by the Turkish site (SITE_CONFIG.turkishSiteUrl).
+    areaServed: ['DE'],
     knowsLanguage: ['de', 'en', 'tr'],
     address: ADDRESS,
     hasOfferCatalog: {

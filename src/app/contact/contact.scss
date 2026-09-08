@@ -184,8 +184,9 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
    min-content floor and the 6rem gap tips the sum over the available width.
    Measured: 346 + 333 + 96 = 775 in a 757px content box at 901px, an 18px
    overhang that only clears at ~940. Stacking from 1000 leaves 28px of
-   headroom at 1001 (841 available against 384 + 333 + 96 of floors, German and
-   Turkish alike) — 940 would be the edge with none. Not the 101px the fr share
+   headroom at 1001 (841 available against 384 + 333 + 96 of floors — measured
+   while the site still had Turkish copy, the widest of the three; German and
+   English sit within) — 940 would be the edge with none. Not the 101px the fr share
    suggests: the right track never gets that share, because the left track is
    on its own floor and takes the space, which is the whole mechanism here.
    minmax(0, …) was the other option and was rejected: it trades a visible

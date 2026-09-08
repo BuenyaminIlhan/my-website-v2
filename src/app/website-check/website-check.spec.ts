@@ -30,7 +30,7 @@ describe('WebsiteCheck', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     TestBed.configureTestingModule({});
-    TestBed.inject(LangService).applyRoute('tr', 'home');
+    TestBed.inject(LangService).applyRoute('en', 'home');
 
     fixture = TestBed.createComponent(WebsiteCheck);
     check = fixture.componentInstance;
@@ -51,7 +51,7 @@ describe('WebsiteCheck', () => {
     const body = sentBody();
     expect(body.get('form')).toBe('website-check');
     expect(body.get('url')).toBe('https://example.com');
-    expect(body.get('lang')).toBe('tr');
+    expect(body.get('lang')).toBe('en');
 
     expect(check.sent()).toBe(true);
     expect(check.url()).toBe('');

@@ -5,12 +5,11 @@ import { Router } from '@angular/router';
 import { Lang, LangTranslations, SUPPORTED_LOCALES } from '../i18n/translations';
 import { de } from '../i18n/de';
 import { en } from '../i18n/en';
-import { tr } from '../i18n/tr';
 import { PageKey, urlPathFor, homePathFor, blogArticleUrlPath } from '../i18n/route-map';
 
 export type { Lang, LangTranslations, OfferItem, ServicePageContent, TestimonialItem } from '../i18n/translations';
 
-const translations: Record<Lang, LangTranslations> = { de, en, tr };
+const translations: Record<Lang, LangTranslations> = { de, en };
 
 /** Where the visitor currently is, in locale-independent terms — set by the langGuard. */
 interface RouteContext {

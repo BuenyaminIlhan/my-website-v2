@@ -33,16 +33,17 @@ describe('LangService', () => {
 
   describe('applyRoute', () => {
     it('takes the language from the route and reflects it on <html lang>', () => {
-      service.applyRoute('tr', 'home');
+      service.applyRoute('en', 'home');
 
-      expect(service.current()).toBe('tr');
-      expect(document.documentElement.getAttribute('lang')).toBe('tr');
+      expect(service.current()).toBe('en');
+      expect(document.documentElement.getAttribute('lang')).toBe('en');
+    });
+
+    it('serves exactly German and English — Turkish moved to its own domain', () => {
+      expect(service.locales).toEqual(['de', 'en']);
     });
 
     it('points each locale at its own web app manifest', () => {
-      service.applyRoute('tr', 'home');
-      expect(manifestHref()).toBe('manifest.tr.json');
-
       service.applyRoute('en', 'home');
       expect(manifestHref()).toBe('manifest.en.json');
 
@@ -68,18 +69,18 @@ describe('LangService', () => {
     });
 
     it('prefixes other locales without leaving a trailing slash on the root', () => {
-      service.applyRoute('tr', 'home');
+      service.applyRoute('en', 'home');
 
-      expect(service.link('/')).toBe('/tr');
-      expect(service.link('/blog')).toBe('/tr/blog');
+      expect(service.link('/')).toBe('/en');
+      expect(service.link('/blog')).toBe('/en/blog');
     });
   });
 
   describe('pagePath', () => {
     it('resolves a page key to the localized path of the active locale', () => {
-      service.applyRoute('tr', 'home');
+      service.applyRoute('en', 'home');
 
-      expect(service.pagePath('legal')).toBe('/tr/kunye');
+      expect(service.pagePath('legal')).toBe('/en/legal-notice');
     });
 
     it('falls back to the locale home when the page key is unknown', () => {
@@ -98,12 +99,12 @@ describe('LangService', () => {
       expect(navigateByUrl).toHaveBeenCalledWith('/en/website-development');
     });
 
-    it('keeps the visitor on the same blog article across locales', () => {
+    it('leaves a blog article for the English home — no article has an English counterpart', () => {
       service.applyRoute('de', 'blog', 'website-kosten-handwerker');
 
-      service.switchTo('tr');
+      service.switchTo('en');
 
-      expect(navigateByUrl).toHaveBeenCalledWith('/tr/blog/esnaf-icin-web-sitesi-maliyeti');
+      expect(navigateByUrl).toHaveBeenCalledWith('/en');
     });
 
     it('falls back to the locale home when the page has no counterpart there', () => {
@@ -118,9 +119,9 @@ describe('LangService', () => {
     it('remembers the chosen language for the next visit', () => {
       service.applyRoute('de', 'home');
 
-      service.switchTo('tr');
+      service.switchTo('en');
 
-      expect(localStorage.getItem('lang')).toBe('tr');
+      expect(localStorage.getItem('lang')).toBe('en');
     });
 
     it('does nothing when the target locale is already active', () => {

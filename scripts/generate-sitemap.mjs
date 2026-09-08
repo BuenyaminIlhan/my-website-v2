@@ -13,6 +13,18 @@ const OUT_DIR = join(root, 'dist', 'my-website-v2', 'browser');
 const routes = JSON.parse(readFileSync(join(root, 'src/app/i18n/routes.json'), 'utf8'));
 const registry = JSON.parse(readFileSync(join(root, 'src/app/blog/blog-registry.json'), 'utf8'));
 
+/* The home page's <head> lists the Turkish site (own domain) as hreflang="tr"
+   once SITE_CONFIG.turkishSiteUrl is set — the sitemap has to say the same,
+   or the two hreflang sources contradict each other. Read from the same
+   constant the app uses; a missing match is a broken config, not a default. */
+const siteConfig = readFileSync(join(root, 'src/app/config/site.config.ts'), 'utf8');
+const turkishMatch = siteConfig.match(/turkishSiteUrl:\s*'([^']*)'/);
+if (!turkishMatch) {
+  console.error('site.config.ts has no turkishSiteUrl entry — sitemap and <head> would diverge.');
+  process.exit(1);
+}
+const HOME_EXTERNAL = turkishMatch[1] ? [{ hreflang: 'tr', href: turkishMatch[1] }] : [];
+
 const today = new Date().toISOString().slice(0, 10);
 
 function urlOf(lang, slug) {
@@ -21,13 +33,14 @@ function urlOf(lang, slug) {
   return path ? `${BASE}/${path}` : `${BASE}/`;
 }
 
-/** slugsByLang: { de: '...', en?: '...', tr?: '...' } */
-function entriesFor(slugsByLang, { lastmod, changefreq, priority }) {
+/** slugsByLang: { de: '...', en?: '...' }; external: alternates on other domains, same order as SeoService. */
+function entriesFor(slugsByLang, { lastmod, changefreq, priority }, external = []) {
   const langs = Object.keys(slugsByLang);
   return langs.map(lang => {
     const loc = urlOf(lang, slugsByLang[lang]);
     const alternates = [
       ...langs.map(l => ({ hreflang: l, href: urlOf(l, slugsByLang[l]) })),
+      ...external,
       ...(slugsByLang.de !== undefined ? [{ hreflang: 'x-default', href: urlOf('de', slugsByLang.de) }] : []),
     ];
     return { loc, lastmod, changefreq, priority, alternates };
@@ -48,7 +61,7 @@ const entries = [];
 for (const [key, slugsByLang] of Object.entries(routes.pages)) {
   if (key === 'notFound') continue;
   const meta = META[key] ?? SERVICE_META;
-  entries.push(...entriesFor(slugsByLang, { lastmod: today, ...meta }));
+  entries.push(...entriesFor(slugsByLang, { lastmod: today, ...meta }, key === 'home' ? HOME_EXTERNAL : []));
 }
 
 for (const article of registry.articles) {

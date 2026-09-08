@@ -1,5 +1,8 @@
 {
   "trustedPackages": [
     "@eslint/js"
+  ],
+  "coverageDiffIgnore": [
+    "src/app/i18n/tr.ts"
   ]
 }
