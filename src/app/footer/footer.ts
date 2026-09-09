@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal, computed, HostListener, inj
 import { isPlatformBrowser, NgStyle } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
+import { SITE_CONFIG } from '../config/site.config';
 
 const STORAGE_KEY_X = 'fab-x';
 const STORAGE_KEY_Y = 'fab-y';
@@ -20,6 +21,9 @@ export class Footer {
   lang = inject(LangService);
   private platformId = inject(PLATFORM_ID);
   readonly year = new Date().getFullYear();
+
+  /** Country switcher target — a signal, like Reviews.url, so specs can render both states. */
+  readonly turkishSiteUrl = signal<string>(SITE_CONFIG.turkishSiteUrl);
 
   readonly scrolled = signal(false);
   readonly dragging = signal(false);

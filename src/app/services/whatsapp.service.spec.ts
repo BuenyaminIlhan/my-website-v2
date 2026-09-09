@@ -32,7 +32,7 @@ describe('WhatsappService', () => {
   it('re-encodes when the visitor switches language', () => {
     const german = wa.href();
 
-    lang.applyRoute('tr', 'home');
+    lang.applyRoute('en', 'home');
 
     expect(wa.href()).not.toBe(german);
     expect(wa.href()).toContain(encodeURIComponent(lang.t().whatsapp.prefill));

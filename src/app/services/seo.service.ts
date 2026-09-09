@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/common';
 import { Lang } from '../i18n/translations';
 import { SITE_CONFIG } from '../config/site.config';
 
-const OG_LOCALES: Record<Lang, string> = { de: 'de_DE', en: 'en_US', tr: 'tr_TR' };
+const OG_LOCALES: Record<Lang, string> = { de: 'de_DE', en: 'en_US' };
 
 export interface SeoPageInfo {
   title: string;
@@ -16,7 +16,19 @@ export interface SeoPageInfo {
    * only for locales where the page exists. Drives canonical + hreflang alternates.
    */
   paths: Partial<Record<Lang, string>>;
+  /**
+   * hreflang alternates on other domains (e.g. the Turkish site), appended
+   * after the internal ones. Only pages that have a real counterpart there
+   * pass any — a link to a non-existent page is worse than none.
+   */
+  externalAlternates?: ExternalAlternate[];
   ogImage?: string;
+}
+
+export interface ExternalAlternate {
+  hreflang: string;
+  /** Absolute URL, exactly as the other site canonicalises it. */
+  href: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -60,23 +72,24 @@ export class SeoService {
     const canonical = this.document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (canonical) canonical.href = url;
 
-    this.setHreflang(info.paths);
+    this.setHreflang(info.paths, info.externalAlternates ?? []);
   }
 
-  private setHreflang(paths: Partial<Record<Lang, string>>) {
+  private setHreflang(paths: Partial<Record<Lang, string>>, external: ExternalAlternate[]) {
     this.document.head
       .querySelectorAll('link[rel="alternate"][hreflang]')
       .forEach(el => el.remove());
-    const add = (hreflang: string, path: string) => {
+    const add = (hreflang: string, href: string) => {
       const link = this.document.createElement('link');
       link.setAttribute('rel', 'alternate');
       link.setAttribute('hreflang', hreflang);
-      link.setAttribute('href', this.urlOf(path));
+      link.setAttribute('href', href);
       this.document.head.appendChild(link);
     };
-    for (const [lang, path] of this.entries(paths)) add(lang, path);
+    for (const [lang, path] of this.entries(paths)) add(lang, this.urlOf(path));
+    for (const alt of external) add(alt.hreflang, alt.href);
     // x-default points to the German original.
-    if (paths.de !== undefined) add('x-default', paths.de);
+    if (paths.de !== undefined) add('x-default', this.urlOf(paths.de));
   }
 
   private entries(paths: Partial<Record<Lang, string>>): [Lang, string][] {

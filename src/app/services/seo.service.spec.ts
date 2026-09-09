@@ -7,13 +7,15 @@ import { SITE_CONFIG } from '../config/site.config';
 
 const BASE = SITE_CONFIG.baseUrl;
 
-/** A service page as it exists in all three locales. */
+/** A service page as it exists in both locales. */
 const servicePage: SeoPageInfo = {
   title: 'Website erstellen lassen',
   description: 'Individuelle Websites für kleine Unternehmen.',
   lang: 'de',
-  paths: { de: 'website-erstellen-lassen', en: 'en/website-development', tr: 'tr/web-sitesi-yaptirma' },
+  paths: { de: 'website-erstellen-lassen', en: 'en/website-development' },
 };
+
+const TR_HOME = 'https://softlyx.tr/';
 
 describe('SeoService', () => {
   let service: SeoService;
@@ -47,10 +49,10 @@ describe('SeoService', () => {
 
   describe('update', () => {
     it('points the canonical URL at the current locale, not the site root', () => {
-      service.update({ ...servicePage, lang: 'tr' });
+      service.update({ ...servicePage, lang: 'en' });
 
       const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-      expect(canonical?.href).toBe(`${BASE}/tr/web-sitesi-yaptirma`);
+      expect(canonical?.href).toBe(`${BASE}/en/website-development`);
     });
 
     it('writes the German home page as a bare root URL', () => {
@@ -66,43 +68,67 @@ describe('SeoService', () => {
       expect(hreflangs()).toEqual([
         ['de', `${BASE}/website-erstellen-lassen`],
         ['en', `${BASE}/en/website-development`],
-        ['tr', `${BASE}/tr/web-sitesi-yaptirma`],
         ['x-default', `${BASE}/website-erstellen-lassen`],
       ]);
+    });
+
+    it('emits no Turkish hreflang of its own — Turkish is not a locale of this site', () => {
+      service.update(servicePage);
+
+      expect(hreflangs().map(([lang]) => lang)).not.toContain('tr');
+    });
+
+    it('appends external alternates verbatim, between the own locales and x-default', () => {
+      // Cross-domain hreflang, the MediaMarkt pattern: the Turkish home on its own domain.
+      service.update({ ...servicePage, externalAlternates: [{ hreflang: 'tr', href: TR_HOME }] });
+
+      expect(hreflangs()).toEqual([
+        ['de', `${BASE}/website-erstellen-lassen`],
+        ['en', `${BASE}/en/website-development`],
+        ['tr', TR_HOME],
+        ['x-default', `${BASE}/website-erstellen-lassen`],
+      ]);
+    });
+
+    it('drops external alternates on navigation to a page that has none', () => {
+      service.update({ ...servicePage, externalAlternates: [{ hreflang: 'tr', href: TR_HOME }] });
+      service.update(servicePage);
+
+      expect(hreflangs().map(([lang]) => lang)).toEqual(['de', 'en', 'x-default']);
     });
 
     it('omits locales the page does not exist in', () => {
       // The blog has no English translation.
       service.update({
-        title: 'Blog', description: 'd', lang: 'de', paths: { de: 'blog', tr: 'tr/blog' },
+        title: 'Blog', description: 'd', lang: 'de', paths: { de: 'blog' },
       });
 
-      expect(hreflangs().map(([lang]) => lang)).toEqual(['de', 'tr', 'x-default']);
+      expect(hreflangs().map(([lang]) => lang)).toEqual(['de', 'x-default']);
     });
 
     it('replaces hreflang links on navigation instead of accumulating them', () => {
       service.update(servicePage);
       service.update({
-        title: 'Blog', description: 'd', lang: 'de', paths: { de: 'blog', tr: 'tr/blog' },
+        title: 'Blog', description: 'd', lang: 'de', paths: { de: 'blog' },
       });
 
-      expect(hreflangs()).toHaveLength(3);
+      expect(hreflangs()).toHaveLength(2);
     });
 
     it('maps the language to an OpenGraph locale and lists the others as alternates', () => {
-      service.update({ ...servicePage, lang: 'tr' });
+      service.update({ ...servicePage, lang: 'en' });
 
-      expect(metaContent('meta[property="og:locale"]')).toBe('tr_TR');
+      expect(metaContent('meta[property="og:locale"]')).toBe('en_US');
       const alternates = [...document.head.querySelectorAll('meta[property="og:locale:alternate"]')]
         .map(el => el.getAttribute('content'));
-      expect(alternates).toEqual(['de_DE', 'en_US']);
+      expect(alternates).toEqual(['de_DE']);
     });
 
     it('does not accumulate og:locale:alternate tags across navigations', () => {
       service.update(servicePage);
       service.update(servicePage);
 
-      expect(document.head.querySelectorAll('meta[property="og:locale:alternate"]')).toHaveLength(2);
+      expect(document.head.querySelectorAll('meta[property="og:locale:alternate"]')).toHaveLength(1);
     });
 
     it('mirrors title and description into the OpenGraph and Twitter tags', () => {
