@@ -20,14 +20,21 @@
 
     <!-- Step 1: project type -->
     @if (step() === 1) {
-      <h3 class="wizard-title">{{ lang.t().wizard.typeTitle }}</h3>
-      <div class="type-grid">
-        @for (type of lang.t().wizard.types; track type.key) {
+      <h3 class="wizard-title" id="wizard-type-title">{{ lang.t().wizard.typeTitle }}</h3>
+      <!-- Labelled by the visible heading, so it is not read out twice. -->
+      <div class="type-grid" role="radiogroup" aria-labelledby="wizard-type-title">
+        @for (type of lang.t().wizard.types; track type.key; let i = $index) {
+          <!-- One tab stop for the whole group; the arrow keys move between the
+               cards. Selecting is Space or Enter, because it also advances. -->
           <button
             type="button"
+            role="radio"
             class="type-card"
             [class.selected]="projectType() === type.key"
-            [attr.aria-pressed]="projectType() === type.key"
+            [attr.aria-checked]="projectType() === type.key"
+            [attr.tabindex]="focusedType() === i ? 0 : -1"
+            (focus)="focusedType.set(i)"
+            (keydown)="onTypeKeydown($event, i)"
             (click)="selectType(type.key)">
             <span class="type-label">{{ type.label }}</span>
             <span class="type-desc">{{ type.desc }}</span>
@@ -102,6 +109,12 @@
           </p>
         }
 
+        <!-- Says at the point of collection what happens with the data, so nobody
+             has to go looking in the footer for it. A pointer, not a consent. -->
+        <p class="privacy-note">
+          {{ lang.t().contact.privacyNote.text }}
+          <a [routerLink]="lang.pagePath('privacy')">{{ lang.t().contact.privacyNote.linkLabel }}</a>.
+        </p>
         <div class="wizard-nav">
           <button type="button" class="btn-back" (click)="back()">{{ lang.t().wizard.back }}</button>
           <button type="submit" class="btn-submit" [disabled]="sending()">

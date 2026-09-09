@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-website-check',
-  imports: [FormsModule, RevealDirective],
+  imports: [FormsModule, RevealDirective, RouterLink],
   templateUrl: './website-check.html',
   styleUrl: './website-check.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

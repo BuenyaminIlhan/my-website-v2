@@ -165,6 +165,10 @@ export const en: LangTranslations = {
     waNote: 'Message me directly — I usually reply within minutes.',
     mailNote: 'Or the classic way, by email:',
     formNote: 'Prefer to go into detail? The form walks you through it.',
+    privacyNote: {
+      text: 'I only use and store your details to handle your enquiry. More in the',
+      linkLabel: 'privacy policy',
+    },
   },
   footer: {
     legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!',

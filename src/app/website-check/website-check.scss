@@ -140,3 +140,21 @@ form { display: flex; flex-direction: column; gap: 1.25rem; }
 @media (max-width: 900px) {
   .check-inner { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
 }
+
+/* Sits right above the send button, quiet but readable: --muted is the palette
+   role already used for secondary copy, and it clears 4.5:1 in both themes. */
+.privacy-note {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  a:hover,
+  a:focus-visible { color: var(--text); }
+}

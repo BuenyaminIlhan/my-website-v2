@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, linkedSignal, inject, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { InquiryService } from '../services/inquiry.service';
 import { SITE_CONFIG } from '../config/site.config';
 
 @Component({
   selector: 'app-contact-wizard',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './contact-wizard.html',
   styleUrl: './contact-wizard.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +18,14 @@ export class ContactWizard {
 
   readonly step        = signal<1 | 2 | 3>(1);
   readonly projectType = signal<string>('');
+  /* Which card the roving tab stop points at — focus, not selection. Derived
+     from the choice so the group is entered on the checked option, whether it
+     was picked here, preset from an offer card, or cleared by reset(). Arrow
+     keys write to it directly; the next change of projectType takes over again. */
+  readonly focusedType = linkedSignal(() => {
+    const index = this.lang.t().wizard.types.findIndex(t => t.key === this.projectType());
+    return index < 0 ? 0 : index;
+  });
   readonly budget      = signal<string>('');
   readonly timeline    = signal<string>('');
   readonly details     = signal('');
@@ -44,6 +53,46 @@ export class ContactWizard {
   selectType(key: string) {
     this.projectType.set(key);
     this.step.set(2);
+  }
+
+  /* A radiogroup normally selects as the arrow key moves. It must not here:
+     selecting jumps to step 2, so arrowing would walk the visitor through the
+     wizard. Arrows move the focus only, Space and Enter commit — the exception
+     the ARIA practices allow for exactly this case. */
+  onTypeKeydown(event: KeyboardEvent, index: number) {
+    /* Alt+Left is Back, Cmd+Up is top of document, Ctrl+Home likewise: keys the
+       browser owns. Only the unmodified ones belong to the group. */
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+
+    const count = this.lang.t().wizard.types.length;
+    const target = ((): number | null => {
+      switch (event.key) {
+        case 'ArrowRight': case 'ArrowDown': return (index + 1) % count;
+        case 'ArrowLeft':  case 'ArrowUp':   return (index - 1 + count) % count;
+        case 'Home': return 0;
+        case 'End':  return count - 1;
+        default: return null;
+      }
+    })();
+
+    if (target !== null) {
+      event.preventDefault();
+      this.focusedType.set(target);
+      /* Asked for by role, not by position among the siblings: another element
+         inside the grid would otherwise shift the focus target silently. */
+      const cards = (event.currentTarget as HTMLElement)
+        .closest('[role="radiogroup"]')
+        ?.querySelectorAll<HTMLElement>('.type-card');
+      cards?.[target]?.focus();
+      return;
+    }
+
+    /* Enter already activates a button; Space does not scroll the page away
+       from under the visitor once it is handled here. */
+    if (event.key === ' ' || event.key === 'Spacebar') {
+      event.preventDefault();
+      this.selectType(this.lang.t().wizard.types[index].key);
+    }
   }
 
   next() {
