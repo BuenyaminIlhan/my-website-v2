@@ -21,6 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
+      # Cheap, dependency-free, and the only automatic run this guard gets:
+      # guardian's chain cannot be extended without replacing it wholesale.
+      - name: Check light-mode contrast
+        run: npm run test:contrast
+
       - name: Build
         run: npm run build
 

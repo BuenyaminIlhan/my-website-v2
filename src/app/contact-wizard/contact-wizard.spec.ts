@@ -179,4 +179,50 @@ describe('ContactWizard', () => {
     expect(wizard.budget()).toBe('');
     expect(wizard.timeline()).toBe('');
   });
+
+  it('marks the chosen project type as pressed, and only that one', () => {
+    create();
+    const cards = () => Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('.type-card'),
+    ).map(c => c.getAttribute('aria-pressed'));
+
+    expect(cards().every(v => v === 'false')).toBe(true);
+
+    wizard.selectType(lang.t().wizard.types[1].key);
+    wizard.step.set(1);
+    fixture.detectChanges();
+
+    expect(cards().filter(v => v === 'true')).toHaveLength(1);
+    expect(cards()[1]).toBe('true');
+  });
+
+  it('marks the chosen budget and timeline chips as pressed', () => {
+    create();
+    wizard.step.set(2);
+    wizard.budget.set(lang.t().wizard.budgets[2]);
+    wizard.timeline.set(lang.t().wizard.timelines[0]);
+    fixture.detectChanges();
+
+    const pressed = Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('.chip[aria-pressed="true"]'),
+    ).map(c => c.textContent?.trim());
+
+    expect(pressed).toEqual([lang.t().wizard.budgets[2], lang.t().wizard.timelines[0]]);
+  });
+
+  it('names the current step for assistive tech, and only the current one', () => {
+    create();
+    const current = () => Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll('.wizard-progress li'),
+    ).map(li => li.getAttribute('aria-current'));
+
+    expect(current()[0]).toBe('step');
+    expect(current().filter(v => v === 'step')).toHaveLength(1);
+
+    wizard.step.set(3);
+    fixture.detectChanges();
+
+    expect(current()[2]).toBe('step');
+    expect(current().filter(v => v === 'step')).toHaveLength(1);
+  });
 });

@@ -51,7 +51,8 @@
       </button>
 
       <!-- Mobile burger -->
-      <button class="burger" (click)="toggleMenu()" [class.active]="menuOpen()" [attr.aria-label]="lang.t().a11y.menu">
+      <button class="burger" (click)="toggleMenu()" [class.active]="menuOpen()" [attr.aria-label]="lang.t().a11y.menu"
+              [attr.aria-expanded]="menuOpen()" aria-controls="nav-overlay">
         <span></span>
         <span></span>
         <span></span>
@@ -63,7 +64,7 @@
 <!-- Mobile overlay -->
 <!-- Closed, the overlay is only moved off-screen — without `inert` its
      links stay in the tab order and a keyboard user falls into them. -->
-<div class="nav-overlay" [class.open]="menuOpen()" [attr.inert]="menuOpen() ? null : ''">
+<div class="nav-overlay" id="nav-overlay" [class.open]="menuOpen()" [attr.inert]="menuOpen() ? null : ''">
   <nav class="nav-links">
     <a [routerLink]="lang.link('/')" fragment="offers" (click)="closeMenu()"><span class="num">01</span>{{ lang.t().nav.offers }}</a>
     <a [routerLink]="lang.link('/')" fragment="about" (click)="closeMenu()"><span class="num">02</span>{{ lang.t().nav.about }}</a>

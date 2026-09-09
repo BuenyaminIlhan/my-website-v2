@@ -120,6 +120,34 @@
   color: #8a5300;
 }
 
+/* The terminal palette was tuned on the dark surface. Measured again on the
+   light one, four roles fall below the 4.5:1 that body text needs: the [ok]
+   marker sat at 1.86:1, "live" at 3.02:1, the window title at 3.47:1 and the
+   dimmed command lines at 4.24:1. The replacements below are measured, and
+   each carries the ratio it reaches. The prompt glyphs keep --brand on
+   purpose: they are decoration, not text anyone has to read. */
+:host-context(body.light) {
+  .terminal-bar .bar-title { color: #555555; }  /* 5.08:1 on --border */
+  .terminal-bar .bar-live  { color: #7d4b00; }  /* 4.97:1 on --border */
+
+  /* The dot beside "live" keeps --brand and its 0.5 -> 1 pulse, so it dips to
+     about 1.9:1. Deliberate: it carries no information the word next to it does
+     not already carry, so it is decoration and exempt. Change that and it needs
+     4.5:1 too, plus an entry in scripts/contrast-check.mjs. */
+
+  .term-line {
+    .ok   { color: #33702f; }  /* 4.99:1 on --surface */
+    .note { color: #5a5a5a; }  /* 5.73:1 on --surface */
+  }
+
+  .visitor-line,
+  .load-line,
+  .req-line,
+  .theme-line,
+  .lang-line,
+  .ip-line { color: #5a5a5a; }  /* 5.73:1 on --surface */
+}
+
 .cursor {
   color: var(--brand);
   animation: cursorBlink 1s step-end infinite;
