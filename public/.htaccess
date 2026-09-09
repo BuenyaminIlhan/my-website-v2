@@ -13,6 +13,23 @@ RewriteRule (.*) https://ilhan-buenyamin.com%{REQUEST_URI} [R=301,L]
 # is set in the same commit): a 301 is cached by browsers, so the target must exist.
 RewriteRule ^tr(?:/(.*))?$ https://softlyx.tr/$1 [R=301,L,NC]
 
+# The Turkish web-app manifest sits in the document root, so the rule above does
+# not catch it: that one only matches the path "tr". The file was removed from
+# the repository with the locale, but the deploy mirrors without --delete, so the
+# server still had it and served it with 200. Its counterpart on the Turkish
+# domain is called manifest.json, hence a rule of its own rather than a wider
+# pattern. Anchored on the full filename so manifest.json and manifest.en.json
+# stay untouched.
+#
+# Two things to know before touching this rule:
+#  - The file is STILL on the server. It is only unreachable because of this
+#    rule. Do not remove the rule before it has actually been deleted there,
+#    or the stale Turkish manifest answers 200 again.
+#  - The target lives in the softlyx.tr repository. Renaming manifest.json
+#    there turns this 301 into a redirect to a 404, and nothing here would
+#    notice. It belongs on the same check list as the /tr target above.
+RewriteRule ^manifest\.tr\.json$ https://softlyx.tr/manifest.json [R=301,L]
+
 # Unknown paths: real 404 status with branded error page
 ErrorDocument 404 /404/index.html
 
