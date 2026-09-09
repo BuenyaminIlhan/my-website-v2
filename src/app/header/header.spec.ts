@@ -1,16 +1,19 @@
-import { describe, it, expect, beforeEach, vi, type MockInstance } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi, type MockInstance } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { Header } from './header';
 import { LangService } from '../services/lang.service';
-import { text } from '../../testing/fixture';
+import { host, text } from '../../testing/fixture';
 
 describe('Header', () => {
   let fixture: ComponentFixture<Header>;
   let header: Header;
   let navigate: MockInstance<Router['navigate']>;
+  let bodyWasLight: boolean;
 
   beforeEach(() => {
+    // ThemeService paints the body on creation; remember what to put back.
+    bodyWasLight = document.body.classList.contains('light');
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     // The real Router keeps routerLink in the template working; only the
     // navigation itself is stubbed out.
@@ -19,6 +22,14 @@ describe('Header', () => {
     fixture = TestBed.createComponent(Header);
     header = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    /* toggle() stores the choice and repaints the body. Both outlive the
+       fixture, so they are restored here and not at the end of a test body,
+       where a failing expect() would skip the cleanup. */
+    localStorage.removeItem('theme');
+    document.body.classList.toggle('light', bodyWasLight);
   });
 
   it('renders the localized navigation', () => {
@@ -95,5 +106,42 @@ describe('Header', () => {
 
     expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
     expect(header.menuOpen()).toBe(false);
+  });
+
+  it('labels the theme toggle from the translations, in both directions', () => {
+    const label = () => host(fixture).querySelector('.theme-btn')?.getAttribute('aria-label');
+    const a11y = () => header.lang.t().a11y;
+    const wasDark = header.theme.isDark();
+
+    expect(label()).toBe(wasDark ? a11y().switchToLight : a11y().switchToDark);
+
+    header.theme.toggle();
+    fixture.detectChanges();
+
+    expect(header.theme.isDark()).toBe(!wasDark);
+    expect(label()).toBe(wasDark ? a11y().switchToDark : a11y().switchToLight);
+  });
+
+  it('names the theme button by the action it performs, in both languages', () => {
+    const lang = TestBed.inject(LangService);
+    const label = () => host(fixture).querySelector('.theme-btn')?.getAttribute('aria-label') ?? '';
+    /* Exact strings on purpose: a bare state noun ("Dunkles Theme") leaves
+       listeners guessing whether it names the current theme or the one behind
+       the button, and a verb alone ("Theme wechseln") is just as mute about
+       the target. The signal is set directly — this is about the wording, not
+       the persistence that toggle() would drag in. */
+    const show = (dark: boolean) => { header.theme.isDark.set(dark); fixture.detectChanges(); };
+
+    expect(lang.current()).toBe('de');
+    show(false);
+    expect(label()).toBe('Zu dunklem Theme wechseln');
+    show(true);
+    expect(label()).toBe('Zu hellem Theme wechseln');
+
+    lang.current.set('en');
+    fixture.detectChanges();
+    expect(label()).toBe('Switch to light mode');
+    show(false);
+    expect(label()).toBe('Switch to dark mode');
   });
 });

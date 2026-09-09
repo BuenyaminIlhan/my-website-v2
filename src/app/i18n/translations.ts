@@ -70,7 +70,7 @@ export interface LangTranslations {
     notFoundTitle: string; notFoundDesc: string;
   };
   blogUi: { eyebrow: string; h1: string; sub: string; minRead: string; readMore: string; backToAll: string; cta: string };
-  a11y: { menu: string; backToTop: string; langSwitch: string };
+  a11y: { menu: string; backToTop: string; langSwitch: string; switchToLight: string; switchToDark: string };
   whatsapp: { aria: string; prefill: string; cta: string; short: string };
   websiteCheck: {
     label: string; title: string; titleAccent: string; sub: string;

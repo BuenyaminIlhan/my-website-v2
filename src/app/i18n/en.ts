@@ -279,6 +279,8 @@ export const en: LangTranslations = {
     menu: 'Menu',
     backToTop: 'Back to top',
     langSwitch: 'Choose language',
+    switchToLight: 'Switch to light mode',
+    switchToDark: 'Switch to dark mode',
   },
   whatsapp: {
     aria: 'Chat on WhatsApp',
