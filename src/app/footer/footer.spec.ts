@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Footer } from './footer';
 import { text } from '../../testing/fixture';
+import { SITE_CONFIG } from '../config/site.config';
 
 /** The FAB handlers only read these fields off the event. */
 const pointerEvent = (clientX: number, clientY: number): PointerEvent =>
@@ -52,9 +53,16 @@ describe('Footer', () => {
     expect(spoken.map(s => s.textContent)).toEqual(['Softlyx – Bünyamin Ilhan']);
   });
 
+  /* The flag itself, pinned in one place: emptying it is the documented lever if
+     the Turkish site ever goes down, and it must stay a one-line config change. */
+  it('ships with the Turkish site configured', () => {
+    expect(SITE_CONFIG.turkishSiteUrl).toBe('https://softlyx.tr/');
+  });
+
   it('shows no country switcher while the Turkish site URL is not configured', () => {
     create();
-    expect(footer.turkishSiteUrl()).toBe('');
+    footer.turkishSiteUrl.set('');
+    fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).querySelector('.site-switch')).toBeNull();
     expect(text(fixture)).not.toContain('Türkçe');
   });

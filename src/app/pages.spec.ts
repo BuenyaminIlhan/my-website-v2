@@ -83,14 +83,18 @@ describe('page components', () => {
     expect(text(fixture)).toContain(lang.t().faq.title);
   });
 
-  it('Home emits hreflang="tr" for the Turkish site only once its URL is configured', async () => {
+  it('Home emits hreflang="tr" only while the Turkish site URL is set', async () => {
     const trLinks = () =>
       Array.from(document.head.querySelectorAll<HTMLLinkElement>('link[rel="alternate"][hreflang="tr"]'))
         .map(l => l.getAttribute('href'));
 
     const fixture = mount(Home);
     await fixture.whenStable();
-    expect(fixture.componentInstance.turkishSiteUrl()).toBe('');
+    // Both states are driven from here, so the shipped value stays a one-line
+    // config change; footer.spec.ts pins what that value is.
+    fixture.componentInstance.turkishSiteUrl.set('');
+    fixture.detectChanges();
+    await fixture.whenStable();
     expect(trLinks()).toEqual([]);
 
     fixture.componentInstance.turkishSiteUrl.set('https://softlyx.tr/');
