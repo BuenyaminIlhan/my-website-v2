@@ -10,7 +10,8 @@
     <!-- Progress -->
     <ol class="wizard-progress">
       @for (label of lang.t().wizard.steps; track label; let i = $index) {
-        <li [class.active]="step() === i + 1" [class.done]="step() > i + 1">
+        <li [class.active]="step() === i + 1" [class.done]="step() > i + 1"
+            [attr.aria-current]="step() === i + 1 ? 'step' : null">
           <span class="step-num">{{ i + 1 }}</span>
           <span class="step-label">{{ label }}</span>
         </li>
@@ -26,6 +27,7 @@
             type="button"
             class="type-card"
             [class.selected]="projectType() === type.key"
+            [attr.aria-pressed]="projectType() === type.key"
             (click)="selectType(type.key)">
             <span class="type-label">{{ type.label }}</span>
             <span class="type-desc">{{ type.desc }}</span>
@@ -42,6 +44,7 @@
       <div class="chip-row">
         @for (option of lang.t().wizard.budgets; track option) {
           <button type="button" class="chip" [class.selected]="budget() === option"
+            [attr.aria-pressed]="budget() === option"
             (click)="budget.set(budget() === option ? '' : option)">{{ option }}</button>
         }
       </div>
@@ -50,6 +53,7 @@
       <div class="chip-row">
         @for (option of lang.t().wizard.timelines; track option) {
           <button type="button" class="chip" [class.selected]="timeline() === option"
+            [attr.aria-pressed]="timeline() === option"
             (click)="timeline.set(timeline() === option ? '' : option)">{{ option }}</button>
         }
       </div>

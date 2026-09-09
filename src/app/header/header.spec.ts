@@ -144,4 +144,50 @@ describe('Header', () => {
     show(false);
     expect(label()).toBe('Switch to dark mode');
   });
+
+  it('tells assistive tech whether the mobile menu is open', () => {
+    const burger = host(fixture).querySelector('.burger');
+    const overlay = host(fixture).querySelector('.nav-overlay');
+
+    expect(burger?.getAttribute('aria-controls')).toBe(overlay?.id);
+    expect(overlay?.id).toBeTruthy();
+    expect(burger?.getAttribute('aria-expanded')).toBe('false');
+
+    header.toggleMenu();
+    fixture.detectChanges();
+
+    expect(burger?.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  /* A real key event, not a direct call: the binding string in the decorator is
+     the part that silently stops working, and only dispatching can catch that. */
+  const pressEscape = () => {
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+  };
+
+  it('closes the open menu on Escape and gives the button back the focus', () => {
+    const burger = host(fixture).querySelector<HTMLButtonElement>('.burger');
+    header.toggleMenu();
+    fixture.detectChanges();
+
+    pressEscape();
+
+    expect(header.menuOpen()).toBe(false);
+    expect(document.activeElement).toBe(burger);
+  });
+
+  it('leaves the focus where it was when the menu is already closed', () => {
+    /* Without the guard clause in onEscape, every Escape on the page would drag
+       the focus to the burger — from a form field the visitor is typing in. */
+    const elsewhere = document.createElement('input');
+    document.body.appendChild(elsewhere);
+    elsewhere.focus();
+
+    pressEscape();
+
+    expect(header.menuOpen()).toBe(false);
+    expect(document.activeElement).toBe(elsewhere);
+    elsewhere.remove();
+  });
 });
