@@ -113,33 +113,63 @@ describe('Header', () => {
     const a11y = () => header.lang.t().a11y;
     const wasDark = header.theme.isDark();
 
-    expect(label()).toBe(wasDark ? a11y().themeLight : a11y().themeDark);
+    expect(label()).toBe(wasDark ? a11y().switchToLight : a11y().switchToDark);
 
     header.theme.toggle();
     fixture.detectChanges();
 
     expect(header.theme.isDark()).toBe(!wasDark);
-    expect(label()).toBe(wasDark ? a11y().themeDark : a11y().themeLight);
+    expect(label()).toBe(wasDark ? a11y().switchToDark : a11y().switchToLight);
   });
 
-  it('speaks German by default and leaves the English wording as it was', () => {
+  it('names the theme button by the action it performs, in both languages', () => {
     const lang = TestBed.inject(LangService);
-    const label = () => host(fixture).querySelector('.theme-btn')?.getAttribute('aria-label');
+    const label = () => host(fixture).querySelector('.theme-btn')?.getAttribute('aria-label') ?? '';
     // The signal is set directly: this is about the wording, not about the
     // persistence that toggle() would drag in.
     const show = (dark: boolean) => { header.theme.isDark.set(dark); fixture.detectChanges(); };
 
     expect(lang.current()).toBe('de');
     show(false);
-    expect(label()).toBe('Dunkles Design');
+    expect(label()).toBe('Zu dunklem Theme wechseln');
     show(true);
-    expect(label()).toBe('Helles Design');
+    expect(label()).toBe('Zu hellem Theme wechseln');
 
     lang.current.set('en');
     fixture.detectChanges();
-    // Word for word the label this fix replaced, so nothing changes in English.
-    expect(label()).toBe('Light mode');
+    expect(label()).toBe('Switch to light mode');
     show(false);
-    expect(label()).toBe('Dark mode');
+    expect(label()).toBe('Switch to dark mode');
+  });
+
+  it('names both the action and its target, in every locale', () => {
+    const lang = TestBed.inject(LangService);
+    const label = () => host(fixture).querySelector('.theme-btn')?.getAttribute('aria-label') ?? '';
+    /* A bare state noun ("Dunkles Theme") leaves listeners guessing whether it
+       names the current theme or the one behind the button, and a verb alone
+       ("Theme wechseln") is just as mute about the target. */
+    const both = (phrase: RegExp) => {
+      header.theme.isDark.set(false);
+      fixture.detectChanges();
+      const whileLight = label();
+
+      header.theme.isDark.set(true);
+      fixture.detectChanges();
+      const whileDark = label();
+
+      expect(whileLight).toMatch(phrase);
+      expect(whileDark).toMatch(phrase);
+      expect(whileLight).not.toBe(whileDark);
+    };
+
+    both(/^Zu (hellem|dunklem) Theme wechseln$/);
+
+    lang.current.set('en');
+    both(/^Switch to (light|dark) mode$/);
+
+    // Turkish still ships from here; this case leaves with tr.ts when the
+    // decoupling branch lands.
+    lang.current.set('tr');
+    both(/^(Açık|Koyu) temaya geçin$/);
   });
 });

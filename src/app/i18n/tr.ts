@@ -279,8 +279,8 @@ export const tr: LangTranslations = {
     menu: 'Menü',
     backToTop: 'Yukarı dön',
     langSwitch: 'Dil seçin',
-    themeLight: 'Açık tema',
-    themeDark: 'Koyu tema',
+    switchToLight: 'Açık temaya geçin',
+    switchToDark: 'Koyu temaya geçin',
   },
   whatsapp: {
     aria: 'WhatsApp üzerinden yazın',
