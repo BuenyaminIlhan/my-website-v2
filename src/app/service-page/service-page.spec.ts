@@ -42,7 +42,7 @@ describe('ServicePage', () => {
   it('follows a language switch', () => {
     mount('sorglos-paket');
 
-    lang.applyRoute('tr', 'sorglos-paket');
+    lang.applyRoute('en', 'sorglos-paket');
     fixture.detectChanges();
 
     expect(fixture.componentInstance.content()).toBe(lang.t().servicePages['sorglos-paket']);

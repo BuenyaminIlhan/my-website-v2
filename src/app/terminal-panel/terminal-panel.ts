@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, signal, inject, PLATFORM_
 import { isPlatformBrowser } from '@angular/common';
 import { LangService } from '../services/lang.service';
 import { ThemeService } from '../services/theme.service';
-import { Lang } from '../i18n/translations';
+import { Lang, SUPPORTED_LOCALES } from '../i18n/translations';
 
 /* navigator.connection is Chromium-only — Safari and Firefox ship neither the
    property nor a lib.dom typing for it, so the shape is declared here and read
@@ -248,13 +248,16 @@ export class TerminalPanel {
     const tags = navigator.languages?.length ? navigator.languages : [navigator.language];
     for (const tag of tags) {
       const base = tag.split('-')[0].toLowerCase();
-      if (base === 'de' || base === 'en' || base === 'tr') return base;
+      // Only locales this site actually serves; a Turkish browser gets no offer here.
+      const match = SUPPORTED_LOCALES.find(l => l === base);
+      if (match) return match;
     }
     return null;
   }
 
   langName(lang: Lang): string {
-    return { de: 'deutsch', en: 'english', tr: 'türkçe' }[lang];
+    const names: Record<Lang, string> = { de: 'deutsch', en: 'english' };
+    return names[lang];
   }
 
   /* Lines appear one after another, like a build log running through.

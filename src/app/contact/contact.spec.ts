@@ -44,7 +44,7 @@ describe('Contact', () => {
   });
 
   it('re-encodes the prefilled message when the language changes', () => {
-    lang.applyRoute('tr', 'home');
+    lang.applyRoute('en', 'home');
     expect(contact.waHref()).toContain(encodeURIComponent(lang.t().whatsapp.prefill));
   });
 

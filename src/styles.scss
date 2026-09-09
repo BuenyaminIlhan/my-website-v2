@@ -54,7 +54,8 @@ body.light {
 }
 
 /* Brand face ("softlyx_", terminal, marquee) — latin + latin-ext
-   subsets, single weight. latin-ext carries ş/ğ/İ for Turkish copy. */
+   subsets, single weight. latin-ext dates from the former Turkish copy and
+   stays: it costs little and keeps names with ş/ğ/İ in the brand face. */
 @font-face {
   font-family: "IBM Plex Mono";
   src: url("/fonts/IBMPlexMono/IBMPlexMono-Medium-latin.woff2") format("woff2");

@@ -1,6 +1,6 @@
-// Blog articles exist in German (local German search queries) and Turkish
-// (Turkish-speaking businesses in Germany + clients in Turkey). No English
-// blog: mixed-language listings would hurt rather than help EN indexing.
+// Blog articles exist in German only (local German search queries). No English
+// blog: mixed-language listings would hurt rather than help EN indexing. The
+// Turkish articles live on the Turkish site (see SITE_CONFIG.turkishSiteUrl).
 // Slugs and dates live in blog-registry.json (shared with the sitemap generator).
 
 import registryJson from './blog-registry.json';
@@ -116,87 +116,6 @@ const contents: Record<string, Partial<Record<Lang, BlogArticleContent>>> = {
       ctaText:
         'Im kostenlosen Erstgespräch bekommen Sie eine ehrliche Einschätzung und danach ein transparentes Angebot — zugeschnitten auf Ihren Betrieb, ohne versteckte Kosten.',
     },
-    tr: {
-      title: 'Esnaf ve zanaatkârlar için bir web sitesi ne kadar tutar?',
-      metaTitle: 'Esnaf İçin Web Sitesi Ne Kadar Tutar? Dürüst Fiyat Rehberi 2026',
-      metaDescription:
-        'Hazır site kurucusu, freelancer veya ajans? Bir işletme web sitesinin gerçekte ne kadar tuttuğu, hangi sürekli maliyetlerin eklendiği ve adil bir teklifi nasıl tanıyacağınız.',
-      dateDisplay: '21 Ağustos 2026',
-      readingMinutes: 6,
-      teaser:
-        'Piyasada 0 Euro’dan 15.000 Euro’ya kadar her şey var — bu makale, farkların nerede olduğunu ve bir işletme için gerçekten neyin mantıklı olduğunu dürüstçe açıklıyor.',
-      intro: [
-        'Bir işletme sahibi olarak web sitesi yaptırmak istediğinizde, fiyat sorusuna nadiren net bir yanıt alırsınız. Bunun dürüst bir nedeni var: Web sitesi raftan alınan bir ürün değil, bir hizmettir — ve fiyat, sitenin ne yapması gerektiğine bağlıdır. Yine de piyasayı iyi bir şekilde sınıflandırmak mümkün, ve bu makale tam olarak bunu yapıyor.',
-        'Önce genel bir çerçeve: Profesyonelce geliştirilmiş bir işletme web sitesi — özel tasarım, arama motoru optimizasyonu ve tüm zorunlu yasal sayfalarla birlikte — freelancer’larda genellikle düşük ile orta dört haneli Euro aralığındadır. Ajanslar aynı hizmet için çoğu zaman bunun iki-üç katını ister; hazır site kurucuları ise neredeyse ücretsiz görünür. Aradaki farkın neden bu kadar büyük olduğunu üç yol üzerinden detaylıca görelim.',
-      ],
-      sections: [
-        {
-          h2: 'Üç yolun karşılaştırması',
-          paragraphs: [
-            'İşletmeler için web sitesine giden temelde üç yol vardır — çok farklı maliyetler ve çok farklı sonuçlarla:',
-          ],
-          table: {
-            head: ['Yol', 'Tipik maliyet', 'Kimler için uygun'],
-            rows: [
-              [
-                'Hazır site kurucusu (Wix, Jimdo vb.), kendiniz yapıyorsunuz',
-                'yakl. ayda 10–40 € + saatlerce kendi emeğiniz',
-                'Bütçe gerçekten yoksa geçici bir çözüm. Çoğunlukla şablon gibi görünür, Google’da nadiren iyi sıralanır — ve bir usta olarak kendi zamanınız her ajans saatinden daha değerlidir.',
-              ],
-              [
-                'Freelancer / bağımsız geliştirici',
-                'çoğunlukla tek seferlik yakl. 1.500–5.000 €',
-                'Çoğu işletme için ideal nokta: özel tasarım, temiz teknik altyapı, SEO — doğrudan muhatap ve ajans masrafları olmadan.',
-              ],
-              [
-                'Ajans',
-                'çoğunlukla 5.000–15.000 € ve üzeri',
-                'Çok şubeli, kampanyalı ve kurumsal kimlik süreçli büyük projelerde mantıklı. Standart bir işletme sitesinde proje yöneticisinin ve ofisin maliyetini de siz ödersiniz.',
-              ],
-            ],
-          },
-        },
-        {
-          h2: 'Fiyatı gerçekte ne belirler',
-          paragraphs: [
-            '„Bir web sitesi" için iki teklif arasında binlerce Euro fark olabilir — çünkü arkasında farklı hizmet kapsamları vardır. En önemli beş fiyat faktörü:',
-          ],
-          list: [
-            'Kapsam: Hizmetler, referanslar ve iletişimden oluşan kompakt bir site; kariyer portalı ve konfigüratörlü on iki alt sayfadan daha ucuzdur.',
-            'Metinler ve fotoğraflar: İçerikleri kendiniz mi sağlıyorsunuz, yoksa metinlerin yazılması ve fotoğrafçı ayarlanması mı gerekiyor? Bu çoğu zaman dört haneli bir farktır.',
-            'Fonksiyonlar: İletişim formu standarttır. Online randevu, teklif hesaplayıcısı veya müşteri paneli ise geliştirme işidir ve buna göre maliyeti vardır.',
-            'Arama motoru optimizasyonu: „Google’da bulunmak" bir onay kutusu değil; teknik, metin ve yerel kayıtlar üzerinde çalışmaktır. SEO içermeyen teklifler daha ucuzdur — ve daha az müşteri getirir.',
-            'Yayın sonrası bakım: Çalışma saatlerini, fotoğrafları, güvenlik güncellemelerini sonradan kim yapacak? Kendiniz, tek tek sipariş vererek veya bakım sözleşmesiyle — bu, teklifte yer almalıdır.',
-          ],
-        },
-        {
-          h2: 'Sürekli maliyetleri unutmayın',
-          paragraphs: [
-            'Tek seferlik ücretle iş bitmiyor — gerçekçi olarak şunlar eklenir: alan adı ve hosting (sağlayıcıya göre ayda yaklaşık 5–20 €) ve isteğe bağlı olarak bir bakım paketi, piyasada genellikle ayda 30 ile 100 € arasında. Kulağa az geliyor, ama baştan planlanmalı: Üç yıl kimsenin dokunmadığı bir web sitesi eninde sonunda yavaş, güvensiz ve içerik olarak güncelliğini yitirmiş olur — ve hiç site olmamasından daha kötü bir vitrine dönüşür.',
-          ],
-        },
-        {
-          h2: 'Adil bir teklifi nasıl tanırsınız',
-          paragraphs: ['Kiminle çalışırsanız çalışın — ciddiyeti satış taktiğinden şu noktalar ayırır:'],
-          list: [
-            'Fiyattan önce bir görüşme vardır. İşletmenizi tanımadan size sabit fiyat veren biri, şablon satıyordur.',
-            'Teklif neyin dahil olduğunu listeler — sayfa sayısı, metin yazımı, SEO, mobil optimizasyon, zorunlu yasal sayfalar (künye, gizlilik), bakım.',
-            'Sahibi siz kalırsınız: Alan adı ve web sitesi size aittir, hizmet sağlayıcıya değil. Sitesiz çıkamayacağınız kiralama modellerine dikkat.',
-            'Referanslar gerçek ve ulaşılabilirdir — şüphedeyseniz adı geçen işletmeyi arayıverin.',
-            'Gerçekçi vaatler: „Google’da 1. sıra, garantili" kesin bir uyarı işaretidir.',
-          ],
-        },
-        {
-          h2: 'Sonuç: önce ihtiyaç, sonra fiyat',
-          paragraphs: [
-            'Fiyat sorusunun dürüst yanıtı şu: Web sitenizin işletmeniz için ne yapması gerektiğine bağlı — ve tam da bu yüzden işin başında bir fiyat listesi değil, bir görüşme olmalı. İyi bir hizmet sağlayıcı önce dinler, hangi kapsama ihtiyacınız olmadığını da söyler ve ardından bütçenize uygun, şeffaf bir teklif sunar.',
-          ],
-        },
-      ],
-      ctaTitle: 'Web sitenizin ne kadar tutacağını öğrenmek ister misiniz?',
-      ctaText:
-        'Ücretsiz ön görüşmede dürüst bir değerlendirme, ardından şeffaf bir teklif alırsınız — işletmenize göre hazırlanmış, gizli maliyet olmadan.',
-    },
   },
   'website-relaunch-5-anzeichen': {
     de: {
@@ -262,70 +181,6 @@ const contents: Record<string, Partial<Record<Lang, BlogArticleContent>>> = {
       ctaTitle: 'Nicht sicher, wo Ihre Website steht?',
       ctaText:
         'Schicken Sie mir Ihre URL — Sie erhalten eine ehrliche Einschätzung, was sich lohnt zu verbessern, und ob ein Redesign überhaupt nötig ist.',
-    },
-    tr: {
-      title: 'Web sitenizin yenilenmesi gerektiğini gösteren 5 işaret',
-      metaTitle: 'Web Sitesi Yenileme İçin 5 İşaret — Kontrol Listesi 2026',
-      metaDescription:
-        'Web siteniz yavaş mı yükleniyor, eski mi görünüyor veya artık neredeyse hiç müşteri getirmiyor mu? Yenilemenin gerekip gerekmediğini gösteren 5 net işaret.',
-      dateDisplay: '22 Ağustos 2026',
-      readingMinutes: 5,
-      teaser:
-        'Yıllar önce iyi olan bir web sitesi otomatik olarak kötü değildir — ama çoğu zaman olabileceği kadar iyi de değildir. Bu beş işaret, daha yakından bakmanın ne zaman gerektiğini gösteriyor.',
-      intro: [
-        'Çoğu web sitesi bir anda kötüleşmez — sinsice eskir. Tasarım bir noktada artık çağdaş görünmez, yükleme süresi fark edilir şekilde uzar ve site üzerinden gelen müşteri talepleri, tek bir neden görünmeden yavaş yavaş azalır. Bu süreç çok yavaş ilerlediği için, çoğu zaman en son site sahipleri fark eder.',
-        'Aşağıdaki beş işaret dürüst bir değerlendirme için yardımcı olur: Birden fazlası sizin için geçerliyse, en azından daha ayrıntılı bir analiz yapmaya değer — illa komple yeni bir site değil, ama sitenin bugün ne yaptığına ve ne yapabileceğine hedefli bir bakış.',
-      ],
-      sections: [
-        {
-          h2: '1. Site fark edilir şekilde yavaş yükleniyor — özellikle telefonda',
-          paragraphs: [
-            'Bir sayfanın içeriği görünene kadar belirgin şekilde zaman geçiyorsa veya öğeler yüklenirken gözle görülür biçimde zıplıyorsa, bu yalnızca kozmetik bir sorun değildir: Ziyaretçileri, daha ne sunduğunuzu görmeden kaybettirir. Özellikle akıllı telefonda — çoğu işletme için artık trafiğin çoğunluğu — yavaş bir site özellikle göze batar.',
-            'İyi bir ilk test: Kendi web sitenizi telefonunuzda Wi-Fi yerine mobil bağlantıyla açın. Siz bile sabırsızlanıyorsanız, potansiyel müşterileriniz için de durum farklı değildir.',
-          ],
-        },
-        {
-          h2: '2. Tasarım başka bir zamandan kalmış gibi duruyor',
-          paragraphs: [
-            'Web tasarımı gelişmeye devam ediyor — yazı tipleri, görsel dil, ana sayfa kurgusu. Yedi-sekiz yıl önce modern görünen bir site, içerik olarak her şey doğru olsa bile bugün çoğu zaman eskimiş durur. Bu bir güven sorunudur: Ziyaretçiler sitenin izlenimini farkında olmadan arkasındaki işletmeye aktarır. Eskimiş bir sayfa, doğru olup olmadığından bağımsız olarak, hızla eskimiş bir işletme izlenimi verir.',
-          ],
-        },
-        {
-          h2: '3. Google’da artık neredeyse görünmüyor',
-          paragraphs: [
-            'Arama motoru optimizasyonu tek seferlik bir durum değil, hareketli bir hedeftir: Google değerlendirme kriterlerini sürekli günceller ve rakipleriniz kendi sitelerine yatırım yapmaya devam eder. Yıllar önce iyi sıralanan ve o zamandan beri değişmeyen bir sayfa, zamanla neredeyse kaçınılmaz olarak görünürlük kaybeder — kötüleştiği için değil, diğerleri arayı kapattığı için.',
-            'Basit bir test: Google’da en önemli hizmetlerinizi bulunduğunuz şehirle birlikte aratın. Kendinizi ancak ikinci veya üçüncü sayfada buluyorsanız, bu net bir sinyaldir.',
-          ],
-        },
-        {
-          h2: '4. İçerikler eski, eksik veya net bir sonraki adımdan yoksun',
-          paragraphs: [
-            'Eski fiyatlar, ayrılmış çalışanların olduğu bir ekip fotoğrafı, çoktan sunulmayan hizmetler — bu detaylar tek tek zararsız görünür ama toplandığında yarım kalmış bir izlenim yaratır. Aynı derecede önemli: Site, ziyaretçiyi net bir eyleme yönlendiriyor mu? Belirgin bir sonraki adımı olmayan bir sayfa — aramak, formu doldurmak, teklif istemek — içerik aslında yerinde olsa bile müşteri taleplerini boşa harcar.',
-          ],
-        },
-        {
-          h2: '5. Telefonda kullanımı zor',
-          paragraphs: [
-            'Çok küçük butonlar, telefonda ancak yakınlaştırınca okunabilen metinler, zar zor doldurulabilen formlar: Büyük ekranda zararsız görünen şey, telefonda hızla engele dönüşür. Aramaların büyük bölümü bugün mobilden yapıldığı için, mobil kullanılabilirlik çoğu zaman bir ziyaretin talebe dönüşüp dönüşmeyeceğini doğrudan belirler.',
-          ],
-        },
-        {
-          h2: 'Hemen komple yeni bir site mi gerekiyor?',
-          paragraphs: [
-            'Şart değil. İşaretlerden yalnızca biri veya ikisi geçerliyse, çoğu zaman hedefli bir yenileme yeterlidir: daha hızlı görseller, güncellenmiş içerikler, yükleme süresinde teknik iyileştirmeler. Birden fazla nokta aynı anda geçerliyse — özellikle eskimiş tasarım ile Google’da zayıf görünürlük bir aradaysa — genellikle yeniden yapılanmaya dürüstçe bakmak daha mantıklıdır; çünkü temelden eski bir yapıya yapılan çok sayıda küçük düzeltme artık pek karşılığını vermez.',
-            'Her iki durumda da geçerli: Karar öncesi bir analiz size kısa bir görüşmeden başka bir şeye mal olmaz — ve yanlış yöne yatırım yapmaktan kurtarır.',
-          ],
-        },
-        {
-          h2: 'Sonuç',
-          paragraphs: [
-            'Bu beş işaretten hiçbiri tek başına dramatik değildir. Ama bir arada, bir web sitesinin hâlâ yapabileceğini yapıp yapmadığını — yoksa artık yardım etmekten çok engel mi olduğunu — oldukça güvenilir şekilde gösterirler. İlk adım yeniden tasarım kararı değil, dürüst bir durum tespitidir.',
-          ],
-        },
-      ],
-      ctaTitle: 'Web sitenizin nerede durduğundan emin değil misiniz?',
-      ctaText:
-        'Bana URL’nizi gönderin — neyin iyileştirilmeye değer olduğuna ve yeniden tasarımın gerçekten gerekli olup olmadığına dair dürüst bir değerlendirme alırsınız.',
     },
   },
 };

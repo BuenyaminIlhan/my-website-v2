@@ -1,7 +1,12 @@
-export type Lang = 'de' | 'en' | 'tr';
+export type Lang = 'de' | 'en';
 
-/** Locales that get their own routed URL tree. '/' = de, '/en/...', '/tr/...'. */
-export const SUPPORTED_LOCALES: Lang[] = ['de', 'en', 'tr'];
+/**
+ * Locales that get their own routed URL tree. '/' = de, '/en/...'.
+ * Turkish is not a locale of this site: it lives on its own domain
+ * (SITE_CONFIG.turkishSiteUrl) with its own legal texts. The web server
+ * redirects the former /tr/... URLs there (public/.htaccess).
+ */
+export const SUPPORTED_LOCALES: Lang[] = ['de', 'en'];
 
 export interface OfferItem {
   title: string;

@@ -1,6 +1,6 @@
 import routesJson from './routes.json';
 import blogRegistry from '../blog/blog-registry.json';
-import { Lang } from './translations';
+import { Lang, SUPPORTED_LOCALES } from './translations';
 
 export type PageKey = keyof typeof routesJson.pages;
 
@@ -24,7 +24,7 @@ export function requiredSlug(key: PageKey, lang: Lang): string {
 
 /**
  * URL path (relative to the site root, no leading slash) of a page in a locale.
- * '' = German home, 'tr' = Turkish home, 'en/website-development', …
+ * '' = German home, 'en' = English home, 'en/website-development', …
  */
 export function urlPathFor(key: PageKey, lang: Lang): string | undefined {
   const slug = slugFor(key, lang);
@@ -41,7 +41,7 @@ export function homePathFor(lang: Lang): string {
 /** URL paths of a page in every locale where it exists — input for canonical + hreflang. */
 export function urlPathsFor(key: PageKey): Partial<Record<Lang, string>> {
   const paths: Partial<Record<Lang, string>> = {};
-  for (const lang of ['de', 'en', 'tr'] as Lang[]) {
+  for (const lang of SUPPORTED_LOCALES) {
     const p = urlPathFor(key, lang);
     if (p !== undefined) paths[lang] = p;
   }
@@ -58,7 +58,7 @@ export function blogArticleUrlPath(articleId: string, lang: Lang): string | unde
 
 export function blogArticleUrlPaths(articleId: string): Partial<Record<Lang, string>> {
   const paths: Partial<Record<Lang, string>> = {};
-  for (const lang of ['de', 'en', 'tr'] as Lang[]) {
+  for (const lang of SUPPORTED_LOCALES) {
     const p = blogArticleUrlPath(articleId, lang);
     if (p !== undefined) paths[lang] = p;
   }

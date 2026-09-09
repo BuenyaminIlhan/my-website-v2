@@ -77,10 +77,32 @@ describe('page components', () => {
 
     expect(text(fixture)).toContain(lang.t().faq.title);
 
-    lang.applyRoute('tr', 'home');
+    lang.applyRoute('en', 'home');
     fixture.detectChanges();
 
     expect(text(fixture)).toContain(lang.t().faq.title);
+  });
+
+  it('Home emits hreflang="tr" only while the Turkish site URL is set', async () => {
+    const trLinks = () =>
+      Array.from(document.head.querySelectorAll<HTMLLinkElement>('link[rel="alternate"][hreflang="tr"]'))
+        .map(l => l.getAttribute('href'));
+
+    const fixture = mount(Home);
+    await fixture.whenStable();
+    // Both states are driven from here, so the shipped value stays a one-line
+    // config change; footer.spec.ts pins what that value is.
+    fixture.componentInstance.turkishSiteUrl.set('');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(trLinks()).toEqual([]);
+
+    fixture.componentInstance.turkishSiteUrl.set('https://softlyx.tr/');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(trLinks()).toEqual(['https://softlyx.tr/']);
+
+    document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
   });
 
   it('Offerings.prefill carries the offer slug into the contact wizard', () => {

@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { slugFor, urlPathFor, urlPathsFor, blogArticleUrlPath, blogArticleUrlPaths } from './route-map';
+import { SUPPORTED_LOCALES } from './translations';
+import routesJson from './routes.json';
+import blogRegistry from '../blog/blog-registry.json';
 
 describe('route-map', () => {
   describe('urlPathFor', () => {
@@ -10,14 +13,12 @@ describe('route-map', () => {
 
     it('prefixes every non-German locale with its language code', () => {
       expect(urlPathFor('home', 'en')).toBe('en');
-      expect(urlPathFor('home', 'tr')).toBe('tr');
-      expect(urlPathFor('legal', 'tr')).toBe('tr/kunye');
+      expect(urlPathFor('legal', 'en')).toBe('en/legal-notice');
     });
 
     it('uses the localized slug, not the German one, for service pages', () => {
       expect(urlPathFor('website-erstellen-lassen', 'de')).toBe('website-erstellen-lassen');
       expect(urlPathFor('website-erstellen-lassen', 'en')).toBe('en/website-development');
-      expect(urlPathFor('website-erstellen-lassen', 'tr')).toBe('tr/web-sitesi-yaptirma');
     });
 
     it('returns undefined for an unknown page key instead of throwing', () => {
@@ -27,7 +28,7 @@ describe('route-map', () => {
     });
 
     it('returns undefined for a page that does not exist in a locale', () => {
-      // The blog is only published in de and tr.
+      // The blog is only published in German.
       expect(slugFor('blog', 'en')).toBeUndefined();
       expect(urlPathFor('blog', 'en')).toBeUndefined();
     });
@@ -38,13 +39,17 @@ describe('route-map', () => {
       expect(urlPathsFor('privacy')).toEqual({
         de: 'privacy-policy',
         en: 'en/privacy-policy',
-        tr: 'tr/gizlilik-politikasi',
       });
+    });
+
+    it('lists exactly the supported locales for a page that exists everywhere', () => {
+      expect(Object.keys(urlPathsFor('home'))).toEqual(['de', 'en']);
+      expect(SUPPORTED_LOCALES).toEqual(['de', 'en']);
     });
 
     it('omits locales where the page is missing instead of falling back', () => {
       const paths = urlPathsFor('blog');
-      expect(paths).toEqual({ de: 'blog', tr: 'tr/blog' });
+      expect(paths).toEqual({ de: 'blog' });
       expect('en' in paths).toBe(false);
     });
   });
@@ -53,8 +58,8 @@ describe('route-map', () => {
     it('composes the localized blog base with the localized article slug', () => {
       expect(blogArticleUrlPath('website-kosten-handwerker', 'de'))
         .toBe('blog/was-kostet-eine-website-fuer-handwerker');
-      expect(blogArticleUrlPath('website-kosten-handwerker', 'tr'))
-        .toBe('tr/blog/esnaf-icin-web-sitesi-maliyeti');
+      expect(blogArticleUrlPaths('website-kosten-handwerker'))
+        .toEqual({ de: 'blog/was-kostet-eine-website-fuer-handwerker' });
     });
 
     it('returns undefined where the article has no translation', () => {
@@ -64,6 +69,26 @@ describe('route-map', () => {
     it('returns undefined for an unknown article id', () => {
       expect(blogArticleUrlPath('does-not-exist', 'de')).toBeUndefined();
       expect(blogArticleUrlPaths('does-not-exist')).toEqual({});
+    });
+  });
+
+  describe('slug tables', () => {
+    // Guards against Turkish quietly coming back: a "tr" slug here would be
+    // silently ignored by the route tree but would still leak into the sitemap.
+    const supported = new Set<string>(SUPPORTED_LOCALES);
+
+    it('routes.json only names supported locales', () => {
+      for (const [key, slugs] of Object.entries(routesJson.pages)) {
+        const foreign = Object.keys(slugs).filter(l => !supported.has(l));
+        expect(foreign, `page "${key}"`).toEqual([]);
+      }
+    });
+
+    it('blog-registry.json only names supported locales', () => {
+      for (const article of blogRegistry.articles) {
+        const foreign = Object.keys(article.slugs).filter(l => !supported.has(l));
+        expect(foreign, `article "${article.id}"`).toEqual([]);
+      }
     });
   });
 });

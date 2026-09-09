@@ -36,7 +36,7 @@ describe('Offerings', () => {
   /* Pinned to the offer's own title, not to the component's constants —
      a mis-assigned core tile has to fail here. */
   it('gives the big tile to Business-Web-Apps and the band to the care package', () => {
-    for (const locale of ['de', 'en', 'tr'] as const) {
+    for (const locale of ['de', 'en'] as const) {
       lang.applyRoute(locale, 'home');
       fixture.detectChanges();
 

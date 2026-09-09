@@ -58,7 +58,7 @@ describe('Reviews', () => {
   it('states the empty case without a star, a rating or a count', () => {
     reviews.url.set(REVIEW_URL);
 
-    for (const locale of ['de', 'en', 'tr'] as const) {
+    for (const locale of ['de', 'en'] as const) {
       lang.applyRoute(locale, 'home');
       fixture.detectChanges();
 
@@ -89,7 +89,7 @@ describe('Reviews', () => {
 
   it('keeps the label, title and copy in the active locale', () => {
     reviews.url.set(REVIEW_URL);
-    lang.applyRoute('tr', 'home');
+    lang.applyRoute('en', 'home');
     fixture.detectChanges();
 
     const t = lang.t().reviews;

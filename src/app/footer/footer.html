@@ -53,13 +53,19 @@
     <span class="copyright">© {{ year }} Bünyamin Ilhan</span>
 
     <nav class="footer-nav">
-      @if (lang.current() !== 'en') {
+      @if (lang.current() === 'de') {
         <a [routerLink]="lang.pagePath('blog')">Blog</a>
         <span class="sep">·</span>
       }
       <a [routerLink]="lang.pagePath('legal')">{{ lang.t().footer.legal }}</a>
       <span class="sep">·</span>
       <a [routerLink]="lang.pagePath('privacy')">{{ lang.t().footer.privacy }}</a>
+      <!-- Country switcher to the Turkish site (own domain, own legal texts).
+           A plain link the visitor chooses — never an automatic redirect. -->
+      @if (turkishSiteUrl(); as trUrl) {
+        <span class="sep">·</span>
+        <a class="site-switch" [href]="trUrl" hreflang="tr" lang="tr">Türkçe</a>
+      }
     </nav>
 
     <div class="footer-social">

@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Footer } from './footer';
 import { text } from '../../testing/fixture';
+import { SITE_CONFIG } from '../config/site.config';
 
 /** The FAB handlers only read these fields off the event. */
 const pointerEvent = (clientX: number, clientY: number): PointerEvent =>
@@ -50,6 +51,45 @@ describe('Footer', () => {
     // Everything visible is aria-hidden; only the sr-only span may speak.
     const spoken = Array.from(logo?.querySelectorAll('span:not([aria-hidden="true"])') ?? []);
     expect(spoken.map(s => s.textContent)).toEqual(['Softlyx – Bünyamin Ilhan']);
+  });
+
+  /* The flag itself, pinned in one place: emptying it is the documented lever if
+     the Turkish site ever goes down, and it must stay a one-line config change. */
+  it('ships with the Turkish site configured', () => {
+    expect(SITE_CONFIG.turkishSiteUrl).toBe('https://softlyx.tr/');
+  });
+
+  it('shows no country switcher while the Turkish site URL is not configured', () => {
+    create();
+    footer.turkishSiteUrl.set('');
+    fixture.detectChanges();
+    expect((fixture.nativeElement as HTMLElement).querySelector('.site-switch')).toBeNull();
+    expect(text(fixture)).not.toContain('Türkçe');
+  });
+
+  it('links to the Turkish site as a plain country switcher once configured', () => {
+    create();
+    footer.turkishSiteUrl.set('https://softlyx.tr/');
+    fixture.detectChanges();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('.site-switch');
+    expect(link?.getAttribute('href')).toBe('https://softlyx.tr/');
+    expect(link?.getAttribute('hreflang')).toBe('tr');
+    expect(link?.getAttribute('lang')).toBe('tr');
+    expect(link?.textContent?.trim()).toBe('Türkçe');
+  });
+
+  it('shows the blog link only in German, the only locale with a blog', () => {
+    create();
+    const blogLink = () =>
+      Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.footer-nav a'))
+        .find(a => a.textContent?.trim() === 'Blog');
+
+    expect(blogLink()).toBeDefined();
+
+    footer.lang.applyRoute('en', 'home');
+    fixture.detectChanges();
+    expect(blogLink()).toBeUndefined();
   });
 
   it('leaves the FAB at its stylesheet position until it is dragged', () => {
