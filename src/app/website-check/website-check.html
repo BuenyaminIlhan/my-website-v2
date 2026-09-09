@@ -46,6 +46,12 @@
             <p class="error-msg">{{ lang.t().websiteCheck.error }}</p>
           }
 
+          <!-- Says at the point of collection what happens with the data, so nobody
+               has to go looking in the footer for it. A pointer, not a consent. -->
+          <p class="privacy-note">
+            {{ lang.t().contact.privacyNote.text }}
+            <a [routerLink]="lang.pagePath('privacy')">{{ lang.t().contact.privacyNote.linkLabel }}</a>.
+          </p>
           <button type="submit" class="btn-submit" [disabled]="sending()">
             {{ sending() ? lang.t().websiteCheck.sending : lang.t().websiteCheck.submit }}
           </button>

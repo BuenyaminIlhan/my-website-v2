@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { WebsiteCheck } from './website-check';
 import { LangService } from '../services/lang.service';
 import { stubIntersectionObserver } from '../../testing/browser-stubs';
@@ -29,7 +30,7 @@ describe('WebsiteCheck', () => {
     fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal('fetch', fetchMock);
 
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     TestBed.inject(LangService).applyRoute('en', 'home');
 
     fixture = TestBed.createComponent(WebsiteCheck);
@@ -96,5 +97,16 @@ describe('WebsiteCheck', () => {
     await check.send();
 
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('points at the privacy policy where the data is entered', () => {
+    const lang = TestBed.inject(LangService);
+    const note = (fixture.nativeElement as HTMLElement).querySelector('.privacy-note');
+
+    expect(note?.textContent).toContain(lang.t().contact.privacyNote.text);
+    const link = note?.querySelector('a');
+    expect(link?.textContent?.trim()).toBe(lang.t().contact.privacyNote.linkLabel);
+    // The localized route, not a hardcoded path.
+    expect(link?.getAttribute('href')).toBe(lang.pagePath('privacy'));
   });
 });

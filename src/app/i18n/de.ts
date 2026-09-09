@@ -165,6 +165,10 @@ export const de: LangTranslations = {
     waNote: 'Direkt schreiben, meist antworte ich innerhalb weniger Minuten.',
     mailNote: 'Oder klassisch per E-Mail:',
     formNote: 'Lieber ausführlich? Das Formular führt Sie Schritt für Schritt durch.',
+    privacyNote: {
+      text: 'Ihre Angaben verwende und speichere ich nur, um Ihre Anfrage zu bearbeiten. Mehr dazu in der',
+      linkLabel: 'Datenschutzerklärung',
+    },
   },
   footer: {
     legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!',

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { ContactWizard } from './contact-wizard';
 import { LangService } from '../services/lang.service';
 import { InquiryService } from '../services/inquiry.service';
@@ -30,7 +31,7 @@ describe('ContactWizard', () => {
     fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal('fetch', fetchMock);
 
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: [provideRouter([])] });
     lang = TestBed.inject(LangService);
     lang.applyRoute('de', 'home');
     inquiry = TestBed.inject(InquiryService);
@@ -180,20 +181,92 @@ describe('ContactWizard', () => {
     expect(wizard.timeline()).toBe('');
   });
 
-  it('marks the chosen project type as pressed, and only that one', () => {
-    create();
-    const cards = () => Array.from(
-      (fixture.nativeElement as HTMLElement).querySelectorAll('.type-card'),
-    ).map(c => c.getAttribute('aria-pressed'));
+  const cardEls = () => Array.from(
+    (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('.type-card'),
+  );
+  const press = (index: number, key: string) => {
+    cardEls()[index].dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true }));
+    fixture.detectChanges();
+  };
 
-    expect(cards().every(v => v === 'false')).toBe(true);
+  it('offers the project types as one radio group', () => {
+    create();
+    const group = (fixture.nativeElement as HTMLElement).querySelector('.type-grid');
+
+    expect(group?.getAttribute('role')).toBe('radiogroup');
+    const labelId = group?.getAttribute('aria-labelledby');
+    expect((fixture.nativeElement as HTMLElement).querySelector('#' + labelId)?.textContent)
+      .toBe(lang.t().wizard.typeTitle);
+    expect(cardEls().every(c => c.getAttribute('role') === 'radio')).toBe(true);
+    // One tab stop for the group, not one per card.
+    expect(cardEls().map(c => c.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1', '-1', '-1']);
+  });
+
+  it('marks the chosen project type as checked, and only that one', () => {
+    create();
+    const checked = () => cardEls().map(c => c.getAttribute('aria-checked'));
+
+    expect(checked().every(v => v === 'false')).toBe(true);
 
     wizard.selectType(lang.t().wizard.types[1].key);
     wizard.step.set(1);
     fixture.detectChanges();
 
-    expect(cards().filter(v => v === 'true')).toHaveLength(1);
-    expect(cards()[1]).toBe('true');
+    expect(checked().filter(v => v === 'true')).toHaveLength(1);
+    expect(checked()[1]).toBe('true');
+  });
+
+  it('moves the focus with the arrow keys without selecting anything', () => {
+    create();
+    /* Selecting also advances the wizard, so an arrow key must not select:
+       arrowing through the options would otherwise walk the visitor forward. */
+    const event = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true });
+    cardEls()[0].dispatchEvent(event);
+    fixture.detectChanges();
+
+    // Without this the page scrolls out from under whoever is arrowing.
+    expect(event.defaultPrevented).toBe(true);
+    expect(wizard.focusedType()).toBe(1);
+    expect(wizard.projectType()).toBe('');
+    expect(wizard.step()).toBe(1);
+    expect(cardEls().map(c => c.getAttribute('tabindex'))).toEqual(['-1', '0', '-1', '-1', '-1', '-1']);
+  });
+
+  it('wraps around at both ends and jumps with Home and End', () => {
+    create();
+    const last = lang.t().wizard.types.length - 1;
+
+    press(0, 'ArrowLeft');
+    expect(wizard.focusedType()).toBe(last);
+
+    press(last, 'ArrowDown');
+    expect(wizard.focusedType()).toBe(0);
+
+    press(0, 'End');
+    expect(wizard.focusedType()).toBe(last);
+
+    press(last, 'Home');
+    expect(wizard.focusedType()).toBe(0);
+    expect(wizard.projectType()).toBe('');
+  });
+
+  it('selects with Space, exactly like a click does', () => {
+    create();
+
+    press(2, ' ');
+
+    expect(wizard.projectType()).toBe(lang.t().wizard.types[2].key);
+    expect(wizard.step()).toBe(2);
+  });
+
+  it('leaves keys it does not handle to the browser', () => {
+    create();
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+
+    cardEls()[0].dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(wizard.focusedType()).toBe(0);
   });
 
   it('marks the chosen budget and timeline chips as pressed', () => {
@@ -224,5 +297,62 @@ describe('ContactWizard', () => {
 
     expect(current()[2]).toBe('step');
     expect(current().filter(v => v === 'step')).toHaveLength(1);
+  });
+
+  it('points at the privacy policy where the data is entered', () => {
+    create();
+    wizard.step.set(3);
+    fixture.detectChanges();
+    const note = (fixture.nativeElement as HTMLElement).querySelector('.privacy-note');
+
+    expect(note?.textContent).toContain(lang.t().contact.privacyNote.text);
+    const link = note?.querySelector('a');
+    expect(link?.textContent?.trim()).toBe(lang.t().contact.privacyNote.linkLabel);
+    // The localized route, not a hardcoded path.
+    expect(link?.getAttribute('href')).toBe(lang.pagePath('privacy'));
+  });
+
+  it('selects on click, which is also the path Enter takes', () => {
+    create();
+    /* Enter activates a button natively, so it arrives here as a click. Space
+       is the one the keydown handler has to serve itself. */
+    cardEls()[2].click();
+    fixture.detectChanges();
+
+    expect(wizard.projectType()).toBe(lang.t().wizard.types[2].key);
+    expect(wizard.step()).toBe(2);
+  });
+
+  it('leaves modified arrow keys to the browser', () => {
+    create();
+    /* Alt+Left is Back, Cmd+Up jumps to the top: not ours to take. */
+    const event = new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true, bubbles: true, cancelable: true });
+
+    cardEls()[0].dispatchEvent(event);
+    fixture.detectChanges();
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(wizard.focusedType()).toBe(0);
+  });
+
+  it('puts the tab stop on the type an offer card preselected', () => {
+    /* Someone arriving from a service page finds that type already chosen; the
+       group must be entered there, not on the first card. */
+    TestBed.inject(InquiryService).projectType.set(lang.t().wizard.types[3].key);
+    create();
+
+    expect(cardEls()[3].getAttribute('aria-checked')).toBe('true');
+    expect(cardEls().map(c => c.getAttribute('tabindex'))).toEqual(['-1', '-1', '-1', '0', '-1', '-1']);
+  });
+
+  it('moves the tab stop back to the first card after a reset', () => {
+    create();
+    wizard.selectType(lang.t().wizard.types[4].key);
+
+    wizard.reset();
+    fixture.detectChanges();
+
+    expect(cardEls().every(c => c.getAttribute('aria-checked') === 'false')).toBe(true);
+    expect(cardEls()[0].getAttribute('tabindex')).toBe('0');
   });
 });
