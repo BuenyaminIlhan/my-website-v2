@@ -46,7 +46,7 @@
       </div>
 
       <!-- Theme toggle -->
-      <button class="theme-btn" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Light mode' : 'Dark mode'">
+      <button class="theme-btn" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? lang.t().a11y.themeLight : lang.t().a11y.themeDark">
         <span class="theme-icon">{{ theme.isDark() ? '☀' : '☾' }}</span>
       </button>
 
