@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { Lang } from '../i18n/translations';
+import { absoluteUrl } from '../i18n/route-map';
 import { SITE_CONFIG } from '../config/site.config';
 
 const OG_LOCALES: Record<Lang, string> = { de: 'de_DE', en: 'en_US' };
@@ -37,16 +38,11 @@ export class SeoService {
   private title = inject(Title);
   private document = inject(DOCUMENT);
 
-  private readonly baseUrl = SITE_CONFIG.baseUrl;
   private readonly defaultImage = SITE_CONFIG.baseUrl + '/assets/img/og-image.jpg';
-
-  private urlOf(path: string): string {
-    return path ? `${this.baseUrl}/${path}` : `${this.baseUrl}/`;
-  }
 
   update(info: SeoPageInfo) {
     const currentPath = info.paths[info.lang] ?? '';
-    const url = this.urlOf(currentPath);
+    const url = absoluteUrl(currentPath);
     const image = info.ogImage ?? this.defaultImage;
 
     this.title.setTitle(info.title);
@@ -86,10 +82,10 @@ export class SeoService {
       link.setAttribute('href', href);
       this.document.head.appendChild(link);
     };
-    for (const [lang, path] of this.entries(paths)) add(lang, this.urlOf(path));
+    for (const [lang, path] of this.entries(paths)) add(lang, absoluteUrl(path));
     for (const alt of external) add(alt.hreflang, alt.href);
     // x-default points to the German original.
-    if (paths.de !== undefined) add('x-default', this.urlOf(paths.de));
+    if (paths.de !== undefined) add('x-default', absoluteUrl(paths.de));
   }
 
   private entries(paths: Partial<Record<Lang, string>>): [Lang, string][] {

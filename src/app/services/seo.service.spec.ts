@@ -52,7 +52,7 @@ describe('SeoService', () => {
       service.update({ ...servicePage, lang: 'en' });
 
       const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-      expect(canonical?.href).toBe(`${BASE}/en/website-development`);
+      expect(canonical?.href).toBe(`${BASE}/en/website-development/`);
     });
 
     it('writes the German home page as a bare root URL', () => {
@@ -62,13 +62,46 @@ describe('SeoService', () => {
         .toBe(`${BASE}/`);
     });
 
+    // Everything this service builds itself — external alternates are passed in
+    // verbatim and are covered by their own case below.
+    const ownUrls = () => [
+      document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href,
+      metaContent('meta[property="og:url"]'),
+      ...hreflangs()
+        .filter(([, href]) => href?.startsWith(BASE))
+        .map(([, href]) => href),
+    ];
+
+    it('emits every URL in the form the server serves: closed by one slash', () => {
+      // The server only serves the directory form (/blog -> 301 -> /blog/).
+      service.update(servicePage);
+
+      expect(ownUrls()).toHaveLength(5);
+      // scheme + host + optional non-empty segments, always closed by exactly one slash
+      for (const url of ownUrls()) {
+        expect(url ?? '(tag missing)').toMatch(/^https:\/\/[^/]+\/(?:[^/]+\/)*$/);
+      }
+    });
+
+    it('normalises a stray slash instead of doubling it', () => {
+      // urlPathFor yields no slash at either end today, so nothing in the app reaches
+      // this. It pins the guarantee absoluteUrl gives, so the next caller can rely on it.
+      service.update({ title: 'Blog', description: 'd', lang: 'de', paths: { de: '/blog/' } });
+
+      // canonical, og:url, hreflang="de", x-default — the page exists in German only
+      expect(ownUrls()).toHaveLength(4);
+      for (const url of ownUrls()) {
+        expect(url ?? '(tag missing)').toMatch(/^https:\/\/[^/]+\/(?:[^/]+\/)*$/);
+      }
+    });
+
     it('emits one hreflang per locale plus x-default pointing at German', () => {
       service.update(servicePage);
 
       expect(hreflangs()).toEqual([
-        ['de', `${BASE}/website-erstellen-lassen`],
-        ['en', `${BASE}/en/website-development`],
-        ['x-default', `${BASE}/website-erstellen-lassen`],
+        ['de', `${BASE}/website-erstellen-lassen/`],
+        ['en', `${BASE}/en/website-development/`],
+        ['x-default', `${BASE}/website-erstellen-lassen/`],
       ]);
     });
 
@@ -83,10 +116,10 @@ describe('SeoService', () => {
       service.update({ ...servicePage, externalAlternates: [{ hreflang: 'tr', href: TR_HOME }] });
 
       expect(hreflangs()).toEqual([
-        ['de', `${BASE}/website-erstellen-lassen`],
-        ['en', `${BASE}/en/website-development`],
+        ['de', `${BASE}/website-erstellen-lassen/`],
+        ['en', `${BASE}/en/website-development/`],
         ['tr', TR_HOME],
-        ['x-default', `${BASE}/website-erstellen-lassen`],
+        ['x-default', `${BASE}/website-erstellen-lassen/`],
       ]);
     });
 
