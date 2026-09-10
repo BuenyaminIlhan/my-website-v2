@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
-import { blogArticleUrlPaths, blogArticleUrlPath, homePathFor } from '../i18n/route-map';
+import { absoluteUrl, blogArticleUrlPaths, blogArticleUrlPath, homePathFor } from '../i18n/route-map';
 import { articleById, articleContent, BlogArticleContent } from './blog-data';
 import { SITE_CONFIG } from '../config/site.config';
 
@@ -27,7 +27,8 @@ export class BlogArticlePage implements OnDestroy {
   constructor() {
     const currentLang = this.lang.current();
     const path = blogArticleUrlPath(this.articleId, currentLang) ?? homePathFor(currentLang);
-    const url = SITE_CONFIG.baseUrl + '/' + path;
+    // Same address the canonical link and the hreflang alternates of this page carry.
+    const url = absoluteUrl(path);
     this.seo.update({
       title: this.article.metaTitle,
       description: this.article.metaDescription,

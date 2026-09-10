@@ -77,6 +77,11 @@ describe('BlogArticlePage', () => {
       ],
     });
     TestBed.inject(LangService).applyRoute('de', 'blog', article.id);
+    // The real index.html ships a canonical link; SeoService only updates an existing
+    // one, and the JSON-LD test below compares the graph against it.
+    const canonical = document.createElement('link');
+    canonical.setAttribute('rel', 'canonical');
+    document.head.appendChild(canonical);
 
     const fixture = TestBed.createComponent(BlogArticlePage);
     fixture.detectChanges();
@@ -85,6 +90,8 @@ describe('BlogArticlePage', () => {
 
   afterEach(() => {
     document.getElementById('page-jsonld')?.remove();
+    document.head.querySelectorAll('link[rel="canonical"], link[rel="alternate"][hreflang]')
+      .forEach(el => el.remove());
   });
 
   it('renders the article the route points at', () => {
@@ -102,6 +109,11 @@ describe('BlogArticlePage', () => {
     const payload = JSON.parse(script?.textContent ?? '{}') as Record<string, unknown>;
     expect(payload['@type']).toBe('BlogPosting');
     expect(payload['datePublished']).toBe(article.dateIso);
+    // The graph has to name the same address as the canonical link on the page —
+    // it built its own URL once and stayed a slash behind (cold review 2026-09-10).
+    const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
+    expect(payload['url']).toBe(canonical);
+    expect(payload['mainEntityOfPage']).toBe(canonical);
 
     fixture.destroy();
     expect(document.getElementById('page-jsonld')).toBeNull();

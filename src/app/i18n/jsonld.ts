@@ -1,5 +1,5 @@
 import { Lang, LangTranslations } from './translations';
-import { urlPathFor } from './route-map';
+import { absoluteUrl, homePathFor } from './route-map';
 import { SITE_CONFIG } from '../config/site.config';
 
 const BASE = SITE_CONFIG.baseUrl;
@@ -44,7 +44,7 @@ function personNode(lang: Lang): object {
     '@type': 'Person',
     '@id': `${BASE}/#person`,
     name: 'Bünyamin Ilhan',
-    url: BASE,
+    url: `${BASE}/`,
     email: SITE_CONFIG.email,
     jobTitle: 'Web- & App-Entwickler',
     description: PERSON_DESC[lang],
@@ -67,7 +67,7 @@ function serviceNode(lang: Lang, t: LangTranslations): object {
     name: `${SITE_CONFIG.brandName} — ${SERVICE_NAME_SUFFIX[lang]}`,
     alternateName: 'softlyx_',
     logo: `${BASE}/brand/avatar-square-dark.svg`,
-    url: BASE,
+    url: `${BASE}/`,
     founder: { '@id': `${BASE}/#person` },
     description: SERVICE_DESC[lang],
     // The Turkish market is served by the Turkish site (SITE_CONFIG.turkishSiteUrl).
@@ -107,7 +107,7 @@ function websiteNode(lang: Lang): object {
   return {
     '@type': 'WebSite',
     '@id': `${BASE}/#website`,
-    url: BASE,
+    url: `${BASE}/`,
     name: `${SITE_CONFIG.brandName} — Portfolio`,
     author: { '@id': `${BASE}/#person` },
     inLanguage: lang,
@@ -148,7 +148,9 @@ function projectsNode(): object {
 
 /** Localized site-wide JSON-LD @graph, injected on the home page of each locale. */
 export function buildSiteGraph(lang: Lang, t: LangTranslations): object {
-  const homeUrl = BASE + '/' + (urlPathFor('home', lang) || '');
+  // The @id values below are derived from this URL, so it has to be the same one
+  // SeoService writes as the canonical link on the page — hence the shared helper.
+  const homeUrl = absoluteUrl(homePathFor(lang));
 
   return {
     '@context': 'https://schema.org',

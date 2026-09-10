@@ -1,6 +1,7 @@
 import routesJson from './routes.json';
 import blogRegistry from '../blog/blog-registry.json';
 import { Lang, SUPPORTED_LOCALES } from './translations';
+import { SITE_CONFIG } from '../config/site.config';
 
 export type PageKey = keyof typeof routesJson.pages;
 
@@ -31,6 +32,26 @@ export function urlPathFor(key: PageKey, lang: Lang): string | undefined {
   if (slug === undefined) return undefined;
   const prefix = lang === 'de' ? '' : lang;
   return [prefix, slug].filter(Boolean).join('/');
+}
+
+/**
+ * Absolute URL of a path, always closed by exactly one slash — the only form this
+ * site serves. Every page is prerendered into its own directory, so Apache's
+ * DirectorySlash answers `/blog` with a 301 to `/blog/` (measured 2026-09-10; only
+ * the root already ends in a slash). A canonical, hreflang or JSON-LD URL without
+ * the slash therefore names an address that never answers 200.
+ *
+ * Every absolute URL of an own page goes through here. It used to be built in three
+ * places, and the third one was missed when the slash was introduced — that is the
+ * reason this function exists rather than a local helper per caller.
+ *
+ * The paths above carry no slash at either end, but this is the single owner of the
+ * rule and public, so it normalises rather than trusting its callers: a stray slash
+ * on either side is stripped instead of doubled.
+ */
+export function absoluteUrl(path: string): string {
+  const trimmed = path.replace(/^\/+|\/+$/g, '');
+  return trimmed ? `${SITE_CONFIG.baseUrl}/${trimmed}/` : `${SITE_CONFIG.baseUrl}/`;
 }
 
 /** Home path of a locale — '' for German, the locale prefix otherwise. Always defined, unlike urlPathFor. */

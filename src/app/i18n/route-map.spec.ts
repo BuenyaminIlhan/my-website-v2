@@ -1,10 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { slugFor, urlPathFor, urlPathsFor, blogArticleUrlPath, blogArticleUrlPaths } from './route-map';
+import { absoluteUrl, slugFor, urlPathFor, urlPathsFor, blogArticleUrlPath, blogArticleUrlPaths } from './route-map';
 import { SUPPORTED_LOCALES } from './translations';
+import { SITE_CONFIG } from '../config/site.config';
 import routesJson from './routes.json';
 import blogRegistry from '../blog/blog-registry.json';
 
 describe('route-map', () => {
+  describe('absoluteUrl', () => {
+    const BASE = SITE_CONFIG.baseUrl;
+
+    it('closes a path with exactly one slash and leaves the root a bare root', () => {
+      expect(absoluteUrl('')).toBe(`${BASE}/`);
+      expect(absoluteUrl('en')).toBe(`${BASE}/en/`);
+      expect(absoluteUrl('blog/website-relaunch-5-anzeichen'))
+        .toBe(`${BASE}/blog/website-relaunch-5-anzeichen/`);
+    });
+
+    it('strips a stray slash on either side rather than doubling it', () => {
+      expect(absoluteUrl('/blog')).toBe(`${BASE}/blog/`);
+      expect(absoluteUrl('blog/')).toBe(`${BASE}/blog/`);
+      expect(absoluteUrl('/')).toBe(`${BASE}/`);
+    });
+  });
+
   describe('urlPathFor', () => {
     it('keeps German at the site root without a locale prefix', () => {
       expect(urlPathFor('home', 'de')).toBe('');
