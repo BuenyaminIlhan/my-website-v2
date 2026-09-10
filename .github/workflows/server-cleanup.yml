@@ -1,0 +1,129 @@
+name: Server cleanup (manual)
+
+# This workflow NEVER runs on its own. Deleting files on the live server is a
+# decision, not a side effect of a merge, so it takes a human pressing the button
+# — and a typed confirmation on top of that. Without the confirmation it only
+# looks and reports.
+#
+# Why it exists at all: the deploy mirrors with `lftp mirror --reverse` and no
+# --delete, so it puts files there and overwrites them but never removes any.
+# Leftovers therefore survive forever. --delete on the deploy would be the easy
+# answer and the wrong one: it would also wipe anything ever uploaded to the
+# server by hand, which cannot be seen from the repository.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type loeschen to actually delete the known leftovers. Anything else only lists them.'
+        required: false
+        default: ''
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    # Two dispatches at once would interleave the deletes and the listings and make
+    # the before/after pair meaningless.
+    concurrency: server-cleanup
+    # Nothing here writes to the repository.
+    permissions:
+      contents: read
+    steps:
+      # Pinned to a commit SHA rather than a moving tag: this repository is public
+      # and this workflow carries SFTP credentials that can delete inside the
+      # document root. Update SHA and comment together.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      # The leftover report at the end compares the built site against the server,
+      # so the build has to exist. Same command the deploy uses.
+      - name: Build
+        run: npm run build
+
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      # --env-password keeps the password out of every URL lftp prints. It prints
+      # fully-qualified sftp://user:password@host URLs for what a dry run would do,
+      # and percent-encodes the password on the way, so GitHub's secret masking no
+      # longer recognises it — and this repository is public. The sed filter below
+      # is the second line of defence, not the first.
+      # net:max-retries 3 because lftp retries up to a thousand times by default,
+      # which combined with `|| true` would spin for hours and still look green.
+      - name: What is there now
+        timeout-minutes: 5
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; cls -l /website/manifest.tr.json; cls -l /website/assets/img/Badeo.webp; cls -ld /website/tr; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
+
+      # Three paths written out in full, no wildcards. -f is kept so that a second
+      # run does not go red on an already-deleted file — not because it is needed to
+      # continue the chain (lftp's cmd:fail-exit defaults to no).
+      # Read this before trusting a green tick: `rm -f` prints NOTHING and exits 0
+      # whether the file was deleted, was already gone, or could not be deleted for
+      # lack of permission. Nothing in this workflow asserts that anything vanished.
+      # The listing after this step is the only proof, and a human has to read it.
+      - name: Delete the known leftovers
+        if: inputs.confirm == 'loeschen'
+        timeout-minutes: 5
+        # Two things are needed to make a broken connection show up as a red step,
+        # and neither works alone.
+        # 1. shell: bash gives this step pipefail, which the default `bash -e` does
+        #    not — without it the `| sed` pipe throws lftp's exit status away.
+        # 2. The chain has to END on a command whose failure is the session's
+        #    failure. lftp returns the status of the LAST command only, and `rm -f`
+        #    stays quiet and returns 0 even for "connection refused" and "login
+        #    incorrect". Hence the closing `cls -ld /website`: the document root
+        #    always exists, so it can never go red for a benign reason, but an
+        #    unreachable host or a rejected login makes it — and the step — fail.
+        # What this still does NOT catch: permission denied on one individual file.
+        # For that, read the listing in the next step. Nothing here asserts it.
+        shell: bash
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; rm -f /website/manifest.tr.json; rm -f /website/assets/img/Badeo.webp; rm -r -f /website/tr; cls -ld /website; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g'
+
+      - name: What is there afterwards
+        # always(), so that a failed delete does not skip the very listing that would
+        # show what state the server is in.
+        if: always() && inputs.confirm == 'loeschen'
+        timeout-minutes: 5
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; cls -l /website/manifest.tr.json; cls -l /website/assets/img/Badeo.webp; cls -ld /website/tr; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
+
+      # Leftover radar. --dry-run executes nothing; it prints what a deleting
+      # mirror WOULD remove, which is the only way to see what else has piled up
+      # on the server over the years. Read the list, do not fear it: everything
+      # the site needs comes from the build and is therefore not in it.
+      # DO NOT ever remove --dry-run from the line below. This is the only step
+      # carrying --delete and the only one without a confirmation gate; without
+      # --dry-run it becomes a full mirror-delete of the document root.
+      # Note also: it compares against a build of whatever ref was dispatched, so a
+      # list produced from a stale branch is misleading. Do not act on one.
+      - name: Report what is on the server but not in the build (nothing is deleted)
+        timeout-minutes: 10
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          echo "DRY RUN — the lines below are what a deleting mirror would do. Nothing is executed."
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror --reverse --delete --dry-run dist/my-website-v2/browser/ /website/; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
