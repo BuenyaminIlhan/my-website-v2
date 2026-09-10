@@ -24,10 +24,16 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      # Cheap, dependency-free, and the only automatic run this guard gets:
+      # Cheap, dependency-free, and the only automatic run these guards get:
       # guardian's chain cannot be extended without replacing it wholesale.
       - name: Check light-mode contrast
         run: npm run test:contrast
+
+      # The module these tests cover decides which files the manual cleanup workflow
+      # deletes from this server. Running them here means a regression turns a push red,
+      # rather than being discovered at the moment someone dispatches a deletion.
+      - name: Check the stale-bundle logic
+        run: npm run test:sweep
 
       - name: Build
         run: npm run build

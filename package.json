@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:layout": "node scripts/layout-check.mjs",
-    "test:contrast": "node scripts/contrast-check.mjs"
+    "test:contrast": "node scripts/contrast-check.mjs",
+    "test:sweep": "node --test scripts/stale-bundles.test.mjs"
   },
   "private": true,
   "packageManager": "npm@11.12.0",
