@@ -17,12 +17,22 @@ on:
         description: 'Type loeschen to actually delete the known leftovers. Anything else only lists them.'
         required: false
         default: ''
+      sweep_bundles:
+        description: 'Type alte-bundles-loeschen to ALSO remove hashed bundles of older deploys. Only from main, only when no deploy is in flight. Directories the build no longer produces are OUT OF SCOPE and pages they still serve WILL break — check the report first.'
+        required: false
+        default: ''
 
 jobs:
   cleanup:
     runs-on: ubuntu-latest
-    # Two dispatches at once would interleave the deletes and the listings and make
-    # the before/after pair meaningless.
+    # Deliberately NOT shared with deploy.yml, and this is a trade, not a free win:
+    # sharing a group would serialise the two, but GitHub keeps only ONE pending run per
+    # group and cancels the previous one, so a queued production deploy could be dropped
+    # in silence by the next dispatch here.
+    # Be clear about what that leaves: NOTHING stops a deploy from running alongside this
+    # workflow. What protects the site is not scheduling, it is the served-index.html
+    # comparison before the removals and again afterwards, plus the check that nothing
+    # about to be deleted is referenced by any document the server currently serves.
     concurrency: server-cleanup
     # Nothing here writes to the repository.
     permissions:
@@ -127,3 +137,386 @@ jobs:
         run: |
           echo "DRY RUN — the lines below are what a deleting mirror would do. Nothing is executed."
           lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; mirror --reverse --delete --dry-run dist/my-website-v2/browser/ /website/; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
+
+      # ---------------------------------------------------------------------------
+      # Removing hashed bundles of older deploys. Every deploy leaves a full set
+      # behind, because the mirror never deletes; on 2026-09-10 that was 225 files.
+      #
+      # Three designs were rejected on the way here, each by a cold review, and the
+      # reasons are worth keeping because they are not obvious:
+      #
+      #  - `mirror --reverse --delete` is a two-way sync, not a pruner. Dispatched from
+      #    an old ref it would upload that ref's build over the live site AND delete
+      #    what the live release added: an unattended rollback nothing would report.
+      #  - A guard counting files proves nothing here: public/ alone contributes 124
+      #    files, so a build with no JS or CSS at all sails past a "at least 100" check.
+      #  - Asserting that this build's bundles are PRESENT on the server proves only
+      #    that the server CONTAINS this build. Since nothing is ever deleted, every
+      #    release ever deployed is still present, so any old commit passes — and then
+      #    everything newer is classified as stale. Re-running an old cleanup run from
+      #    the Actions UI was enough to trigger it.
+      #
+      # What is left is the only correlation that actually holds: index.html is NOT
+      # hashed and is overwritten by every deploy, so if the served one is byte-for-byte
+      # the built one, the server is serving exactly this build. That is checked before
+      # deleting and again afterwards.
+      #
+      # The list itself is computed by scripts/stale-bundles.mjs, which has its own
+      # tests — the safety argument must not live only inside a YAML block where no one
+      # can re-run it.
+      #
+      # NOT covered, deliberately and explicitly: directories the build no longer
+      # produces. If any exist, they serve old HTML that loads old bundles, and this
+      # sweep will break those pages. The report step above lists them; clear them
+      # first. An earlier attempt to gate on that automatically was removed because it
+      # read the report's output and failed OPEN whenever the report itself had failed.
+      # ---------------------------------------------------------------------------
+      - name: Test the stale-list logic before trusting it
+        if: inputs.sweep_bundles == 'alte-bundles-loeschen'
+        run: npm run test:sweep
+
+      - name: Guard - only from main, and only with a build that ships bundles
+        if: inputs.sweep_bundles == 'alte-bundles-loeschen'
+        shell: bash
+        run: |
+          # Fails loudly rather than skipping quietly: a wrong-branch dispatch must
+          # look like an error, not like a sweep that found nothing.
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "Dispatched from $GITHUB_REF. Refusing - see the header comment."
+            exit 1
+          fi
+          # A re-run replays the original inputs and SHA, which is one of the ways the
+          # rejected designs could delete the live release. The served-index.html check
+          # below already closes it; this makes the intent visible rather than implied.
+          if [ "${GITHUB_RUN_ATTEMPT:-1}" != "1" ]; then
+            echo "This is re-run attempt $GITHUB_RUN_ATTEMPT of an earlier dispatch, so it"
+            echo "builds an older commit. Dispatch a fresh run instead. Refusing."
+            exit 1
+          fi
+          DIR=dist/my-website-v2/browser
+          if [ ! -s "$DIR/index.html" ]; then
+            echo "index.html missing or empty - refusing."; exit 1
+          fi
+          REF=$(grep -oE 'main-[A-Z0-9]+\.js' "$DIR/index.html" | head -1)
+          if [ -z "$REF" ]; then
+            echo "index.html references no main bundle - refusing."; exit 1
+          fi
+          if [ ! -s "$DIR/$REF" ]; then
+            echo "index.html references $REF, which the build does not contain - refusing."; exit 1
+          fi
+          if ! ls "$DIR"/styles-*.css >/dev/null 2>&1; then
+            echo "No styles bundle in the build - refusing."; exit 1
+          fi
+          echo "Build ships $REF and a styles bundle."
+
+      - name: Work out which bundles are stale, then remove exactly those
+        id: sweep
+        if: inputs.sweep_bundles == 'alte-bundles-loeschen'
+        timeout-minutes: 10
+        shell: bash
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          DIR=dist/my-website-v2/browser
+          T="$RUNNER_TEMP"
+          RUN='set sftp:auto-confirm yes; set net:max-retries 3;'
+          mkdir -p "$T/served"
+          # Created up front so that the verify step can always read it, whichever way
+          # this step ends. Without that, a refusal at check A or a clean "nothing
+          # stale" exit left the file absent and killed the verify step mid-pipeline,
+          # with no message — the same silent-abort shape as the guard removed earlier.
+          : > "$T/referenced.txt"
+
+          # Three independent checks, in one lftp session so the window between them is
+          # as small as it can be. None of them is sufficient alone:
+          #
+          #  A. The served index.html must be byte-identical to the built one. It is not
+          #     hashed and every deploy overwrites it, so equality identifies WHICH
+          #     release the root document comes from. ("This build's bundles are present"
+          #     does not: nothing is ever deleted up there, so every past release is
+          #     still present and any old commit would pass.)
+          #  B. Every bundle this build ships must already be on the server. Equality in
+          #     A says which release index.html belongs to, not that its deploy FINISHED
+          #     — a deploy dying after index.html but before the bundles satisfies A.
+          #  C. Nothing on the delete list may be referenced by any document the server
+          #     currently serves. Each prerendered route is its own file with its own
+          #     bundle references, and a partial deploy can leave those older than the
+          #     root document. This is the check that directly answers "will this break
+          #     something that is live".
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" \
+            -e "$RUN get /website/index.html -o $T/served-index.html; cls -1 /website/; quit" 2>&1 \
+            | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' \
+            | sed -E 's#^/website/##' > "$T/server-listing.txt"
+
+          if [ ! -s "$T/served-index.html" ]; then
+            echo "Could not fetch the served index.html. Refusing."
+            exit 1
+          fi
+          if [ ! -s "$T/server-listing.txt" ]; then
+            echo "The server listing came back empty. That is what a dead connection looks"
+            echo "like too, so this is not treated as 'nothing to do'. Refusing."
+            exit 1
+          fi
+
+          # A
+          if ! cmp -s "$T/served-index.html" "$DIR/index.html"; then
+            echo "The index.html on the server is not the one this build produced, so the"
+            echo "server is serving a different release. Everything this build does not"
+            echo "ship would look stale, including what is live. Deploy main and run again."
+            echo "Served: $(grep -oE 'main-[A-Z0-9]+\.js' "$T/served-index.html" | head -1)"
+            echo "Built : $(grep -oE 'main-[A-Z0-9]+\.js' "$DIR/index.html" | head -1)"
+            echo "If the deployed commit IS this one, the difference is dependency drift,"
+            echo "not a missing deploy: both workflows install without a lockfile-exact"
+            echo "step, so two runs of the same commit can hash differently."
+            exit 1
+          fi
+
+          # B
+          node scripts/stale-bundles.mjs --missing "$T/server-listing.txt" "$DIR" > "$T/absent.txt"
+          if [ -s "$T/absent.txt" ]; then
+            echo "The server is missing bundles this build ships:"
+            cat "$T/absent.txt"
+            echo "index.html matches, so a deploy uploaded the root document and then did"
+            echo "not finish. Re-run the deploy before sweeping. Refusing."
+            exit 1
+          fi
+
+          node scripts/stale-bundles.mjs "$T/server-listing.txt" "$DIR" > "$T/stale.txt"
+          echo "Bundles on the server   : $(grep -cE '^(main|chunk|polyfills|styles|scripts)-[A-Z0-9]+\.(js|css)$' "$T/server-listing.txt" || true)"
+          echo "Shipped by this build   : $(ls -1 "$DIR" | grep -cE '^(main|chunk|polyfills|styles|scripts)-[A-Z0-9]+\.(js|css)$' || true)"
+          echo "Stale, to be removed    : $(wc -l < "$T/stale.txt")"
+          echo "--- the exact list ---"
+          cat "$T/stale.txt"
+
+          if [ ! -s "$T/stale.txt" ]; then
+            echo "Nothing stale. Done."
+            touch "$T/nothing-stale.flag"
+            exit 0
+          fi
+
+          # C — fetch every route document the server holds for this build's routes and
+          # collect the bundle names they reference. A handful of small transfers, and
+          # the only check that looks at what visitors actually load.
+          #
+          # Two things it does NOT cover, so nobody reads more into it than it says:
+          #  - documents the server serves that this build does not produce. The list
+          #    comes from the build, so C inherits the same blind spot the header
+          #    declares out of scope.
+          #  - lazy chunk names, which live inside main-<HASH>.js rather than in the
+          #    HTML. In practice that does not bite: a document from an older release
+          #    also references that release's main-<HASH>.js, which is on the delete
+          #    list and therefore caught here.
+          cd "$DIR" && find . -name index.html | sed 's#^\./##' | sort > "$T/docs.txt"
+          cd "$GITHUB_WORKSPACE"
+
+          # The names below are interpolated into an lftp command string. They come from
+          # the repository rather than the server, but "trusted input" is a claim, not a
+          # mechanism — so it is enforced instead of assumed.
+          if grep -qvE '^[A-Za-z0-9._/-]+$' "$T/docs.txt"; then
+            echo "A route path contains a character this step will not put into a command"
+            echo "string:"
+            grep -vE '^[A-Za-z0-9._/-]+$' "$T/docs.txt"
+            exit 1
+          fi
+
+          GETS="$RUN"
+          while read -r doc; do
+            GETS="$GETS get /website/$doc -o $T/served/$(echo "$doc" | tr '/' '_');"
+          done < "$T/docs.txt"
+          GETS="$GETS quit"
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "$GETS" 2>&1 \
+            | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
+
+          # A partial fetch would narrow this check without saying so — the same shape as
+          # the guard removed earlier. Count instead of hoping.
+          EXPECTED=$(wc -l < "$T/docs.txt")
+          GOT=$(find "$T/served" -type f | wc -l)
+          echo "Route documents expected: $EXPECTED, fetched: $GOT"
+          if [ "$GOT" -ne "$EXPECTED" ]; then
+            echo "Not every served document could be fetched, so this check would only"
+            echo "cover part of the site. Refusing."
+            exit 1
+          fi
+
+          # Counting files catches a fetch that never happened, not one that died halfway.
+          # Angular puts the script tags at the end of the body, so a truncated document
+          # passes the count and silently contributes no references. Every real document
+          # of this site names a main bundle, so assert exactly that, per file.
+          for doc in "$T/served"/*; do
+            if ! grep -qE 'main-[A-Z0-9]+\.js' "$doc"; then
+              echo "Fetched but incomplete (no main bundle reference): $(basename "$doc")"
+              echo "A truncated document would narrow the next check without saying so."
+              exit 1
+            fi
+          done
+
+          # || true so that an empty result reaches the message below instead of aborting
+          # the step mutely under set -e.
+          cat "$T/served"/* 2>/dev/null \
+            | grep -oE '(main|chunk|polyfills|styles|scripts)-[A-Z0-9]+\.(js|css)' \
+            | sort -u > "$T/referenced.txt" || true
+          echo "Bundle names referenced by served documents: $(wc -l < "$T/referenced.txt")"
+
+          if [ ! -s "$T/referenced.txt" ]; then
+            echo "No served document referenced any bundle. That cannot be right for this"
+            echo "site, so the fetches probably failed. Refusing."
+            exit 1
+          fi
+
+          # Subset, not intersection: every name a served document references must be one
+          # this build ships. Stronger, and it also catches a site that is already broken
+          # (a document referencing a bundle that is not on the server at all).
+          UNKNOWN=0
+          while read -r ref; do
+            if ! grep -qxF "$ref" <(ls -1 "$DIR"); then
+              echo "Referenced by a served document but NOT shipped by this build: $ref"
+              UNKNOWN=$((UNKNOWN + 1))
+            fi
+          done < "$T/referenced.txt"
+          if [ "$UNKNOWN" -gt 0 ]; then
+            echo "Served documents reference $UNKNOWN file(s) this build does not ship."
+            echo "Either an older document is still up there or the site is already"
+            echo "broken. Either way, not a state to delete in. Refusing."
+            exit 1
+          fi
+          echo "Every bundle any served document references is one this build ships."
+
+          # One rm per name, every name already validated by the anchored pattern.
+          # The chain ends on cls so that an unreachable host or a rejected login fails
+          # the step - rm -f itself is silent and returns 0 for everything.
+          # The marker is what lets the verify step tell "this run deleted things" from
+          # "this run refused and deleted nothing".
+          touch "$T/removed.flag"
+          CMDS="$RUN"
+          while read -r f; do
+            CMDS="$CMDS rm -f /website/$f;"
+          done < "$T/stale.txt"
+          CMDS="$CMDS cls -ld /website; quit"
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "$CMDS" 2>&1 \
+            | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g'
+
+      - name: Verify what the sweep left behind
+        # always(), not !cancelled(): a run cancelled mid-removal is exactly when the
+        # server state is unknown and worth reporting. Skipped only when the sweep never
+        # ran at all.
+        if: always() && inputs.sweep_bundles == 'alte-bundles-loeschen' && steps.sweep.outcome != 'skipped'
+        timeout-minutes: 10
+        shell: bash
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          # Asserts in both directions, because only one of them is obvious: "no stale
+          # name left" is equally satisfied by a truncated listing and by a dead
+          # connection. Absence is never accepted as proof on its own.
+          DIR=dist/my-website-v2/browser
+          T="$RUNNER_TEMP"
+          RUN='set sftp:auto-confirm yes; set net:max-retries 3;'
+
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" \
+            -e "$RUN get /website/index.html -o $T/after-index.html; cls -1 /website/; quit" 2>&1 \
+            | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' \
+            | sed -E 's#^/website/##' > "$T/after.txt"
+
+          if [ ! -s "$T/after.txt" ]; then
+            echo "The listing came back empty — indistinguishable from a dead connection."
+            exit 1
+          fi
+          # A failed fetch must be an error, not a skipped comparison. The earlier
+          # orphaned-directory guard was removed for exactly this shape of bug.
+          if [ ! -s "$T/after-index.html" ]; then
+            echo "Could not fetch the served index.html afterwards, so nothing below can"
+            echo "be called verified."
+            exit 1
+          fi
+
+          # THE question this step exists to answer: is anything the server serves now
+          # missing from the server? Asked against the SERVED document, so it holds even
+          # when a deploy landed meanwhile and the served release is no longer ours.
+          # Did this run actually remove anything? Without the marker the sweep refused
+          # somewhere and deleted nothing, and every message below has to say so — a
+          # refusal reported as a deletion is read during an incident.
+          if [ -f "$T/removed.flag" ]; then
+            # "attempted", not "deleted": rm -f is silent and returns 0 even for
+            # permission denied, so the only evidence of what actually went is the
+            # still-stale count below.
+            DELETED="this run attempted to remove $(wc -l < "$T/stale.txt" 2>/dev/null || echo '?') file(s)"
+          elif [ -f "$T/nothing-stale.flag" ]; then
+            DELETED="this run removed nothing because there was nothing stale to remove"
+          else
+            DELETED="this run removed NOTHING (the sweep refused before reaching the removals)"
+          fi
+          echo "$DELETED"
+
+          # Everything the root document references must be on the server, and so must
+          # everything the 19 route documents referenced before the sweep. The pre-check
+          # already computed the latter in this same job.
+          grep -oE '(main|chunk|polyfills|styles|scripts)-[A-Z0-9]+\.(js|css)' "$T/after-index.html" \
+            | sort -u > "$T/served-refs.txt" || true
+          if [ ! -s "$T/served-refs.txt" ]; then
+            echo "The served index.html names no bundle at all. It was fetched and is not"
+            echo "empty, so this is a garbled transfer, not a valid state — refusing to"
+            echo "call anything verified."
+            exit 1
+          fi
+          # referenced.txt is created at the top of the sweep step, so this cannot die
+          # here on a run where check C never got that far.
+          cat "$T/served-refs.txt" "$T/referenced.txt" | sort -u > "$T/must-exist.txt"
+          BROKEN=0
+          while read -r ref; do
+            if ! grep -qxF "$ref" "$T/after.txt"; then
+              echo "REFERENCED BY A SERVED DOCUMENT BUT MISSING: $ref"
+              BROKEN=$((BROKEN + 1))
+            fi
+          done < "$T/must-exist.txt"
+          if [ "$BROKEN" -gt 0 ]; then
+            if [ -f "$T/removed.flag" ]; then
+              echo "The live site references files that are not on the server, and this run"
+              echo "did remove files. Assume this run caused it. Push main to restore."
+              echo "--- what this run deleted ---"
+              cat "$T/stale.txt" 2>/dev/null || echo "(delete list unavailable)"
+            else
+              echo "The live site references files that are not on the server — but this"
+              echo "run deleted nothing, so the breakage was there before it started."
+              echo "Most likely an unfinished deploy. Push main to restore."
+            fi
+            exit 1
+          fi
+
+          if ! cmp -s "$T/after-index.html" "$DIR/index.html"; then
+            echo "A different release is being served now than when this run started —"
+            echo "most likely a deploy landed in between. The check above already"
+            echo "confirmed that what IS served is intact, so the site is fine; the"
+            echo "stale/shipped numbers below simply refer to a build that is no longer"
+            echo "the live one."
+            echo "Served now: $(grep -oE 'main-[A-Z0-9]+\.js' "$T/after-index.html" | head -1)"
+            echo "This run   : $(grep -oE 'main-[A-Z0-9]+\.js' "$DIR/index.html" | head -1)"
+            echo "$DELETED"
+            cat "$T/stale.txt" 2>/dev/null || true
+            exit 0
+          fi
+
+          node scripts/stale-bundles.mjs --missing "$T/after.txt" "$DIR" > "$T/gone.txt"
+          node scripts/stale-bundles.mjs "$T/after.txt" "$DIR" > "$T/still-stale.txt"
+
+          echo "Bundles this build ships that are GONE from the server: $(wc -l < "$T/gone.txt")"
+          echo "Bundles still there that this build does not ship     : $(wc -l < "$T/still-stale.txt")"
+
+          if [ -s "$T/gone.txt" ]; then
+            echo "--- removed but needed ---"
+            cat "$T/gone.txt"
+            echo "The sweep removed something the site needs. Push main to restore it."
+            exit 1
+          fi
+          if [ -s "$T/still-stale.txt" ]; then
+            echo "--- still there ---"
+            cat "$T/still-stale.txt"
+            echo "The removal did not finish. Not treating this run as clean."
+            exit 1
+          fi
+          echo "Everything this build ships is present, and no bundle matching the"
+          echo "pattern is left over. Older non-esbuild shapes, if any exist, are out"
+          echo "of this sweep's scope by design."
