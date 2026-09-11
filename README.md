@@ -63,6 +63,32 @@ splitting a component's SCSS into `@use` partials changes nothing (they inline i
 same output), and adding a second `styleUrls` entry would split the number without removing
 a single byte of CSS. Neither is a way to get under the limit — only less CSS is.
 
+### Why the SSR packages are devDependencies
+
+`@angular/platform-server` and `@angular/ssr` sit in **devDependencies**, not
+`dependencies`, which is not where `ng new` puts them. The reason is this project's output
+mode:
+
+- `angular.json` sets `"outputMode": "static"`. The build produces `dist/my-website-v2/browser/`
+  plus `prerendered-routes.json` and **no server bundle** — there is no `server/` directory
+  to deploy.
+- `.github/workflows/deploy.yml` mirrors only `dist/my-website-v2/browser/` to the host,
+  which serves plain files. No Node process runs in production.
+- The only import of either package is `provideServerRendering` in
+  `src/app/app.config.server.ts`, which runs during **prerendering on the CI runner**.
+  Nothing imports `@angular/ssr` at all.
+
+So both are build tools here, and `dependencies` was simply the wrong shelf. The move was
+prompted by `npm audit --omit=dev` flagging two high-severity **SSR runtime** advisories in
+`@angular/platform-server` (GHSA-v3p8-whq6-r5jg, GHSA-f6mr-pjwc-34m4) on 2026-09-11, for
+which no patched 21.x exists — only `22.2.0-next.*`. Neither advisory is reachable from a
+static build.
+
+**This is a classification fix, not a way to silence the audit.** If SSR is ever switched
+on here, these packages belong back in `dependencies` and the advisories become real and
+must be dealt with. `@angular/ssr` had to move too: it keeps `platform-server` as a peer
+dependency, so leaving it behind kept the finding alive.
+
 ## Running unit tests
 
 To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
@@ -70,6 +96,36 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 ```bash
 ng test
 ```
+
+### Button style guard (`npm run test:buttons`)
+
+`scripts/button-style-check.mjs` is not an invariant check like the layout and contrast
+guards — there is no "correct" padding it could assert. It compares **two builds**:
+
+```bash
+node scripts/button-style-check.mjs sweep <baseline-dist>/browser before.json
+node scripts/button-style-check.mjs sweep dist/my-website-v2/browser after.json
+node scripts/button-style-check.mjs diff before.json after.json
+```
+
+Run it whenever the shared button CSS in `styles.scss` is touched. It walks every
+prerendered route in both themes, resting **and** with `:hover` forced through CDP, and
+reports any computed property that moved.
+
+Two things it covers that reading the diff does not:
+
+- **`:hover`.** A component rule only wins the properties it *declares*. The wizard's small
+  ghost button declares no hover `transform`, so the global base silently handed it a 2px
+  jump its own `transition` does not even list. A sweep of resting state alone calls that
+  "identical".
+- **The wizard's success screen.** It appears only after a successful submit, so it is on no
+  prerendered route — and it is exactly where dead CSS was removed. The guard injects a
+  stand-in into the real component subtree carrying its real `_ngcontent` attribute (which
+  is what decides whether component rules apply at all), and **fails** if that injection
+  never succeeds rather than skipping it quietly.
+
+Computed styles, not pixels: a difference this guard cannot see could still show in a
+screenshot.
 
 ## Running end-to-end tests
 

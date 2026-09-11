@@ -119,67 +119,6 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
   overflow: hidden;
 }
 
-.btn-submit {
-  align-self: flex-start;
-  padding: 14px 40px;
-  background: var(--accent);
-  color: var(--bg);
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: background 150ms, transform 150ms;
-
-  &:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-2px); }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
-}
-
-.error-msg {
-  font-size: 0.85rem;
-  color: #ff4444;
-  font-family: "Overpass", sans-serif;
-}
-
-.success-msg {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-  padding: 3rem;
-  background: var(--surface);
-  border: 1px solid var(--accent);
-
-  .success-icon { font-size: 2rem; color: var(--accent); }
-
-  h3 {
-    font-family: "Syne", sans-serif;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text);
-  }
-
-  p { font-family: "Overpass", sans-serif; color: var(--muted); }
-
-  .btn-ghost {
-    padding: 10px 28px;
-    border: 1px solid var(--border-2);
-    color: var(--muted);
-    background: none;
-    font-family: "Syne", sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: border-color 150ms, color 150ms;
-
-    &:hover { border-color: var(--accent); color: var(--accent); }
-  }
-}
-
 /* 1000, not 900: `1fr 1.4fr` has no minmax(0, …), so both tracks sit on their
    min-content floor and the 6rem gap tips the sum over the available width.
    Measured: 346 + 333 + 96 = 775 in a 757px content box at 901px, an 18px
