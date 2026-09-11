@@ -234,7 +234,15 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
 
   p { font-family: "Overpass", sans-serif; color: var(--muted); }
 
+  /* Shares the class name with the global ghost button but not a single one
+     of its values — this one is small, 1px-bordered and does not lift. The
+     two cancelling declarations are what keeps it that way: the global base
+     would otherwise reach it through the properties this rule does not
+     mention, which is exactly how it picked up an unsprung 2px hover jump
+     and `display: flex` once. A rename would be the cleaner answer; that is
+     a separate job, because the class is also in the template. */
   .btn-ghost {
+    display: inline-block;
     padding: 10px 28px;
     border: 1px solid var(--border-2);
     color: var(--muted);
@@ -247,7 +255,7 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
     cursor: pointer;
     transition: border-color 150ms, color 150ms;
 
-    &:hover { border-color: var(--accent); color: var(--accent); }
+    &:hover { border-color: var(--accent); color: var(--accent); transform: none; }
   }
 }
 

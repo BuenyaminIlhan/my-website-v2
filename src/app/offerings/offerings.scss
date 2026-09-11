@@ -310,22 +310,6 @@
   gap: 1.5rem;
   flex-wrap: wrap;
 
-  .btn-primary {
-    display: inline-block;
-    padding: 0.9rem 2rem;
-    background: var(--accent);
-    color: var(--bg);
-    font-family: "Overpass", sans-serif;
-    font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 200ms ease;
-
-    &:hover { background: var(--accent-h); }
-  }
-
   .mail-hint {
     font-family: "Overpass", sans-serif;
     font-size: 0.9rem;

@@ -286,3 +286,88 @@ app-root {
     &:hover { opacity: 0.8; }
   }
 }
+
+/* Button base — one definition for a shape that was written out nine times
+   across eight component stylesheets: six `.btn-primary` and three
+   `.btn-ghost`, one of the latter already dead code in contact.scss.
+   The wizard's small ghost button is deliberately NOT in that count — it
+   shares the class name and nothing else, and treating it as a fourth copy
+   is precisely the mistake that shipped a hover bug here once.
+   Kept global on purpose: Sass `@mixin` and `@extend` both duplicate per
+   output file, so only a real global class removes the copies instead of
+   moving them.
+
+   Components keep ONLY their genuine deltas. Angular's emulated encapsulation
+   appends an attribute to every component selector (`.btn-primary[_ngcontent-x]`,
+   0-2-0), so a component rule outranks these 0-1-0 ones.
+
+   Read that precisely, because the loose version of it shipped a bug: a
+   component only wins the properties it actually DECLARES. Everything it
+   leaves unmentioned now cascades in from here — including `:hover` state and
+   `display`. The wizard's small ghost button declared neither, and picked up
+   an unsprung 2px hover lift and `display: flex` from this file until it was
+   given `transform: none` and `display: inline-block` to say no with.
+   So: before adding a property here, check every element that carries the
+   class, not just the ones listed below.
+
+   Two further ways a rule can outrank these, neither of them the attribute
+   above: a component's element selector compiles to `a[_ngcontent-x]` (0-1-1)
+   and wins on specificity; and `.btn-compact` below weighs the same 0-1-0 as
+   `.btn-primary`, so only its later position in this file lets it win. Keep
+   that order.
+
+   `.btn-compact` is the Overpass variant that blog, offerings and the service
+   pages had written out identically; it is applied as a second class word in
+   those three templates. It follows `.btn-primary` here because both weigh
+   0-1-0 and order is what decides between them. */
+/* No `align-items` here on purpose: not-found's two buttons never had it.
+   Putting it in the base flipped their computed value from `normal` to
+   `center`. It stays with hero and about-me, which did set it.
+   That flip was found by `npm run test:buttons` (scripts/button-style-check.mjs),
+   which sweeps every button on every prerendered route in both themes, resting
+   and hovered, and diffs two builds. Run it against a baseline build before
+   changing anything in this block. */
+.btn-primary {
+  display: inline-flex;
+  padding: 14px 28px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 150ms, transform 150ms;
+
+  &:hover { background: var(--accent-h); transform: translateY(-2px); }
+}
+
+.btn-ghost {
+  display: inline-flex;
+  padding: 14px 28px;
+  border: 2px solid var(--border-2);
+  color: var(--text);
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 150ms, color 150ms, transform 150ms;
+
+  &:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+}
+
+/* The lift on hover is deliberately cancelled: none of the three Overpass
+   buttons ever had it, and inheriting it here would be a visible change. */
+.btn-compact {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  font-family: "Overpass", sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  transition: background 200ms ease;
+
+  &:hover { transform: none; }
+}

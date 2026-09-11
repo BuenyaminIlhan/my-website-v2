@@ -172,18 +172,11 @@
   }
 }
 
+/* Shape comes from .btn-primary.btn-compact in styles.scss; the gap to the
+   paragraph above is all that is left. This stylesheet serves BOTH blog
+   components (blog-article.ts and blog-index.ts) — the class only appears in
+   blog-article.html, so the rule is emitted into the index chunk without ever
+   matching there. */
 .btn-primary {
-  display: inline-block;
   margin-top: 0.5rem;
-  padding: 0.9rem 2rem;
-  background: var(--accent);
-  color: var(--bg);
-  font-family: "Overpass", sans-serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: background 200ms ease;
-
-  &:hover { background: var(--accent-h); }
 }
