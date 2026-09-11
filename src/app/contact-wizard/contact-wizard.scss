@@ -172,14 +172,17 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
   gap: 1rem;
 }
 
-.btn-back {
-  padding: 12px 28px;
+/* The wizard's two quiet buttons: "back" between the steps and "send another"
+   on the success screen. They differ in padding and size and in nothing else.
+   Deliberately NOT global — both belong to this component alone, and a global
+   class is exactly the trap that .btn-quiet was renamed to escape. */
+.btn-back,
+.btn-quiet {
   border: 1px solid var(--border-2);
   color: var(--muted);
   background: none;
   font-family: "Syne", sans-serif;
   font-weight: 700;
-  font-size: 0.85rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
@@ -188,97 +191,46 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
   &:hover { border-color: var(--accent); color: var(--accent); }
 }
 
+.btn-back {
+  padding: 12px 28px;
+  font-size: 0.85rem;
+}
+
+/* Pulled out of .success-msg so it can share the rule above — two nesting
+   levels cannot sit in one grouped selector without dragging two different
+   specificities along. Angular appends [_ngcontent] to EVERY compound, so the
+   old selector weighed 0-4-0 (.success-msg[a] .btn-quiet[a]) and the new one
+   weighs 0-2-0. Nothing else targets the class, and the sweep proves the
+   computed values did not move. */
+.btn-quiet {
+  padding: 10px 28px;
+  font-size: 0.8rem;
+}
+
+/* Shape and states come from the shared .btn-submit/.btn-next in styles.scss;
+   the wizard's pair is tighter than the site check's. */
 .btn-next,
 .btn-submit {
   padding: 12px 36px;
-  background: var(--accent);
-  color: var(--bg);
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
   font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: background 150ms, transform 150ms;
-
-  &:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-2px); }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
+/* The mailto fallback link is the only thing the site check's copy lacks. */
 .error-msg {
-  font-size: 0.85rem;
-  color: #ff4444;
-  font-family: "Overpass", sans-serif;
-
   a { color: var(--accent); text-decoration: underline; }
 }
 
+/* Layout and type come from the shared .success-msg in styles.scss. This one
+   sits on the raised surface and runs a size larger than the site check's. */
 .success-msg {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
   padding: 3rem;
   background: var(--surface);
-  border: 1px solid var(--accent);
 
-  .success-icon { font-size: 2rem; color: var(--accent); }
-
-  h3 {
-    font-family: "Syne", sans-serif;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text);
-  }
-
-  p { font-family: "Overpass", sans-serif; color: var(--muted); }
-
-  /* Shares the class name with the global ghost button but not a single one
-     of its values — this one is small, 1px-bordered and does not lift. The
-     two cancelling declarations are what keeps it that way: the global base
-     would otherwise reach it through the properties this rule does not
-     mention, which is exactly how it picked up an unsprung 2px hover jump
-     and `display: flex` once. A rename would be the cleaner answer; that is
-     a separate job, because the class is also in the template. */
-  .btn-ghost {
-    display: inline-block;
-    padding: 10px 28px;
-    border: 1px solid var(--border-2);
-    color: var(--muted);
-    background: none;
-    font-family: "Syne", sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: border-color 150ms, color 150ms;
-
-    &:hover { border-color: var(--accent); color: var(--accent); transform: none; }
-  }
+  h3 { font-size: 1.5rem; }
 }
 
 @media (max-width: 560px) {
   .type-grid { grid-template-columns: minmax(0, 1fr); }
   .wizard-progress { gap: 1rem; li .step-label { display: none; } }
   .wizard-progress li.active .step-label { display: inline; }
-}
-
-/* Sits right above the send button, quiet but readable: --muted is the palette
-   role already used for secondary copy, and it clears 4.5:1 in both themes. */
-.privacy-note {
-  margin: 0 0 1rem;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--muted);
-
-  a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  a:hover,
-  a:focus-visible { color: var(--text); }
 }

@@ -84,6 +84,12 @@ form { display: flex; flex-direction: column; gap: 1.25rem; }
   }
 }
 
+/* Still byte-for-byte identical to the wizard's copy, and knowingly left that
+   way: the honeypot and the field shell are form PLUMBING, not shared looks.
+   Globalising `.field`, `label` and `input` would put a rule on three of the
+   most generic names in the codebase, where any future component picks them up
+   by accident — the same shape as the `.btn-ghost` trap. Worth doing only
+   behind names of their own. */
 .hp-field {
   position: absolute !important;
   left: -9999px;
@@ -92,69 +98,24 @@ form { display: flex; flex-direction: column; gap: 1.25rem; }
   overflow: hidden;
 }
 
+/* Shape and states come from the shared .btn-submit in styles.scss; this one
+   stands alone under the form, so it needs the alignment and more air. */
 .btn-submit {
   align-self: flex-start;
   padding: 14px 40px;
-  background: var(--accent);
-  color: var(--bg);
-  font-family: "Syne", sans-serif;
-  font-weight: 700;
   font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: background 150ms, transform 150ms;
-
-  &:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-2px); }
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
-.error-msg {
-  font-size: 0.85rem;
-  color: #ff4444;
-  font-family: "Overpass", sans-serif;
-}
-
+/* Layout and type come from the shared .success-msg in styles.scss. This one
+   sits on the page ground, not the raised surface, and runs a size smaller
+   than the wizard's. */
 .success-msg {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
   padding: 2.5rem;
   background: var(--bg);
-  border: 1px solid var(--accent);
 
-  .success-icon { font-size: 2rem; color: var(--accent); }
-
-  h3 {
-    font-family: "Syne", sans-serif;
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--text);
-  }
-
-  p { font-family: "Overpass", sans-serif; color: var(--muted); }
+  h3 { font-size: 1.4rem; }
 }
 
 @media (max-width: 900px) {
   .check-inner { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-}
-
-/* Sits right above the send button, quiet but readable: --muted is the palette
-   role already used for secondary copy, and it clears 4.5:1 in both themes. */
-.privacy-note {
-  margin: 0 0 1rem;
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: var(--muted);
-
-  a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  a:hover,
-  a:focus-visible { color: var(--text); }
 }

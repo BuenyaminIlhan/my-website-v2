@@ -10,6 +10,11 @@
   --accent:       #ff9900;
   --accent-h:     #ffb033;
   --brand:        #ff9d1f;
+  /* Error text. Dark keeps the original #ff4444 — measured 5.70:1 on --bg and
+     5.41:1 on --surface, which passes. Light needs its own value: the same red
+     reached only 3.07:1 on --bg and 2.83:1 on --surface there, under a message
+     that tells a visitor their enquiry did NOT go out. See body.light below. */
+  --danger:       #ff4444;
   --bg-glass:     rgba(13, 13, 13, 0.92);
   --bg-overlay:   rgba(13, 13, 13, 0.88);
 
@@ -34,6 +39,11 @@ body.light {
   --accent:       #9c5f00;
   --accent-h:     #b06a00;
   --brand:        #a86a0e;
+  /* 5.43:1 on --surface, 5.89:1 on --bg. --surface is the tighter of the two
+     grounds for dark text, so that is the number to keep above 4.5. #c62828
+     would also pass at 4.67:1 and was rejected: 0.17 of slack is gone the next
+     time a surface is nudged. Guarded by scripts/contrast-check.mjs. */
+  --danger:       #b3261e;
   --bg-glass:     rgba(245, 243, 238, 0.92);
   --bg-overlay:   rgba(245, 243, 238, 0.88);
 }
@@ -290,9 +300,10 @@ app-root {
 /* Button base — one definition for a shape that was written out nine times
    across eight component stylesheets: six `.btn-primary` and three
    `.btn-ghost`, one of the latter already dead code in contact.scss.
-   The wizard's small ghost button is deliberately NOT in that count — it
-   shares the class name and nothing else, and treating it as a fourth copy
-   is precisely the mistake that shipped a hover bug here once.
+   The wizard's small quiet button is deliberately NOT in that count — it
+   shared the class name and nothing else, and treating it as a fourth copy is
+   precisely the mistake that shipped a hover bug here once. It is called
+   `.btn-quiet` now, so the trap is gone rather than merely documented.
    Kept global on purpose: Sass `@mixin` and `@extend` both duplicate per
    output file, so only a real global class removes the copies instead of
    moving them.
@@ -304,9 +315,10 @@ app-root {
    Read that precisely, because the loose version of it shipped a bug: a
    component only wins the properties it actually DECLARES. Everything it
    leaves unmentioned now cascades in from here — including `:hover` state and
-   `display`. The wizard's small ghost button declared neither, and picked up
-   an unsprung 2px hover lift and `display: flex` from this file until it was
-   given `transform: none` and `display: inline-block` to say no with.
+   `display`. The wizard's small button declared neither, and picked up an
+   unsprung 2px hover lift and `display: flex` from this file for as long as it
+   was also called `.btn-ghost`. Renaming it to `.btn-quiet` ended that; the two
+   cancelling declarations it needed in the meantime are gone with it.
    So: before adding a property here, check every element that carries the
    class, not just the ones listed below.
 
@@ -370,4 +382,78 @@ app-root {
   transition: background 200ms ease;
 
   &:hover { transform: none; }
+}
+
+/* Form bases — the second half of the same consolidation as the buttons above.
+   `.btn-submit`, `.error-msg` and `.success-msg` were written out in both form
+   components, and a third, unreachable copy sat in contact.scss until it was
+   deleted. Components below keep only their real deltas.
+
+   Same caution as the buttons: a component rule wins only what it DECLARES.
+   Before adding a property here, check every consumer — the wizard
+   (contact-wizard.scss) and the site check (website-check.scss).
+
+   Two of these names are generic enough to catch a future component by
+   accident: `.error-msg` and `.success-msg` would style any element that
+   happens to carry them, and `.btn-next` has exactly ONE consumer today (the
+   wizard) — it sits here only because it shares every value with `.btn-submit`.
+   That is the same shape as the `.btn-ghost` trap one section up. A new form
+   that wants a different look needs its own name, not an override. */
+.btn-submit,
+.btn-next {
+  background: var(--accent);
+  color: var(--bg);
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 150ms, transform 150ms;
+
+  &:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-2px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.error-msg {
+  font-family: "Overpass", sans-serif;
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+.success-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1px solid var(--accent);
+
+  .success-icon { font-size: 2rem; color: var(--accent); }
+
+  h3 {
+    font-family: "Syne", sans-serif;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  p { font-family: "Overpass", sans-serif; color: var(--muted); }
+}
+
+/* The data-protection line under both forms. This one was byte-for-byte
+   identical in contact-wizard.scss and website-check.scss — not a variant, a
+   copy — so nothing stays behind in either component. */
+.privacy-note {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  a:hover,
+  a:focus-visible { color: var(--text); }
 }
