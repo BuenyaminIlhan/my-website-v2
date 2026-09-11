@@ -115,17 +115,47 @@ reports any computed property that moved.
 Two things it covers that reading the diff does not:
 
 - **`:hover`.** A component rule only wins the properties it *declares*. The wizard's small
-  ghost button declares no hover `transform`, so the global base silently handed it a 2px
-  jump its own `transition` does not even list. A sweep of resting state alone calls that
-  "identical".
+  button declared no hover `transform`, so while it was also called `.btn-ghost` the global
+  base silently handed it a 2px jump its own `transition` does not even list. A sweep of
+  resting state alone calls that "identical". The button is `.btn-quiet` now — renaming it
+  is what removed the trap, and `contact-wizard.spec.ts` pins the name so it cannot drift
+  back.
 - **The wizard's success screen.** It appears only after a successful submit, so it is on no
   prerendered route — and it is exactly where dead CSS was removed. The guard injects a
   stand-in into the real component subtree carrying its real `_ngcontent` attribute (which
   is what decides whether component rules apply at all), and **fails** if that injection
   never succeeds rather than skipping it quietly.
 
-Computed styles, not pixels: a difference this guard cannot see could still show in a
-screenshot.
+The stand-ins cover the wizard's `.btn-submit`, `.btn-next`, `.btn-back`, `.error-msg`
+(with its mailto link) and the whole success screen — all of which sit behind a wizard step
+or a successful send and appear on no prerendered route. They hang in a rebuilt
+`.wizard` > `.wizard-nav` chain, because parentage decides `display` through blockification.
+
+**Three limits worth knowing.**
+
+1. The stand-ins carry the *wizard's* encapsulation attribute, so `website-check`'s side of
+   the shared rules is not covered, and neither is the wizard's own `.privacy-note` (it sits
+   behind step 3 — the `.privacy-note` the sweep measures is the site check's). Both were
+   checked by hand; `.privacy-note` has no component-local remainder at all, so the two
+   resolve identically.
+2. Only the properties in the script's `PROPS` list are compared. A value that moves between
+   rules but is not in that list would make the guard report "no differences" about exactly
+   what was lost — extend the list when you move something new.
+3. Computed styles, not pixels: a difference this guard cannot see could still show in a
+   screenshot.
+
+### Contrast guard and `--danger`
+
+`npm run test:contrast` does the WCAG arithmetic on the shipped stylesheets. Since
+2026-09-11 it also covers the **error text**, which both form components used to hard-code
+as `#ff4444`. That passes on the dark ground (5.70:1) and fails on the light one — 3.07:1
+on `--bg`, 2.83:1 on `--surface`, under the one message that tells a visitor their enquiry
+did *not* go out. It is now the `--danger` token: `#ff4444` in `:root`, `#b3261e` in
+`body.light` (5.43:1 on `--surface`, 5.89:1 on `--bg`).
+
+The guard fails if the token disappears, if the shared `.error-msg` rule stops painting
+from it, or if either form component writes a literal colour for `.error-msg` again. All
+three were verified by deliberately breaking them.
 
 ## Running end-to-end tests
 

@@ -165,6 +165,23 @@ describe('ContactWizard', () => {
     expect(decodeURIComponent(href)).toContain('Shop');
   });
 
+  /* The success button carries `btn-quiet`, not `btn-ghost`. It shares nothing
+     with the global ghost base in styles.scss, and while it wore that name it
+     inherited whatever the base declared and its own rule did not — a
+     `display: flex` and an unsprung 2px hover jump, shipped and then reverted.
+     Renaming the class back would be silent without this assertion: the styles
+     would still compile and the browser guard's stand-in reads the class from
+     the stylesheet, not from this template. */
+  it('the success screen button is named apart from the global ghost', () => {
+    create();
+    wizard.sent.set(true);
+    fixture.detectChanges();
+
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('.success-msg .btn-quiet')).not.toBeNull();
+    expect(el.querySelector('.btn-ghost')).toBeNull();
+  });
+
   it('reset takes the wizard back to an empty step 1', () => {
     create();
     wizard.selectType('website');
