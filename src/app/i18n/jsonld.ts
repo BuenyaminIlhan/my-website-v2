@@ -21,11 +21,6 @@ const APP_OFFER: Record<Lang, { name: string; description: string }> = {
 
 const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services' };
 
-const SERVICE_NAME_SUFFIX: Record<Lang, string> = {
-  de: 'Web- & App-Entwicklung',
-  en: 'Web & App Development',
-};
-
 /** The German home page — the address every own-site reference below points at. */
 const HOME_URL = absoluteUrl(homePathFor('de'));
 
@@ -69,19 +64,22 @@ export function personRef(): object {
   };
 }
 
-/** The business as a provider on other pages — same reasoning as personRef. */
-export function serviceRef(lang: Lang): object {
+/**
+ * The business as a provider on other pages — same reasoning as personRef. The name
+ * is the bare brand, exactly as on the Google Business Profile, in every language.
+ */
+export function serviceRef(): object {
   return {
     '@type': 'ProfessionalService',
     '@id': `${BASE}/#service`,
-    name: `${SITE_CONFIG.brandName} — ${SERVICE_NAME_SUFFIX[lang]}`,
+    name: SITE_CONFIG.brandName,
     url: HOME_URL,
   };
 }
 
 /**
  * E.164 form of a number stored without '+', or nothing at all: an empty number is a
- * supported config state (WhatsApp button hidden) and must not become "telephone": "+".
+ * supported config state and must not become "telephone": "+".
  */
 export function e164(digits: string): { telephone: string } | Record<string, never> {
   return digits ? { telephone: `+${digits}` } : {};
@@ -107,7 +105,7 @@ function personNode(lang: Lang): object {
 
 function serviceNode(lang: Lang, t: LangTranslations): object {
   return {
-    ...serviceRef(lang),
+    ...serviceRef(),
     alternateName: BRAND_WORDMARK,
     logo: `${BASE}/brand/avatar-square-dark.svg`,
     founder: { '@id': `${BASE}/#person` },
@@ -116,8 +114,8 @@ function serviceNode(lang: Lang, t: LangTranslations): object {
     areaServed: ['DE'],
     knowsLanguage: ['de', 'en', 'tr'],
     address: BUSINESS_ADDRESS,
-    // The number behind the WhatsApp button (user decision 2026-10-13).
-    ...e164(SITE_CONFIG.whatsappNumber),
+    // The voice line, not WhatsApp: a different number (user, 2026-10-13).
+    ...e164(SITE_CONFIG.phoneNumber),
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: CATALOG_NAME[lang],
@@ -221,7 +219,7 @@ export function buildServicePageGraph(lang: Lang, key: PageKey, page: ServicePag
         description: page.metaDescription,
         url,
         inLanguage: lang,
-        provider: serviceRef(lang),
+        provider: serviceRef(),
         areaServed: ['DE'],
       },
     ],

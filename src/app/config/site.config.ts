@@ -4,6 +4,10 @@
  * whatsappNumber: international format without '+' or spaces (e.g. '491701234567').
  * Leave empty to hide the WhatsApp button until a WhatsApp Business number exists.
  *
+ * phoneNumber: the number for voice calls, same format. It is a different line from
+ * WhatsApp. It is published as the business telephone in the structured data and
+ * must match the Google Business Profile and the legal notice; empty = no telephone.
+ *
  * googleReviewUrl: paste the Google Business profile review link here to make
  * the reviews section appear. While it is empty the section renders nothing.
  *
@@ -19,6 +23,7 @@ export const SITE_CONFIG = {
   baseUrl: 'https://ilhan-buenyamin.com',
   email: 'mail@ilhan-buenyamin.com',
   whatsappNumber: '4917656987311',
+  phoneNumber: '491732856136',
   googleReviewUrl: '',
   turkishSiteUrl: 'https://softlyx.tr/',
 } as const;

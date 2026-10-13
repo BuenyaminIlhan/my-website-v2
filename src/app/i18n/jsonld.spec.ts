@@ -42,7 +42,7 @@ describe('buildSiteGraph', () => {
     });
   }
 
-  it('gives the business the full address and the phone number of the WhatsApp button', () => {
+  it('gives the business the full address and the number for voice calls', () => {
     const service = nodeOf(buildSiteGraph('de', de), 'ProfessionalService') as unknown as {
       address: Record<string, string>;
       telephone: string;
@@ -51,14 +51,22 @@ describe('buildSiteGraph', () => {
     expect(service.address['streetAddress']).toBe('Beethovenstr. 13');
     expect(service.address['postalCode']).toBe('53721');
     expect(service.address['addressLocality']).toBe('Siegburg');
-    // A format check, not the code's own expression: '+' alone or '++49…' must fail.
-    expect(service.telephone).toMatch(/^\+[1-9]\d{6,14}$/);
-    expect(service.telephone.slice(1)).toBe(SITE_CONFIG.whatsappNumber);
+    // Literal on purpose: it has to equal the Business Profile and the legal notice
+    // (0173 2856136). WhatsApp has a different number.
+    expect(service.telephone).toBe('+491732856136');
+    expect(service.telephone).not.toBe(`+${SITE_CONFIG.whatsappNumber}`);
+  });
+
+  it('names the business exactly like its Business Profile, in every language', () => {
+    for (const [lang, t] of [['de', de], ['en', en]] as [Lang, LangTranslations][]) {
+      expect(nodeOf(buildSiteGraph(lang, t), 'ProfessionalService')['name']).toBe('Softlyx');
+    }
+    expect(nodeOf(buildSiteGraph('de', de), 'Person')['name']).toBe('Bünyamin Ilhan');
   });
 
   it('leaves the phone out when no number is configured, instead of publishing "+"', () => {
     expect(e164('')).toEqual({});
-    expect(e164('4917656987311')).toEqual({ telephone: '+4917656987311' });
+    expect(e164('491701234567')).toEqual({ telephone: '+491701234567' });
   });
 
   it('names the provider of a service page with the same @id as the business on the home page', () => {
