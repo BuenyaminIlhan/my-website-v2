@@ -344,9 +344,37 @@ if (dangerDeclarations.length !== 2) {
     + dangerDeclarations.filter((d) => d.rel !== 'src/styles.scss').map((d) => d.rel).join(', '));
 }
 
+/* ── The person line in the footer logo ─────────────────────────────
+   `.brand-person` paints with --dim on --bg. It once shipped at 3.49:1 (dark)
+   and 2.66:1 (light) although --dim itself passes, because opacity: 0.7 sat on
+   the whole .footer-logo link. So two things are checked: the token on the
+   ground in both themes, and that no opacity reaches the line again — neither
+   on the line itself nor on the link around it. Light mode has only ~0.1 of
+   headroom, which is exactly why this is measured and not commented. */
+const footerRules = rulesOf(compile('src/app/footer/footer.scss'));
+const personColour = declaration(footerRules, '.footer-logo .brand-person', 'color');
+if (!personColour) {
+  fail.push('the footer scanner found no colour for .footer-logo .brand-person — the rule moved, the check below is meaningless');
+} else if (personColour !== 'var(--dim)') {
+  fail.push('.footer-logo .brand-person paints with ' + personColour + ', the thresholds below assume var(--dim)');
+}
+for (const selector of ['.footer-logo', '.footer-logo .brand-person']) {
+  const opacity = declaration(footerRules, selector, 'opacity');
+  if (opacity !== null && Number(opacity) < 1) {
+    fail.push(selector + ' sets opacity ' + opacity + ' — it multiplies into the person line and pulls it under 4.5:1');
+  }
+}
+for (const [theme, dim, bg] of [['light', lightVar('dim'), lightVar('bg')], ['dark', rootVar('dim'), rootVar('bg')]]) {
+  if (!dim || !bg) continue;
+  const ratio = contrast(dim, bg);
+  const ok = ratio >= 4.5;
+  console.log('  ' + (ok ? 'ok  ' : 'FAIL') + ' the footer person line (' + theme + ') — ' + dim + ' on --bg (' + bg + '): ' + ratio.toFixed(2) + ':1');
+  if (!ok) fail.push('the footer person line (' + theme + '): ' + ratio.toFixed(2) + ':1, needs 4.5:1');
+}
+
 if (fail.length) {
   console.error('\n' + fail.length + ' contrast problem(s):');
   for (const f of fail) console.error('  - ' + f);
   process.exit(1);
 }
-console.log('\nAll checked colours reach 4.5:1 — the terminal in light mode, the error text in both.');
+console.log('\nAll checked colours reach 4.5:1 — the terminal in light mode, the error text and the footer person line in both.');
