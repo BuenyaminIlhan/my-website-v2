@@ -195,4 +195,18 @@ describe('Footer', () => {
 
     expect(footer.fabStyle()).toEqual({ left: '300px', top: '736px', right: 'auto', bottom: 'auto' });
   });
+
+  it('links the German-only craftsmen page in German and nowhere else', () => {
+    create();
+    const el: HTMLElement = fixture.nativeElement;
+    const craftsmen = () => Array.from(el.querySelectorAll<HTMLAnchorElement>('.col-links a'))
+      .filter(a => a.getAttribute('href') === '/website-fuer-handwerker');
+    expect(craftsmen()).toHaveLength(1);
+
+    footer.lang.applyRoute('en', 'home');
+    fixture.detectChanges();
+    const services = el.querySelector('.footer-col .col-links');
+    expect(services?.querySelectorAll('a')).toHaveLength(footer.lang.t().offers.items.length);
+    expect(Array.from(services?.querySelectorAll('a') ?? []).some(link => link.getAttribute('href')?.includes('handwerker'))).toBe(false);
+  });
 });

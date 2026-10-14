@@ -59,6 +59,13 @@ describe('route tree', () => {
     }
   });
 
+  it('publishes the craftsmen page in German only, routed to the service page with its key', () => {
+    const route = treeFor('de').find(r => r.path === 'website-fuer-handwerker');
+    expect(route?.data?.['slug']).toBe('website-fuer-handwerker');
+    expect(route?.data?.['pageKey']).toBe('website-fuer-handwerker');
+    expect(paths('en').some(p => p?.includes('handwerk'))).toBe(false);
+  });
+
   it('has no blog routes in English, where the blog does not exist', () => {
     expect(slugFor('blog', 'en')).toBeUndefined();
     expect(paths('en').some(p => p?.startsWith('blog'))).toBe(false);

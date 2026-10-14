@@ -1,4 +1,5 @@
 import { LangTranslations } from './translations';
+import { handwerkerPage } from './de-handwerker';
 
 export const de: LangTranslations = {
   nav: {
@@ -175,6 +176,7 @@ export const de: LangTranslations = {
     servicesTitle: 'Leistungen', contactTitle: 'Kontakt', location: 'Siegburg bei Köln/Bonn',
     noTracking: 'Diese Website respektiert Ihre Privatsphäre — keine Cookies, kein Tracking.',
     tagline: 'Web- & App-Entwicklung',
+    craftsmenLink: 'Website für Handwerker',
   },
   notFound: {
     title: 'Seite nicht gefunden',
@@ -196,6 +198,11 @@ export const de: LangTranslations = {
       included: ['Individuelles Design statt Vorlage', 'SEO & schnelle Ladezeiten von Anfang an', 'Perfekt auf jedem Gerät — Mobile, Tablet, Desktop', 'Barrierefreiheit nach WCAG-Standards', 'Persönliche Betreuung von der Idee bis zum Launch'],
       forWhoTitle: 'Für wen geeignet',
       forWho: 'Für Einzelunternehmer:innen sowie kleine und mittlere Unternehmen, die online professionell auftreten und über Google gefunden werden möchten — ohne Agentur-Wasserkopf.',
+      related: {
+        text: 'Sie führen einen Handwerksbetrieb? Alles zu Kosten, Ablauf und Beispielen:',
+        linkLabel: 'Website für Handwerker →',
+        page: 'website-fuer-handwerker',
+      },
       ctaTitle: 'Bereit für Ihre neue Website?',
       ctaText: 'Schreiben Sie mir unverbindlich — Sie erhalten ein faires, transparentes Angebot.',
       ctaButton: 'Jetzt anfragen',
@@ -258,6 +265,8 @@ export const de: LangTranslations = {
       ctaButton: 'Jetzt anfragen',
       overviewLink: '← Alle Leistungen',
     },
+    // German only, content in its own module — see de-handwerker.ts.
+    'website-fuer-handwerker': handwerkerPage,
   },
   meta: {
     homeTitle: 'Softlyx — Websites, Web-Apps & Apps entwickeln lassen',

@@ -1,3 +1,5 @@
+@use '../shared/content';
+
 .service-page {
   padding-top: 120px;
   padding-bottom: 6rem;
@@ -33,6 +35,11 @@
     font-weight: 800;
     color: var(--text);
     margin-bottom: 1.25rem;
+    /* "Handwerker" at Syne ExtraBold 32px is wider than a 320px viewport allows (found
+       by the layout guard). Same fix as the legal pages in styles.scss: overflow-wrap is
+       the guarantee, hyphens a nicer break where the browser has German patterns. */
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .lead {
@@ -81,6 +88,64 @@
 
       .tick { color: var(--accent); font-weight: 700; }
     }
+  }
+
+  .step-list {
+    padding-left: 1.4rem;
+    margin-bottom: 1rem;
+
+    li {
+      font-family: "Overpass", sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      padding-left: 0.3rem;
+
+      &::marker { color: var(--accent); font-weight: 700; }
+    }
+  }
+
+  /* Base look shared with the blog table (shared/_content.scss). Below 640px every
+     row stacks into labelled lines (data-label), so nothing scrolls sideways. */
+  .price-table {
+    @include content.table;
+    margin: 1.25rem 0;
+
+    @media (max-width: 639.98px) {
+      thead { display: none; }
+      tr { display: block; border-bottom: 2px solid var(--border-2); padding: 0.5rem 0; }
+      tbody th, td { display: block; border: none; padding: 0.3rem 0; }
+      tbody th::before, td::before {
+        content: attr(data-label);
+        display: block;
+        /* The row header is bold; its label must look like the others. */
+        font-weight: 400;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+    }
+  }
+
+  .related-link {
+    @include content.related-link;
+  }
+
+  .service-faq details {
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 0;
+
+    summary {
+      cursor: pointer;
+      font-family: "Overpass", sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    p { margin: 0.6rem 0 0; }
   }
 
   .service-cta {

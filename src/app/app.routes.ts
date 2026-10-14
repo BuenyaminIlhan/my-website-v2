@@ -1,7 +1,7 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
 import { Lang } from './i18n/translations';
 import { langGuard } from './i18n/lang.guard';
-import { requiredSlug, slugFor } from './i18n/route-map';
+import { PageKey, requiredSlug, slugFor } from './i18n/route-map';
 import { articlesFor } from './blog/blog-data';
 
 const SERVICE_KEYS = [
@@ -10,6 +10,29 @@ const SERVICE_KEYS = [
   'website-optimierung',
   'sorglos-paket',
 ] as const;
+
+/**
+ * Service pages that exist in some locales only (today: a German landing page for local
+ * German searches). Like the blog, a locale without a slug simply gets no route.
+ */
+const LOCAL_SERVICE_KEYS = ['website-fuer-handwerker'] as const;
+
+/** One service page route — shared by both lists, so they cannot drift apart. */
+function serviceRoute(key: PageKey, path: string, lang: Lang): Route {
+  return {
+    path,
+    data: { lang, pageKey: key, slug: key },
+    canActivate: [langGuard],
+    loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
+  };
+}
+
+function localServiceRoutes(lang: Lang): Routes {
+  return LOCAL_SERVICE_KEYS.flatMap(key => {
+    const slug = slugFor(key, lang);
+    return slug === undefined ? [] : [serviceRoute(key, slug, lang)];
+  });
+}
 
 /** Static pages that exist in every locale. */
 function pageRoutes(lang: Lang): Routes {
@@ -32,12 +55,7 @@ function pageRoutes(lang: Lang): Routes {
       canActivate: [langGuard],
       loadComponent: () => import('./privacy-policy/privacy-policy').then(m => m.PrivacyPolicy),
     },
-    ...SERVICE_KEYS.map(key => ({
-      path: requiredSlug(key, lang),
-      data: { lang, pageKey: key, slug: key },
-      canActivate: [langGuard],
-      loadComponent: () => import('./service-page/service-page').then(m => m.ServicePage),
-    })),
+    ...SERVICE_KEYS.map(key => serviceRoute(key, requiredSlug(key, lang), lang)),
   ];
 }
 
@@ -87,7 +105,7 @@ function notFoundRoutes(lang: Lang): Routes {
  * is prerendered to its own index.html.
  */
 function localeRoutes(lang: Lang): Routes {
-  return [...pageRoutes(lang), ...blogRoutes(lang), ...notFoundRoutes(lang)];
+  return [...pageRoutes(lang), ...localServiceRoutes(lang), ...blogRoutes(lang), ...notFoundRoutes(lang)];
 }
 
 export const routes: Routes = [

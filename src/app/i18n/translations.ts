@@ -1,3 +1,5 @@
+import type { PageKey } from './route-map';
+
 export type Lang = 'de' | 'en';
 
 /**
@@ -23,6 +25,27 @@ export interface TestimonialItem {
   rating: number;
 }
 
+/** A pointer to a page of routes.json — a typo in the key is a compile error. */
+export interface PageLink { text: string; linkLabel: string; page: PageKey; article?: never }
+
+/**
+ * A pointer from one page to another: a sentence and the link that ends it. Exactly one
+ * target — a page of routes.json or a blog article by its id. An article id is not
+ * checked by the compiler; service-page.spec resolves every link that the content uses.
+ */
+export type ContentLink = PageLink | { text: string; linkLabel: string; article: string; page?: never };
+
+/** One block of a longer service page. */
+export interface ServiceSection {
+  h2: string;
+  paragraphs?: string[];
+  list?: string[];
+  /** Renders the list as numbered steps. */
+  ordered?: boolean;
+  table?: { head: string[]; rows: string[][] };
+  related?: ContentLink;
+}
+
 export interface ServicePageContent {
   metaTitle: string;
   metaDescription: string;
@@ -30,8 +53,17 @@ export interface ServicePageContent {
   h1: string;
   lead: string;
   intro: string[];
-  includedTitle: string;
-  included: string[];
+  /**
+   * The short pages list what is included; a long page tells it in `sections` instead.
+   * Title and list come together — service-page.spec checks every page for it.
+   */
+  includedTitle?: string;
+  included?: string[];
+  sections?: ServiceSection[];
+  /** Questions of this page, with their heading — one object, so neither comes alone. */
+  faq?: { title: string; items: { q: string; a: string }[] };
+  /** A pointer shown before the call to action, e.g. to a more specific page. */
+  related?: ContentLink;
   forWhoTitle: string;
   forWho: string;
   ctaTitle: string;
@@ -61,7 +93,7 @@ export interface LangTranslations {
   portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string; liveProduct: string; responsive: string };
   contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; topic: string; topicGeneral: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string; waTitle: string; waNote: string; mailNote: string; formNote: string; privacyNote: { text: string; linkLabel: string } };
   notFound:  { title: string; sub: string; home: string; contact: string };
-  footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string; tagline: string };
+  footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string; tagline: string; craftsmenLink?: string };
   meta: {
     homeTitle: string; homeDesc: string;
     blogTitle: string; blogDesc: string;

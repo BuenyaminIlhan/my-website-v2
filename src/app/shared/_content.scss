@@ -1,0 +1,42 @@
+// Shared look of long-form content: the blog articles and the long service pages.
+// Partials inline into each component's CSS, so this keeps ONE source for the rules
+// without changing what either bundle ships.
+
+/** Base of a content table: header row and body cells. The first cell of a body row
+    may be a <th scope="row"> (service pages) or a <td> (blog) — both get the row look. */
+@mixin table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: "Overpass", sans-serif;
+  font-size: 0.9rem;
+
+  th, td {
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  thead th {
+    font-family: "Syne", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border-bottom: 2px solid var(--border-2);
+  }
+
+  td { color: var(--muted); }
+  tbody th, td:first-child { color: var(--text); font-weight: 600; }
+}
+
+/** "See also" sentence whose link points to another page. */
+@mixin related-link {
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

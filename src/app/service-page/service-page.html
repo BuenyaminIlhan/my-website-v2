@@ -10,15 +10,88 @@
       <p>{{ paragraph }}</p>
     }
 
-    <h2>{{ page.includedTitle }}</h2>
-    <ul class="included-list">
-      @for (point of page.included; track point) {
-        <li><span class="tick">→</span>{{ point }}</li>
-      }
-    </ul>
+    @if (page.included && page.includedTitle) {
+      <h2>{{ page.includedTitle }}</h2>
+      <ul class="included-list">
+        @for (point of page.included; track point) {
+          <li><span class="tick">→</span>{{ point }}</li>
+        }
+      </ul>
+    }
+
+    @for (section of page.sections ?? []; track section.h2) {
+      <section class="service-section">
+        <h2>{{ section.h2 }}</h2>
+        @for (paragraph of section.paragraphs ?? []; track paragraph) {
+          <p>{{ paragraph }}</p>
+        }
+        @if (section.list; as list) {
+          @if (section.ordered) {
+            <ol class="step-list">
+              @for (item of list; track item) {
+                <li>{{ item }}</li>
+              }
+            </ol>
+          } @else {
+            <ul class="included-list">
+              @for (item of list; track item) {
+                <li><span class="tick">→</span>{{ item }}</li>
+              }
+            </ul>
+          }
+        }
+        @if (section.table; as table) {
+          <!-- Each cell carries its column name, so the table can stack into labelled
+               rows on a phone instead of scrolling sideways. The explicit roles keep it a
+               table for screen readers there: display:block drops the native semantics in
+               Chromium and WebKit. The first cell of a row names the row. -->
+          <table class="price-table" role="table">
+            <thead role="rowgroup">
+              <tr role="row">
+                @for (cell of table.head; track cell) {
+                  <th scope="col" role="columnheader">{{ cell }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              @for (row of table.rows; track $index) {
+                <tr role="row">
+                  @for (cell of row; track $index) {
+                    @if ($first) {
+                      <th scope="row" role="rowheader" [attr.data-label]="table.head[$index]">{{ cell }}</th>
+                    } @else {
+                      <td role="cell" [attr.data-label]="table.head[$index]">{{ cell }}</td>
+                    }
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+        @if (section.related; as related) {
+          <p class="related-link">{{ related.text }} <a [routerLink]="linkPath(related)">{{ related.linkLabel }}</a></p>
+        }
+      </section>
+    }
+
+    @if (page.faq; as faq) {
+      <section class="service-faq">
+        <h2>{{ faq.title }}</h2>
+        @for (item of faq.items; track item.q) {
+          <details>
+            <summary>{{ item.q }}</summary>
+            <p>{{ item.a }}</p>
+          </details>
+        }
+      </section>
+    }
 
     <h2>{{ page.forWhoTitle }}</h2>
     <p>{{ page.forWho }}</p>
+
+    @if (page.related; as related) {
+      <p class="related-link">{{ related.text }} <a [routerLink]="linkPath(related)">{{ related.linkLabel }}</a></p>
+    }
 
     <div class="service-cta">
       <h2>{{ page.ctaTitle }}</h2>
