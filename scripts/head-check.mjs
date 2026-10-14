@@ -20,9 +20,9 @@
  * Silence is not a pass: a dist folder with too few pages is reported, never
  * treated as clean.
  */
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { namesOwner } from '../src/testing/owner-name.ts';
 
 const SCRIPT_OR_STYLE = /<(script|style)[^>]*>[^]*?<\/\1>/g;
@@ -145,4 +145,16 @@ function main() {
   console.log('ok   ' + found.length + ' pages: no owner name in <head> or structured data; og:image ' + [...shipped].join(', ') + ' shipped');
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) main();
+/* Run only as the entry script. Imported from the fixtures, from `node -e` or a REPL,
+   argv[1] is another file or unset — pathToFileURL(undefined) used to throw there.
+   Real paths, not URL strings: started through a symlink or junction, the two spellings
+   differ, and a false "not the entry" would let the build pass without checking. */
+const isEntry = () => {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+};
+if (isEntry()) main();

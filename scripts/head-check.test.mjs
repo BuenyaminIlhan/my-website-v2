@@ -7,6 +7,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { checkPage } from './head-check.mjs';
 
 const BASE = 'https://ilhan-buenyamin.com';
@@ -51,4 +52,13 @@ test('flags an og:image on another host, a relative one and a missing one', () =
   assert.match(checkPage('/', swap(BASE + '/assets/img/og-softlyx.png', 'assets/x.png')).fails[0], /not an absolute URL/);
   assert.match(checkPage('/', swap(/<meta property="og:image"[^>]*>/, '')).fails[0], /no og:image/);
   assert.match(checkPage('/', swap(BASE + '/"', '/"')).fails[0], /no absolute canonical/);
+});
+
+test('can be imported where process.argv[1] is unset (node -e, a REPL) without running or crashing', () => {
+  // Without argv[1], pathToFileURL(undefined) threw ERR_INVALID_ARG_TYPE on import; the
+  // output must also stay exactly "function", i.e. main() must not run on import.
+  const code = "const m = await import('./scripts/head-check.mjs'); console.log(typeof m.checkPage);";
+  const out = execFileSync(process.execPath, ['--disable-warning=MODULE_TYPELESS_PACKAGE_JSON', '--input-type=module', '-e', code],
+    { cwd: new URL('..', import.meta.url), encoding: 'utf8' });
+  assert.equal(out.trim(), 'function');
 });
