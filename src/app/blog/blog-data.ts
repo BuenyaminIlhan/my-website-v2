@@ -4,7 +4,7 @@
 // Slugs and dates live in blog-registry.json (shared with the sitemap generator).
 
 import registryJson from './blog-registry.json';
-import { Lang } from '../i18n/translations';
+import { Lang, PageLink } from '../i18n/translations';
 
 export interface ArticleSection {
   h2: string;
@@ -22,6 +22,8 @@ export interface BlogArticleContent {
   teaser: string;
   intro: string[];
   sections: ArticleSection[];
+  /** A pointer to a page of routes.json, shown before the call to action. */
+  relatedPage?: PageLink;
   ctaTitle: string;
   ctaText: string;
 }
@@ -112,6 +114,11 @@ const contents: Record<string, Partial<Record<Lang, BlogArticleContent>>> = {
           ],
         },
       ],
+      relatedPage: {
+        text: 'Wie das bei mir konkret aussieht:',
+        linkLabel: 'Website für Handwerker →',
+        page: 'website-fuer-handwerker',
+      },
       ctaTitle: 'Sie möchten wissen, was Ihre Website kosten würde?',
       ctaText:
         'Im kostenlosen Erstgespräch bekommen Sie eine ehrliche Einschätzung und danach ein transparentes Angebot — zugeschnitten auf Ihren Betrieb, ohne versteckte Kosten.',

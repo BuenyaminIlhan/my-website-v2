@@ -72,14 +72,14 @@ describe('BlogIndex', () => {
 describe('BlogArticlePage', () => {
   const article = blogArticles[0];
 
-  const mount = () => {
+  const mount = (id = article.id) => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
-        { provide: ActivatedRoute, useValue: { snapshot: { data: { articleId: article.id } } } },
+        { provide: ActivatedRoute, useValue: { snapshot: { data: { articleId: id } } } },
       ],
     });
-    TestBed.inject(LangService).applyRoute('de', 'blog', article.id);
+    TestBed.inject(LangService).applyRoute('de', 'blog', id);
     // The real index.html ships a canonical link; SeoService only updates an existing
     // one, and the JSON-LD test below compares the graph against it.
     const canonical = document.createElement('link');
@@ -139,5 +139,18 @@ describe('BlogArticlePage', () => {
     expect(payload['publisher']).toEqual(author);
     expect(payload['image']).toBe(DEFAULT_OG_IMAGE);
     expect(payload['dateModified']).toBe(article.dateIso);
+  });
+
+  it('points the craftsmen cost article to the craftsmen page, and only that article', () => {
+    const links = (id: string) => {
+      TestBed.resetTestingModule();
+      const fixture = mount(id);
+      const hrefs = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll<HTMLAnchorElement>('.related-link a'))
+        .map(a => a.getAttribute('href'));
+      fixture.destroy();
+      return hrefs;
+    };
+    expect(links('website-kosten-handwerker')).toEqual(['/website-fuer-handwerker']);
+    expect(links('website-relaunch-5-anzeichen')).toEqual([]);
   });
 });

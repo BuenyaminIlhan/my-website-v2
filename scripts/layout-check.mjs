@@ -51,10 +51,14 @@ const ROUTES = [
      .blog-page). Measuring only the home page is how a privacy policy
      collapsed to one word per line at 2300px while the guard reported 39
      green combinations. The sibling routes of each class (/legal-notice,
-     the other three service pages, the blog articles) and the /en
+     the other short service pages, the blog articles) and the /en
      variants share the same CSS, so they are covered by construction —
-     add a route here only when a NEW container class appears. */
+     add a route here only when a NEW container class or a new layout element
+     (a table, a fold) appears. */
   '/privacy-policy', '/sorglos-paket', '/blog',
+  /* The long service page: its price table stacks below 640px and its questions fold —
+     elements the short service pages do not have. */
+  '/website-fuer-handwerker',
 ];
 
 /* Deliberately empty. An allowlist here was used once to ship a real,

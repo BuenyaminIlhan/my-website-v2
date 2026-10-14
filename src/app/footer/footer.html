@@ -32,6 +32,9 @@
         @for (item of lang.t().offers.items; track item.title) {
           <a [routerLink]="lang.pagePath(item.slug)">{{ item.title }}</a>
         }
+        @if (craftsmenLink(); as label) {
+          <a [routerLink]="lang.pagePath('website-fuer-handwerker')">{{ label }}</a>
+        }
       </nav>
     </div>
     <div class="footer-col">

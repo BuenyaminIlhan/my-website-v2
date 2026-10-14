@@ -46,6 +46,10 @@
     </section>
   }
 
+  @if (article.relatedPage; as related) {
+    <p class="related-link">{{ related.text }} <a [routerLink]="lang.pagePath(related.page)">{{ related.linkLabel }}</a></p>
+  }
+
   <div class="article-cta">
     <h2>{{ article.ctaTitle }}</h2>
     <p>{{ article.ctaText }}</p>

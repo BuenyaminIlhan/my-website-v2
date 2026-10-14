@@ -1,3 +1,5 @@
+@use '../shared/content';
+
 /* Shared styles for blog index and article pages */
 .blog-page {
   padding-top: 120px;
@@ -123,39 +125,21 @@
   }
 }
 
+.related-link {
+  @include content.related-link;
+}
+
 /* Article: table + CTA */
 .table-scroll {
   overflow-x: auto;
   margin: 1.25rem 0;
 }
 
+/* The blog table scrolls sideways on a phone (.table-scroll); the service pages'
+   price table stacks instead. Same base look from shared/_content.scss. */
 .article table {
-  border-collapse: collapse;
-  width: 100%;
+  @include content.table;
   min-width: 560px;
-  font-family: "Overpass", sans-serif;
-  font-size: 0.9rem;
-
-  th, td {
-    text-align: left;
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-    line-height: 1.6;
-  }
-
-  th {
-    font-family: "Syne", sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--dim);
-    border-bottom: 2px solid var(--border-2);
-  }
-
-  td { color: var(--muted); }
-  td:first-child { color: var(--text); font-weight: 600; }
 }
 
 .article-cta {

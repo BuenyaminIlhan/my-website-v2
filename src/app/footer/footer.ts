@@ -3,6 +3,7 @@ import { isPlatformBrowser, NgStyle } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SITE_CONFIG } from '../config/site.config';
+import { slugFor } from '../i18n/route-map';
 
 const STORAGE_KEY_X = 'fab-x';
 const STORAGE_KEY_Y = 'fab-y';
@@ -19,6 +20,10 @@ const DRAG_THRESHOLD = 5;
 })
 export class Footer {
   lang = inject(LangService);
+
+  /** The craftsmen page link: only where the page has an address AND a link text. */
+  readonly craftsmenLink = computed(() =>
+    slugFor('website-fuer-handwerker', this.lang.current()) === undefined ? undefined : this.lang.t().footer.craftsmenLink);
   private platformId = inject(PLATFORM_ID);
   readonly year = new Date().getFullYear();
 
