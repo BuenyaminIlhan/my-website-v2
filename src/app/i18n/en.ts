@@ -174,6 +174,7 @@ export const en: LangTranslations = {
     legal: 'Legal notice', privacy: 'Privacy policy', back: '← Back', sayHi: 'Say Hi!',
     servicesTitle: 'Services', contactTitle: 'Contact', location: 'Siegburg near Cologne/Bonn',
     noTracking: 'This website respects your privacy — no cookies, no tracking.',
+    tagline: 'Web & App Development',
   },
   notFound: {
     title: 'Page not found',

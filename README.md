@@ -157,8 +157,8 @@ The guard fails if the token disappears, if the shared `.error-msg` rule stops p
 from it, or if either form component writes a literal colour for `.error-msg` again. All
 three were verified by deliberately breaking them.
 
-Since 2026-10-14 it also measures the **footer person line** (`--dim` on `--bg`, both
-themes) and fails if an `opacity` lands on `.footer-logo` or the line again — `opacity: 0.7`
+Since 2026-10-14 it also measures the **footer tagline** next to the logo (`.brand-person`,
+`--dim` on `--bg`, both themes) and fails if an `opacity` lands on `.footer-logo` or the line again — `opacity: 0.7`
 on the whole logo link once pulled it to 2.66:1 in light mode.
 
 ### Head guard (`npm run test:head`)

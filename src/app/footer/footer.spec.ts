@@ -4,6 +4,7 @@ import { provideRouter } from '@angular/router';
 import { Footer } from './footer';
 import { text } from '../../testing/fixture';
 import { SITE_CONFIG } from '../config/site.config';
+import { namesOwner } from '../../testing/owner-name';
 
 /** The FAB handlers only read these fields off the event. */
 const pointerEvent = (clientX: number, clientY: number): PointerEvent =>
@@ -50,7 +51,30 @@ describe('Footer', () => {
 
     // Everything visible is aria-hidden; only the sr-only span may speak.
     const spoken = Array.from(logo?.querySelectorAll('span:not([aria-hidden="true"])') ?? []);
-    expect(spoken.map(s => s.textContent)).toEqual(['Softlyx – Bünyamin Ilhan']);
+    expect(spoken.map(s => s.textContent)).toEqual(['Softlyx']);
+  });
+
+  it('keeps the owner\'s name and his private address out of the footer of every page', () => {
+    // Decision of 2026-10-14: the business is Softlyx; the footer is on every page and
+    // its text is what a search engine may quote. The Gmail address is a private account.
+    create();
+    const el: HTMLElement = fixture.nativeElement;
+    // Text, not markup: the GitHub/LinkedIn links still carry the name in their URLs
+    // (open question to the user), but nothing a reader or a snippet sees may name him.
+    expect(namesOwner(el.textContent ?? '')).toBe(false);
+    expect(el.innerHTML).not.toContain('gmail');
+    expect(el.querySelector('.copyright')?.textContent).toBe(`© ${footer.year} Softlyx`);
+    expect(el.querySelector('.brand-person')?.textContent).toBe('Web- & App-Entwicklung');
+
+    const mailLinks = Array.from(el.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]'));
+    expect(mailLinks.length).toBeGreaterThan(0);
+    for (const a of mailLinks) expect(a.getAttribute('href')).toBe(`mailto:${SITE_CONFIG.email}`);
+
+    // The English footer has its own tagline text — the same rule applies to it.
+    footer.lang.applyRoute('en', 'home');
+    fixture.detectChanges();
+    expect(el.querySelector('.brand-person')?.textContent).toBe('Web & App Development');
+    expect(namesOwner(el.textContent ?? '')).toBe(false);
   });
 
   /* The flag itself, pinned in one place: emptying it is the documented lever if

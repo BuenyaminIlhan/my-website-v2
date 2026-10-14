@@ -174,6 +174,7 @@ export const de: LangTranslations = {
     legal: 'Impressum', privacy: 'Datenschutz', back: '← Zurück', sayHi: 'Schreiben Sie mir!',
     servicesTitle: 'Leistungen', contactTitle: 'Kontakt', location: 'Siegburg bei Köln/Bonn',
     noTracking: 'Diese Website respektiert Ihre Privatsphäre — keine Cookies, kein Tracking.',
+    tagline: 'Web- & App-Entwicklung',
   },
   notFound: {
     title: 'Seite nicht gefunden',

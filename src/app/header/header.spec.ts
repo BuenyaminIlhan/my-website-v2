@@ -4,6 +4,7 @@ import { Router, provideRouter } from '@angular/router';
 import { Header } from './header';
 import { LangService } from '../services/lang.service';
 import { host, text } from '../../testing/fixture';
+import { namesOwner } from '../../testing/owner-name';
 
 describe('Header', () => {
   let fixture: ComponentFixture<Header>;
@@ -61,11 +62,19 @@ describe('Header', () => {
     expect(overlay?.hasAttribute('inert')).toBe(false);
   });
 
-  it('brands the logo as Softlyx while keeping the person for assistive tech', () => {
+  it('brands the logo as Softlyx, also for assistive tech', () => {
     const el: HTMLElement = fixture.nativeElement;
     expect(el.querySelector('.logo .logo-word')?.textContent).toBe('softlyx_');
     expect(el.querySelector('.logo .logo-mark')).not.toBeNull();
-    expect(el.querySelector('.logo .sr-only')?.textContent).toBe('Softlyx – Bünyamin Ilhan');
+    expect(el.querySelector('.logo .sr-only')?.textContent).toBe('Softlyx');
+  });
+
+  it('keeps the owner\'s name out of the header of every page (decision 2026-10-14)', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    // Text, not markup: the GitHub/LinkedIn links still carry the name in their URLs
+    // (open question to the user), but nothing a reader or a snippet sees may name him.
+    expect(namesOwner(el.textContent ?? '')).toBe(false);
+    expect(el.innerHTML).not.toContain('gmail');
   });
 
   it('opens and closes the mobile menu', () => {

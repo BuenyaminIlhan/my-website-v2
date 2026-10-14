@@ -344,7 +344,7 @@ if (dangerDeclarations.length !== 2) {
     + dangerDeclarations.filter((d) => d.rel !== 'src/styles.scss').map((d) => d.rel).join(', '));
 }
 
-/* ── The person line in the footer logo ─────────────────────────────
+/* ── The tagline next to the footer logo (.brand-person) ────────────
    `.brand-person` paints with --dim on --bg. It once shipped at 3.49:1 (dark)
    and 2.66:1 (light) although --dim itself passes, because opacity: 0.7 sat on
    the whole .footer-logo link. So two things are checked: the token on the
@@ -361,15 +361,15 @@ if (!personColour) {
 for (const selector of ['.footer-logo', '.footer-logo .brand-person']) {
   const opacity = declaration(footerRules, selector, 'opacity');
   if (opacity !== null && Number(opacity) < 1) {
-    fail.push(selector + ' sets opacity ' + opacity + ' — it multiplies into the person line and pulls it under 4.5:1');
+    fail.push(selector + ' sets opacity ' + opacity + ' — it multiplies into the tagline and pulls it under 4.5:1');
   }
 }
 for (const [theme, dim, bg] of [['light', lightVar('dim'), lightVar('bg')], ['dark', rootVar('dim'), rootVar('bg')]]) {
   if (!dim || !bg) continue;
   const ratio = contrast(dim, bg);
   const ok = ratio >= 4.5;
-  console.log('  ' + (ok ? 'ok  ' : 'FAIL') + ' the footer person line (' + theme + ') — ' + dim + ' on --bg (' + bg + '): ' + ratio.toFixed(2) + ':1');
-  if (!ok) fail.push('the footer person line (' + theme + '): ' + ratio.toFixed(2) + ':1, needs 4.5:1');
+  console.log('  ' + (ok ? 'ok  ' : 'FAIL') + ' the footer tagline (' + theme + ') — ' + dim + ' on --bg (' + bg + '): ' + ratio.toFixed(2) + ':1');
+  if (!ok) fail.push('the footer tagline (' + theme + '): ' + ratio.toFixed(2) + ':1, needs 4.5:1');
 }
 
 if (fail.length) {
@@ -377,4 +377,4 @@ if (fail.length) {
   for (const f of fail) console.error('  - ' + f);
   process.exit(1);
 }
-console.log('\nAll checked colours reach 4.5:1 — the terminal in light mode, the error text and the footer person line in both.');
+console.log('\nAll checked colours reach 4.5:1 — the terminal in light mode, the error text and the footer tagline in both.');
