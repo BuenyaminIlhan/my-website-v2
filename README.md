@@ -157,6 +157,50 @@ The guard fails if the token disappears, if the shared `.error-msg` rule stops p
 from it, or if either form component writes a literal colour for `.error-msg` again. All
 three were verified by deliberately breaking them.
 
+Since 2026-10-14 it also measures the **footer person line** (`--dim` on `--bg`, both
+themes) and fails if an `opacity` lands on `.footer-logo` or the line again — `opacity: 0.7`
+on the whole logo link once pulled it to 2.66:1 in light mode.
+
+### Head guard (`npm run test:head`)
+
+The business is presented as **Softlyx**; the owner's personal name stays out of what
+Google and link previews show (decision of 2026-10-14). `scripts/head-check.mjs` reads every
+prerendered `index.html` after the build — `npm run build` runs it, so the deploy does — and
+fails when:
+
+- the `<head>` (title, meta, Open Graph, Twitter) or the JSON-LD names the owner — in the
+  spellings it could plausibly come back in: percent-encoded (also next to a broken byte),
+  numeric HTML entities and named ones for accented letters and format characters, with
+  or without the semicolon, format characters (soft hyphen, zero-width, direction marks), any diacritic or combining mark (ü, İ, u + U+0308),
+  the dotless ı, transliterated (Buenyamin, Bunyamin), capitals;
+- a JSON-LD block is not valid JSON (it is parsed, so a hand-written `\u00fc` cannot hide);
+- the `og:image` a page points at is not an absolute URL, is on another host than the
+  page's canonical (localhost, a staging domain), or is not in the build output;
+- fewer than 10 pages were found (the guard would have measured nothing).
+
+Half of the head lives in `src/index.html` and is never rewritten by `SeoService`
+(`meta author`, `og:image:alt`), which is why this is a script over the build output and
+not a unit test. There is ONE name rule, `src/testing/owner-name.ts`: the specs import it,
+and so does the script — Node 22.18+ strips the type annotations on import (`engines`
+says so, and the workflows use `check-latest`), so keep that file free of enums and namespaces. The page check
+itself is pinned by fixtures in `scripts/head-check.test.mjs`, which `npm run test:head`
+runs first.
+
+**Deliberately out of scope:** the domain `ilhan-buenyamin.com` (cut out before matching;
+moving it is a separate decision), the text of the legal notice and the privacy policy
+(the law requires the name there), and the visible page. Google may still build a snippet
+from visible text, so this guard keeps the name out of the metadata, not out of every
+search result.
+
+The old card `og-image.jpg` (name in large type) is removed from `public/`. The deploy
+never deletes on the server, so it is on the known-leftovers list of
+`.github/workflows/server-cleanup.yml` — run that with `confirm=loeschen` after the
+deploy, or the old URL keeps serving it to image search and preview caches.
+
+The share card `public/assets/img/og-softlyx.png` and its alt text are **German only**,
+also on `/en/` pages — the static alt in `src/index.html` describes exactly that card. A
+page that passes its own `ogImage` to `SeoService` would need its own alt.
+
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:

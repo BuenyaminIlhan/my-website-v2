@@ -4,11 +4,6 @@ import { SITE_CONFIG } from '../config/site.config';
 
 const BASE = SITE_CONFIG.baseUrl;
 
-const PERSON_DESC: Record<Lang, string> = {
-  de: 'Web- und App-Entwickler aus Siegburg. Entwickelt moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift und Kotlin.',
-  en: 'Web and app developer based in Siegburg, Germany. Builds modern websites, web apps and native iOS & Android apps with Angular, Swift and Kotlin.',
-};
-
 const SERVICE_DESC: Record<Lang, string> = {
   de: 'Entwicklung von Websites, Web-Apps und nativen Apps für iOS und Android — modern, performant und maßgeschneidert.',
   en: 'Development of websites, web apps and native apps for iOS and Android — modern, performant and tailor-made.',
@@ -27,21 +22,17 @@ const HOME_URL = absoluteUrl(homePathFor('de'));
 /** The logo wordmark, given to search engines as an alternate spelling of the brand. */
 const BRAND_WORDMARK = 'softlyx_';
 
-const ADDRESS = {
+/**
+ * The business address for local search. Address and phone mirror the Google Business
+ * Profile and must be kept in sync with it.
+ */
+const BUSINESS_ADDRESS = {
   '@type': 'PostalAddress',
+  streetAddress: 'Beethovenstr. 13',
+  postalCode: '53721',
   addressLocality: 'Siegburg',
   addressRegion: 'Nordrhein-Westfalen',
   addressCountry: 'DE',
-};
-
-/**
- * The business address for local search. Address and phone mirror the Google Business
- * Profile and must be kept in sync with it; the person node keeps the town only.
- */
-const BUSINESS_ADDRESS = {
-  ...ADDRESS,
-  streetAddress: 'Beethovenstr. 13',
-  postalCode: '53721',
 };
 
 const PROJECTS = [
@@ -51,22 +42,11 @@ const PROJECTS = [
 ];
 
 /**
- * The person as an author or publisher on a page outside the home page graph. It
- * carries the name itself: a bare @id points into a graph that page does not have.
- * personNode extends it, so reference and full node cannot disagree on @id or name.
- */
-export function personRef(): object {
-  return {
-    '@type': 'Person',
-    '@id': `${BASE}/#person`,
-    name: 'Bünyamin Ilhan',
-    url: HOME_URL,
-  };
-}
-
-/**
- * The business as a provider on other pages — same reasoning as personRef. The name
- * is the bare brand, exactly as on the Google Business Profile, in every language.
+ * The business as author, publisher or provider on pages outside the home page graph.
+ * It carries the name itself: a bare @id points into a graph that page does not have.
+ * The name is the bare brand, exactly as on the Google Business Profile, in every
+ * language. The owner's personal name stays out of what Google shows (user decision
+ * 2026-10-14) — only the legal notice names him, as the law requires.
  */
 export function serviceRef(): object {
   return {
@@ -74,6 +54,7 @@ export function serviceRef(): object {
     '@id': `${BASE}/#service`,
     name: SITE_CONFIG.brandName,
     url: HOME_URL,
+    logo: `${BASE}/brand/avatar-square-dark.svg`,
   };
 }
 
@@ -85,30 +66,10 @@ export function e164(digits: string): { telephone: string } | Record<string, nev
   return digits ? { telephone: `+${digits}` } : {};
 }
 
-function personNode(lang: Lang): object {
-  return {
-    ...personRef(),
-    email: SITE_CONFIG.email,
-    jobTitle: 'Web- & App-Entwickler',
-    description: PERSON_DESC[lang],
-    image: `${BASE}/assets/img/Profile_2.jpg`,
-    knowsAbout: ['Webentwicklung', 'App-Entwicklung', 'Web-App-Entwicklung', 'Angular', 'TypeScript', 'Swift', 'Kotlin', 'iOS', 'Android', 'Frontend-Entwicklung'],
-    // A fact about the person, not site content: Turkish-speaking clients in Germany are served too.
-    knowsLanguage: ['de', 'en', 'tr'],
-    address: ADDRESS,
-    sameAs: [
-      'https://github.com/BuenyaminIlhan',
-      'https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/',
-    ],
-  };
-}
-
 function serviceNode(lang: Lang, t: LangTranslations): object {
   return {
     ...serviceRef(),
     alternateName: BRAND_WORDMARK,
-    logo: `${BASE}/brand/avatar-square-dark.svg`,
-    founder: { '@id': `${BASE}/#person` },
     description: SERVICE_DESC[lang],
     // The Turkish market is served by the Turkish site (SITE_CONFIG.turkishSiteUrl).
     areaServed: ['DE'],
@@ -153,19 +114,7 @@ function websiteNode(lang: Lang): object {
     // Google shows WebSite.name as the site name above the result.
     name: SITE_CONFIG.brandName,
     alternateName: BRAND_WORDMARK,
-    author: { '@id': `${BASE}/#person` },
-    inLanguage: lang,
-  };
-}
-
-function profilePageNode(homeUrl: string, lang: Lang): object {
-  return {
-    '@type': 'ProfilePage',
-    '@id': `${homeUrl}#profilepage`,
-    url: homeUrl,
-    name: 'Bünyamin Ilhan — Web- & App-Entwickler',
-    isPartOf: { '@id': `${BASE}/#website` },
-    mainEntity: { '@id': `${BASE}/#person` },
+    publisher: { '@id': `${BASE}/#service` },
     inLanguage: lang,
   };
 }
@@ -175,7 +124,7 @@ function projectsNode(): object {
     '@type': 'ItemList',
     '@id': `${BASE}/#projects`,
     name: 'Portfolio',
-    author: { '@id': `${BASE}/#person` },
+    author: { '@id': `${BASE}/#service` },
     itemListElement: PROJECTS.map(p => ({
       '@type': 'ListItem',
       position: p.pos,
@@ -184,7 +133,7 @@ function projectsNode(): object {
         name: p.name,
         ...(p.url ? { url: p.url } : {}),
         ...(p.category ? { applicationCategory: p.category } : {}),
-        author: { '@id': `${BASE}/#person` },
+        author: { '@id': `${BASE}/#service` },
       },
     })),
   };
@@ -228,18 +177,16 @@ export function buildServicePageGraph(lang: Lang, key: PageKey, page: ServicePag
 
 /** Localized site-wide JSON-LD @graph, injected on the home page of each locale. */
 export function buildSiteGraph(lang: Lang, t: LangTranslations): object {
-  // The @id values below are derived from this URL, so it has to be the same one
+  // The FAQ node's @id is derived from this URL, so it has to be the same one
   // SeoService writes as the canonical link on the page — hence the shared helper.
   const homeUrl = absoluteUrl(homePathFor(lang));
 
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      personNode(lang),
       serviceNode(lang, t),
       faqNode(homeUrl, t),
       websiteNode(lang),
-      profilePageNode(homeUrl, lang),
       projectsNode(),
     ],
   };

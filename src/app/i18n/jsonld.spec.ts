@@ -2,12 +2,13 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
 import { buildServicePageGraph, buildSiteGraph, e164 } from './jsonld';
-import { homePathFor } from './route-map';
+import { homePathFor, PageKey } from './route-map';
 import { de } from './de';
 import { en } from './en';
 import { Lang, LangTranslations } from './translations';
 import { SeoService } from '../services/seo.service';
 import { SITE_CONFIG } from '../config/site.config';
+import { namesOwner } from '../../testing/owner-name';
 
 const BASE = SITE_CONFIG.baseUrl;
 const T: Record<Lang, LangTranslations> = { de, en };
@@ -34,13 +35,54 @@ describe('buildSiteGraph', () => {
       .forEach(el => el.remove());
   });
 
+  /** The per-locale home URL the graph is anchored on, read from the FAQ node's @id. */
+  const homeOf = (lang: Lang) => nodeOf(buildSiteGraph(lang, T[lang]), 'FAQPage')['@id'].replace(/#faq$/, '');
+
   for (const lang of ['de', 'en'] as Lang[]) {
     it(`names the ${lang} home page in the form the server serves`, () => {
-      const url = nodeOf(buildSiteGraph(lang, T[lang]), 'ProfilePage')['url'];
-
-      expect(url).toBe(lang === 'de' ? `${BASE}/` : `${BASE}/en/`);
+      expect(homeOf(lang)).toBe(lang === 'de' ? `${BASE}/` : `${BASE}/en/`);
     });
   }
+
+  it('keeps the owner\'s name out of everything Google shows (user decision 2026-10-14)', () => {
+    for (const lang of ['de', 'en'] as Lang[]) {
+      const t = T[lang];
+      expect(namesOwner(JSON.stringify(buildSiteGraph(lang, t)))).toBe(false);
+      for (const [key, page] of Object.entries(t.servicePages)) {
+        expect(namesOwner(JSON.stringify(buildServicePageGraph(lang, key as PageKey, page)))).toBe(false);
+        expect(namesOwner(page.metaTitle + page.metaDescription)).toBe(false);
+      }
+      // Titles and descriptions are what the search result shows.
+      for (const text of Object.values(t.meta)) expect(namesOwner(text)).toBe(false);
+    }
+  });
+
+  it('recognises the name in every spelling it could come back in, but not the domain', () => {
+    // Invisible and combining characters are written as escapes on purpose: as raw
+    // characters an editor could normalise them away and the case would test nothing.
+    for (const spelling of ['B\u00FCnyamin', 'ILHAN', 'B&uuml;nyamin', 'Bu\u0308nyamin', 'Buenyamin',
+      'Bunyamin',
+      // The old LinkedIn link is exactly how it would most likely return.
+      'https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/',
+      // Turkish dotted capital and dotless i: /i alone folds neither.
+      '\u0130lhan', '\u0130LHAN', '\u0131lhan',
+      // Entities: numeric in any case and padding, with or without the semicolon
+      // (browsers render all of them), and entities splitting the name.
+      'B&#xFC;nyamin', 'B&#xdc;NYAMIN', 'B&#x00fc;nyamin', 'B&#252;nyamin', 'B&#xFCnyamin', 'B&uumlnyamin',
+      'Il&shy;han', 'I&#108;han', 'Il&lrm;han', 'Il&zwnj;han', 'Il&ZeroWidthSpace;han', 'B&uacute;nyamin',
+      '&Idot;lhan', '&imath;lhan',
+      // Format characters and a combining grapheme joiner splitting the name, and a
+      // soft hyphen between a base letter and its combining mark.
+      'Il\u200Bhan', 'Il\u200Ehan', 'Il\u200Fhan', 'Il\u034Fhan', 'Bu\u00AD\u0308nyamin',
+      // One broken byte must not leave the valid ones in the same run undecoded.
+      '%FF%42%C3%BCnyamin']) {
+      expect(namesOwner(spelling), spelling).toBe(true);
+    }
+    expect(namesOwner('https://ilhan-buenyamin.com/en/')).toBe(false);
+    expect(namesOwner('mail@ilhan-buenyamin.com')).toBe(false);
+    expect(namesOwner('Softlyx \u2014 Web- & App-Entwicklung')).toBe(false);
+    expect(namesOwner('%E0%A4%A broken escape, &#99999999; huge entity')).toBe(false);
+  });
 
   it('gives the business the full address and the number for voice calls', () => {
     const service = nodeOf(buildSiteGraph('de', de), 'ProfessionalService') as unknown as {
@@ -60,8 +102,17 @@ describe('buildSiteGraph', () => {
   it('names the business exactly like its Business Profile, in every language', () => {
     for (const [lang, t] of [['de', de], ['en', en]] as [Lang, LangTranslations][]) {
       expect(nodeOf(buildSiteGraph(lang, t), 'ProfessionalService')['name']).toBe('Softlyx');
+      expect(nodeOf(buildSiteGraph(lang, t), 'ProfessionalService')['logo']).toBe(`${BASE}/brand/avatar-square-dark.svg`);
     }
-    expect(nodeOf(buildSiteGraph('de', de), 'Person')['name']).toBe('Bünyamin Ilhan');
+  });
+
+  it('publishes no person: every reference points at the business node', () => {
+    const graph = buildSiteGraph('de', de) as { '@graph': Record<string, unknown>[] };
+    expect(graph['@graph'].map(n => n['@type'])).not.toContain('Person');
+    expect(graph['@graph'].map(n => n['@type'])).not.toContain('ProfilePage');
+    // A reference to #person would now point at nothing.
+    expect(JSON.stringify(graph)).not.toContain('#person');
+    expect(nodeOf(graph, 'WebSite')['publisher']).toEqual({ '@id': `${BASE}/#service` });
   });
 
   it('leaves the phone out when no number is configured, instead of publishing "+"', () => {
@@ -83,15 +134,6 @@ describe('buildSiteGraph', () => {
     // The blog has no English page; a silent fallback would name the home page instead.
     expect(() => buildServicePageGraph('en', 'blog', de.servicePages['website-erstellen-lassen']))
       .toThrow(/no URL in locale "en"/);
-  });
-
-  it('keeps the street out of the person node', () => {
-    const person = nodeOf(buildSiteGraph('de', de), 'Person') as unknown as {
-      address: Record<string, string>;
-    };
-
-    expect(person.address['addressLocality']).toBe('Siegburg');
-    expect(person.address['streetAddress']).toBeUndefined();
   });
 
   it('names the site after the brand, which is what people search for', () => {
@@ -119,6 +161,6 @@ describe('buildSiteGraph', () => {
     const canonicalHref = document.head
       .querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
 
-    expect(nodeOf(buildSiteGraph('en', en), 'ProfilePage')['url']).toBe(canonicalHref);
+    expect(homeOf('en')).toBe(canonicalHref);
   });
 });

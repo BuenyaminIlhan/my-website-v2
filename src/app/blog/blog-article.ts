@@ -4,7 +4,7 @@ import { LangService } from '../services/lang.service';
 import { DEFAULT_OG_IMAGE, SeoService } from '../services/seo.service';
 import { absoluteUrl, blogArticleUrlPaths, blogArticleUrlPath, homePathFor } from '../i18n/route-map';
 import { articleById, articleContent, BlogArticleContent } from './blog-data';
-import { personRef } from '../i18n/jsonld';
+import { serviceRef } from '../i18n/jsonld';
 
 @Component({
   selector: 'app-blog-article',
@@ -47,8 +47,8 @@ export class BlogArticlePage implements OnDestroy {
       // date. Replace it once blog-data carries one.
       dateModified: this.dateIso,
       image: DEFAULT_OG_IMAGE,
-      author: personRef(),
-      publisher: personRef(),
+      author: serviceRef(),
+      publisher: serviceRef(),
       mainEntityOfPage: url,
     });
   }

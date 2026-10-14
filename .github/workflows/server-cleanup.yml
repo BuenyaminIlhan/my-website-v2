@@ -47,7 +47,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
+          # 22.18+ is required: scripts/head-check.mjs imports a .ts file (type stripping).
+          # Without check-latest the runner may use an older cached 22.x.
           node-version: '22'
+          check-latest: true
           cache: 'npm'
 
       - name: Install dependencies
@@ -75,11 +78,37 @@ jobs:
           DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; cls -l /website/manifest.tr.json; cls -l /website/assets/img/Badeo.webp; cls -ld /website/tr; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; cls -l /website/manifest.tr.json; cls -l /website/assets/img/Badeo.webp; cls -l /website/assets/img/og-image.jpg; cls -ld /website/tr; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
 
-      # Three paths written out in full, no wildcards. -f is kept so that a second
-      # run does not go red on an already-deleted file — not because it is needed to
-      # continue the chain (lftp's cmd:fail-exit defaults to no).
+      # og-image.jpg is only a leftover once the new card is LIVE. Started before that
+      # deploy (or after a failed one), the delete would break every link preview of the
+      # live site. Hence: read the served index.html and refuse while it still links the
+      # old card. In that window a red step here also stops everything after it that
+      # has no always(): the other leftovers, the bundle sweep and the dry-run report.
+      # On purpose — deploy first, then clean up.
+      - name: Refuse while the live site still links the old share card
+        if: inputs.confirm == 'loeschen'
+        timeout-minutes: 5
+        shell: bash
+        env:
+          DEPLOY_SERVER: ${{ secrets.FTP_SERVER }}
+          DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; get /website/index.html -o served-index.html; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g'
+          if [ ! -s served-index.html ]; then
+            echo "The served index.html could not be read - refusing."; exit 1
+          fi
+          if grep -qF 'og-image.jpg' served-index.html; then
+            echo "The live index.html still links og-image.jpg - deploy the new card first. Refusing."; exit 1
+          fi
+
+      # Four paths written out in full, no wildcards. og-image.jpg joined on
+      # 2026-10-14: the old share card carried the owner's name in large type and
+      # was replaced by og-softlyx.png; the deploy mirror never removes it by itself.
+      # -f is kept so that a second run does not go red on an already-deleted file —
+      # not because it is needed to continue the chain (lftp's cmd:fail-exit
+      # defaults to no).
       # Read this before trusting a green tick: `rm -f` prints NOTHING and exits 0
       # whether the file was deleted, was already gone, or could not be deleted for
       # lack of permission. Nothing in this workflow asserts that anything vanished.
@@ -105,7 +134,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; rm -f /website/manifest.tr.json; rm -f /website/assets/img/Badeo.webp; rm -r -f /website/tr; cls -ld /website; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g'
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; rm -f /website/manifest.tr.json; rm -f /website/assets/img/Badeo.webp; rm -f /website/assets/img/og-image.jpg; rm -r -f /website/tr; cls -ld /website; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g'
 
       - name: What is there afterwards
         # always(), so that a failed delete does not skip the very listing that would
@@ -117,7 +146,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.FTP_USERNAME }}
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; cls -l /website/manifest.tr.json; cls -l /website/assets/img/Badeo.webp; cls -ld /website/tr; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
+          lftp --env-password -u "$DEPLOY_USER" "sftp://$DEPLOY_SERVER" -e "set sftp:auto-confirm yes; set net:max-retries 3; cls -l /website/manifest.tr.json; cls -l /website/assets/img/Badeo.webp; cls -l /website/assets/img/og-image.jpg; cls -ld /website/tr; quit" 2>&1 | sed -E 's#(sftp://[^:/]*):[^@]*@#\1:***@#g' || true
 
       # Leftover radar. --dry-run executes nothing; it prints what a deleting
       # mirror WOULD remove, which is the only way to see what else has piled up

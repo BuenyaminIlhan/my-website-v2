@@ -8,6 +8,7 @@ import { LangService } from '../services/lang.service';
 import { text } from '../../testing/fixture';
 import { SITE_CONFIG } from '../config/site.config';
 import { DEFAULT_OG_IMAGE } from '../services/seo.service';
+import { namesOwner } from '../../testing/owner-name';
 
 describe('blog data', () => {
   it('lists only articles that exist in the locale, newest first', () => {
@@ -121,17 +122,20 @@ describe('BlogArticlePage', () => {
     expect(document.getElementById('page-jsonld')).toBeNull();
   });
 
-  it('names the author inside the article, not only by reference to the home page', () => {
-    // The full Person node exists only in the home page graph, so a bare @id would
-    // leave the article without an author name.
+  it('names the business as author inside the article, not only by reference to the home page', () => {
+    // The full business node exists only in the home page graph, so a bare @id would
+    // leave the article without an author name. The owner's personal name stays out
+    // of what Google shows (user decision 2026-10-14).
     mount();
 
     const payload = JSON.parse(document.getElementById('page-jsonld')?.textContent ?? '{}') as
       Record<string, Record<string, string> | string>;
     const author = payload['author'] as Record<string, string>;
-    expect(author['@type']).toBe('Person');
-    expect(author['name']).toBe('Bünyamin Ilhan');
-    expect(author['@id']).toBe(SITE_CONFIG.baseUrl + '/#person');
+    expect(author['@type']).toBe('ProfessionalService');
+    expect(author['name']).toBe('Softlyx');
+    expect(author['@id']).toBe(SITE_CONFIG.baseUrl + '/#service');
+    expect(author['logo']).toBe(SITE_CONFIG.baseUrl + '/brand/avatar-square-dark.svg');
+    expect(namesOwner(JSON.stringify(payload))).toBe(false);
     expect(payload['publisher']).toEqual(author);
     expect(payload['image']).toBe(DEFAULT_OG_IMAGE);
     expect(payload['dateModified']).toBe(article.dateIso);

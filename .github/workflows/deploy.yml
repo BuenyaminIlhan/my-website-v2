@@ -18,7 +18,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
+          # 22.18+ is required: scripts/head-check.mjs imports a .ts file (type stripping).
+          # Without check-latest the runner may use an older cached 22.x.
           node-version: '22'
+          check-latest: true
           cache: 'npm'
 
       - name: Install dependencies

@@ -8,7 +8,7 @@ import { SITE_CONFIG } from '../config/site.config';
 const OG_LOCALES: Record<Lang, string> = { de: 'de_DE', en: 'en_US' };
 
 /** Default share image (og:image), also the image of article structured data. */
-export const DEFAULT_OG_IMAGE = SITE_CONFIG.baseUrl + '/assets/img/og-image.jpg';
+export const DEFAULT_OG_IMAGE = SITE_CONFIG.baseUrl + '/assets/img/og-softlyx.png';
 
 export interface SeoPageInfo {
   title: string;
