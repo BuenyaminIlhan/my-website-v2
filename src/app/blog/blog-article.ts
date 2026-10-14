@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LangService } from '../services/lang.service';
-import { SeoService } from '../services/seo.service';
+import { DEFAULT_OG_IMAGE, SeoService } from '../services/seo.service';
 import { absoluteUrl, blogArticleUrlPaths, blogArticleUrlPath, homePathFor } from '../i18n/route-map';
 import { articleById, articleContent, BlogArticleContent } from './blog-data';
-import { SITE_CONFIG } from '../config/site.config';
+import { serviceRef } from '../i18n/jsonld';
 
 @Component({
   selector: 'app-blog-article',
@@ -43,8 +43,12 @@ export class BlogArticlePage implements OnDestroy {
       datePublished: this.dateIso,
       inLanguage: currentLang,
       url,
-      author: { '@id': SITE_CONFIG.baseUrl + '/#person' },
-      publisher: { '@id': SITE_CONFIG.baseUrl + '/#person' },
+      // No modification date is tracked per article, so it equals the publication
+      // date. Replace it once blog-data carries one.
+      dateModified: this.dateIso,
+      image: DEFAULT_OG_IMAGE,
+      author: serviceRef(),
+      publisher: serviceRef(),
       mainEntityOfPage: url,
     });
   }

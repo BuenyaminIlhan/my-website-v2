@@ -4,13 +4,14 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && node scripts/generate-sitemap.mjs",
+    "build": "ng build && node scripts/generate-sitemap.mjs && npm run test:head",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:layout": "node scripts/layout-check.mjs",
     "test:contrast": "node scripts/contrast-check.mjs",
     "test:sweep": "node --test scripts/stale-bundles.test.mjs",
-    "test:buttons": "node scripts/button-style-check.mjs"
+    "test:buttons": "node scripts/button-style-check.mjs",
+    "test:head": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test scripts/head-check.test.mjs && node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/head-check.mjs"
   },
   "private": true,
   "packageManager": "npm@11.12.0",
@@ -45,5 +46,8 @@
     "typescript": "~5.9.2",
     "typescript-eslint": "^8.68.0",
     "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }

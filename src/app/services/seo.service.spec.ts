@@ -176,7 +176,9 @@ describe('SeoService', () => {
 
     it('falls back to the default share image when the page brings none', () => {
       service.update(servicePage);
-      expect(metaContent('meta[property="og:image"]')).toBe(`${BASE}/assets/img/og-image.jpg`);
+      // The Softlyx card. og-image.jpg carried the owner's name in large type, which
+      // must stay out of what Google and link previews show (user decision 2026-10-14).
+      expect(metaContent('meta[property="og:image"]')).toBe(`${BASE}/assets/img/og-softlyx.png`);
 
       service.update({ ...servicePage, ogImage: `${BASE}/assets/img/custom.jpg` });
       expect(metaContent('meta[property="og:image"]')).toBe(`${BASE}/assets/img/custom.jpg`);

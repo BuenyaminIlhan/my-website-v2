@@ -1,13 +1,8 @@
-import { Lang, LangTranslations } from './translations';
-import { absoluteUrl, homePathFor } from './route-map';
+import { Lang, LangTranslations, ServicePageContent } from './translations';
+import { absoluteUrl, homePathFor, PageKey, urlPathFor } from './route-map';
 import { SITE_CONFIG } from '../config/site.config';
 
 const BASE = SITE_CONFIG.baseUrl;
-
-const PERSON_DESC: Record<Lang, string> = {
-  de: 'Web- und App-Entwickler aus Siegburg. Entwickelt moderne Websites, Web-Apps und native iOS- & Android-Apps mit Angular, Swift und Kotlin.',
-  en: 'Web and app developer based in Siegburg, Germany. Builds modern websites, web apps and native iOS & Android apps with Angular, Swift and Kotlin.',
-};
 
 const SERVICE_DESC: Record<Lang, string> = {
   de: 'Entwicklung von Websites, Web-Apps und nativen Apps für iOS und Android — modern, performant und maßgeschneidert.',
@@ -21,13 +16,20 @@ const APP_OFFER: Record<Lang, { name: string; description: string }> = {
 
 const CATALOG_NAME: Record<Lang, string> = { de: 'Leistungen', en: 'Services' };
 
-const SERVICE_NAME_SUFFIX: Record<Lang, string> = {
-  de: 'Web- & App-Entwicklung',
-  en: 'Web & App Development',
-};
+/** The German home page — the address every own-site reference below points at. */
+const HOME_URL = absoluteUrl(homePathFor('de'));
 
-const ADDRESS = {
+/** The logo wordmark, given to search engines as an alternate spelling of the brand. */
+const BRAND_WORDMARK = 'softlyx_';
+
+/**
+ * The business address for local search. Address and phone mirror the Google Business
+ * Profile and must be kept in sync with it.
+ */
+const BUSINESS_ADDRESS = {
   '@type': 'PostalAddress',
+  streetAddress: 'Beethovenstr. 13',
+  postalCode: '53721',
   addressLocality: 'Siegburg',
   addressRegion: 'Nordrhein-Westfalen',
   addressCountry: 'DE',
@@ -39,41 +41,42 @@ const PROJECTS = [
   { pos: 3, type: 'WebApplication', name: 'Dachplaner', url: undefined, category: 'BusinessApplication' },
 ];
 
-function personNode(lang: Lang): object {
+/**
+ * The business as author, publisher or provider on pages outside the home page graph.
+ * It carries the name itself: a bare @id points into a graph that page does not have.
+ * The name is the bare brand, exactly as on the Google Business Profile, in every
+ * language. The owner's personal name stays out of what Google shows (user decision
+ * 2026-10-14) — only the legal notice names him, as the law requires.
+ */
+export function serviceRef(): object {
   return {
-    '@type': 'Person',
-    '@id': `${BASE}/#person`,
-    name: 'Bünyamin Ilhan',
-    url: `${BASE}/`,
-    email: SITE_CONFIG.email,
-    jobTitle: 'Web- & App-Entwickler',
-    description: PERSON_DESC[lang],
-    image: `${BASE}/assets/img/Profile_2.jpg`,
-    knowsAbout: ['Webentwicklung', 'App-Entwicklung', 'Web-App-Entwicklung', 'Angular', 'TypeScript', 'Swift', 'Kotlin', 'iOS', 'Android', 'Frontend-Entwicklung'],
-    // A fact about the person, not site content: Turkish-speaking clients in Germany are served too.
-    knowsLanguage: ['de', 'en', 'tr'],
-    address: ADDRESS,
-    sameAs: [
-      'https://github.com/BuenyaminIlhan',
-      'https://www.linkedin.com/in/b%C3%BCnyamin-ilhan/',
-    ],
+    '@type': 'ProfessionalService',
+    '@id': `${BASE}/#service`,
+    name: SITE_CONFIG.brandName,
+    url: HOME_URL,
+    logo: `${BASE}/brand/avatar-square-dark.svg`,
   };
+}
+
+/**
+ * E.164 form of a number stored without '+', or nothing at all: an empty number is a
+ * supported config state and must not become "telephone": "+".
+ */
+export function e164(digits: string): { telephone: string } | Record<string, never> {
+  return digits ? { telephone: `+${digits}` } : {};
 }
 
 function serviceNode(lang: Lang, t: LangTranslations): object {
   return {
-    '@type': 'ProfessionalService',
-    '@id': `${BASE}/#service`,
-    name: `${SITE_CONFIG.brandName} — ${SERVICE_NAME_SUFFIX[lang]}`,
-    alternateName: 'softlyx_',
-    logo: `${BASE}/brand/avatar-square-dark.svg`,
-    url: `${BASE}/`,
-    founder: { '@id': `${BASE}/#person` },
+    ...serviceRef(),
+    alternateName: BRAND_WORDMARK,
     description: SERVICE_DESC[lang],
     // The Turkish market is served by the Turkish site (SITE_CONFIG.turkishSiteUrl).
     areaServed: ['DE'],
     knowsLanguage: ['de', 'en', 'tr'],
-    address: ADDRESS,
+    address: BUSINESS_ADDRESS,
+    // The voice line, not WhatsApp: a different number (user, 2026-10-13).
+    ...e164(SITE_CONFIG.phoneNumber),
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: CATALOG_NAME[lang],
@@ -108,20 +111,10 @@ function websiteNode(lang: Lang): object {
     '@type': 'WebSite',
     '@id': `${BASE}/#website`,
     url: `${BASE}/`,
-    name: `${SITE_CONFIG.brandName} — Portfolio`,
-    author: { '@id': `${BASE}/#person` },
-    inLanguage: lang,
-  };
-}
-
-function profilePageNode(homeUrl: string, lang: Lang): object {
-  return {
-    '@type': 'ProfilePage',
-    '@id': `${homeUrl}#profilepage`,
-    url: homeUrl,
-    name: 'Bünyamin Ilhan — Web- & App-Entwickler',
-    isPartOf: { '@id': `${BASE}/#website` },
-    mainEntity: { '@id': `${BASE}/#person` },
+    // Google shows WebSite.name as the site name above the result.
+    name: SITE_CONFIG.brandName,
+    alternateName: BRAND_WORDMARK,
+    publisher: { '@id': `${BASE}/#service` },
     inLanguage: lang,
   };
 }
@@ -131,7 +124,7 @@ function projectsNode(): object {
     '@type': 'ItemList',
     '@id': `${BASE}/#projects`,
     name: 'Portfolio',
-    author: { '@id': `${BASE}/#person` },
+    author: { '@id': `${BASE}/#service` },
     itemListElement: PROJECTS.map(p => ({
       '@type': 'ListItem',
       position: p.pos,
@@ -140,26 +133,60 @@ function projectsNode(): object {
         name: p.name,
         ...(p.url ? { url: p.url } : {}),
         ...(p.category ? { applicationCategory: p.category } : {}),
-        author: { '@id': `${BASE}/#person` },
+        author: { '@id': `${BASE}/#service` },
       },
     })),
   };
 }
 
+const HOME_CRUMB: Record<Lang, string> = { de: 'Startseite', en: 'Home' };
+
+/**
+ * JSON-LD @graph of a service page: the breadcrumb Google can show instead of the
+ * bare URL, and the service itself, offered by the business node of the home page.
+ */
+export function buildServicePageGraph(lang: Lang, key: PageKey, page: ServicePageContent): object {
+  // A page without a URL in this locale is a routing bug. Falling back to '' would
+  // name the home page as this service and the last crumb — break the prerender instead.
+  const path = urlPathFor(key, lang);
+  if (path === undefined) throw new Error(`buildServicePageGraph: page "${key}" has no URL in locale "${lang}"`);
+  const url = absoluteUrl(path);
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: HOME_CRUMB[lang], item: absoluteUrl(homePathFor(lang)) },
+          { '@type': 'ListItem', position: 2, name: page.h1, item: url },
+        ],
+      },
+      {
+        '@type': 'Service',
+        name: page.h1,
+        description: page.metaDescription,
+        url,
+        inLanguage: lang,
+        provider: serviceRef(),
+        areaServed: ['DE'],
+      },
+    ],
+  };
+}
+
 /** Localized site-wide JSON-LD @graph, injected on the home page of each locale. */
 export function buildSiteGraph(lang: Lang, t: LangTranslations): object {
-  // The @id values below are derived from this URL, so it has to be the same one
+  // The FAQ node's @id is derived from this URL, so it has to be the same one
   // SeoService writes as the canonical link on the page — hence the shared helper.
   const homeUrl = absoluteUrl(homePathFor(lang));
 
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      personNode(lang),
       serviceNode(lang, t),
       faqNode(homeUrl, t),
       websiteNode(lang),
-      profilePageNode(homeUrl, lang),
       projectsNode(),
     ],
   };

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, effect, OnDestroy } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { SeoService } from '../services/seo.service';
 import { InquiryService } from '../services/inquiry.service';
 import { urlPathsFor, PageKey } from '../i18n/route-map';
+import { buildServicePageGraph } from '../i18n/jsonld';
 
 /** Maps service content keys to the wizard's project-type keys for prefilling. */
 const PROJECT_TYPE_BY_SLUG: Record<string, string> = {
@@ -20,7 +21,7 @@ const PROJECT_TYPE_BY_SLUG: Record<string, string> = {
   styleUrl: './service-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ServicePage {
+export class ServicePage implements OnDestroy {
   lang = inject(LangService);
   private seo = inject(SeoService);
   private route = inject(ActivatedRoute);
@@ -33,13 +34,19 @@ export class ServicePage {
   constructor() {
     effect(() => {
       const page = this.content();
+      const lang = this.lang.current();
       this.seo.update({
         title: page.metaTitle,
         description: page.metaDescription,
-        lang: this.lang.current(),
+        lang,
         paths: urlPathsFor(this.slug as PageKey),
       });
+      this.seo.setJsonLd(buildServicePageGraph(lang, this.slug as PageKey, page));
     });
+  }
+
+  ngOnDestroy() {
+    this.seo.clearJsonLd();
   }
 
   prefillContact() {

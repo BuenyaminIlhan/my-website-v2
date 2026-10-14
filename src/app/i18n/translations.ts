@@ -61,7 +61,7 @@ export interface LangTranslations {
   portfolio: { label: string; title: string; sub: string; demo: string; pitch: string; github: string; liveProduct: string; responsive: string };
   contact:   { label: string; title: string; titleAccent: string; intro: string; name: string; email: string; topic: string; topicGeneral: string; message: string; namePh: string; emailPh: string; messagePh: string; send: string; sending: string; successTitle: string; successSub: string; sendAnother: string; error: string; waTitle: string; waNote: string; mailNote: string; formNote: string; privacyNote: { text: string; linkLabel: string } };
   notFound:  { title: string; sub: string; home: string; contact: string };
-  footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string };
+  footer:    { legal: string; privacy: string; back: string; sayHi: string; servicesTitle: string; contactTitle: string; location: string; noTracking: string; tagline: string };
   meta: {
     homeTitle: string; homeDesc: string;
     blogTitle: string; blogDesc: string;

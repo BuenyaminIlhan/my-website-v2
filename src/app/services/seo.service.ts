@@ -7,6 +7,9 @@ import { SITE_CONFIG } from '../config/site.config';
 
 const OG_LOCALES: Record<Lang, string> = { de: 'de_DE', en: 'en_US' };
 
+/** Default share image (og:image), also the image of article structured data. */
+export const DEFAULT_OG_IMAGE = SITE_CONFIG.baseUrl + '/assets/img/og-softlyx.png';
+
 export interface SeoPageInfo {
   title: string;
   description: string;
@@ -38,12 +41,10 @@ export class SeoService {
   private title = inject(Title);
   private document = inject(DOCUMENT);
 
-  private readonly defaultImage = SITE_CONFIG.baseUrl + '/assets/img/og-image.jpg';
-
   update(info: SeoPageInfo) {
     const currentPath = info.paths[info.lang] ?? '';
     const url = absoluteUrl(currentPath);
-    const image = info.ogImage ?? this.defaultImage;
+    const image = info.ogImage ?? DEFAULT_OG_IMAGE;
 
     this.title.setTitle(info.title);
     this.meta.updateTag({ name: 'description', content: info.description });

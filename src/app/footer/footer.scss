@@ -69,10 +69,18 @@ footer {
   display: flex;
   align-items: center;
   gap: 8px;
-  opacity: 0.7;
-  transition: opacity 150ms;
 
-  &:hover { opacity: 1; }
+  /* Only the mark and the word are dimmed. The person line already uses --dim;
+     at 0.7 opacity on top it fell to 3.49:1 (dark) and 2.66:1 (light), under
+     4.5:1. Without it: 6.01:1 and 4.60:1, guarded by scripts/contrast-check.mjs. */
+  .logo-mark,
+  .logo-word {
+    opacity: 0.7;
+    transition: opacity 150ms;
+  }
+
+  &:hover .logo-mark,
+  &:hover .logo-word { opacity: 1; }
 
   .logo-mark { fill: var(--brand); flex-shrink: 0; }
 
