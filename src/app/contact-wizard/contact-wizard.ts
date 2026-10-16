@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { InquiryService } from '../services/inquiry.service';
-import { SITE_CONFIG } from '../config/site.config';
+import { MAIL_ENDPOINT, mailtoUrl } from '../config/site.config';
 
 @Component({
   selector: 'app-contact-wizard',
@@ -114,9 +114,7 @@ export class ContactWizard {
       this.details(),
       this.message(),
     ].filter(Boolean);
-    const subject = encodeURIComponent(t.nav.cta + ' — ' + this.typeLabel());
-    const body = encodeURIComponent(lines.join('\n'));
-    return `mailto:${SITE_CONFIG.email}?subject=${subject}&body=${body}`;
+    return mailtoUrl(t.nav.cta + ' — ' + this.typeLabel(), lines);
   });
 
   async send() {
@@ -125,7 +123,7 @@ export class ContactWizard {
     this.error.set(false);
 
     try {
-      const resp = await fetch('https://ilhan-buenyamin.com/send_mail/send_mail.php', {
+      const resp = await fetch(MAIL_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
@@ -138,7 +136,7 @@ export class ContactWizard {
           scope: this.details(),
           message: this.message(),
           lang: this.lang.current(),
-          website: this.honeypot(),
+          hp_contact_ref: this.honeypot(),
         }).toString(),
       });
 
@@ -148,9 +146,11 @@ export class ContactWizard {
         this.details.set(''); this.honeypot.set('');
         this.inquiry.projectType.set('');
       } else {
+        console.error('[contact-wizard] mail endpoint answered', MAIL_ENDPOINT, resp.status);
         this.error.set(true);
       }
-    } catch {
+    } catch (err) {
+      console.error('[contact-wizard] mail endpoint unreachable', MAIL_ENDPOINT, err);
       this.error.set(true);
     } finally {
       this.sending.set(false);

@@ -306,6 +306,7 @@ export const en: LangTranslations = {
     successTitle: 'Request received!',
     successSub: 'Thank you — you will receive your personal website check within 48 hours.',
     error: 'Something went wrong. Please email me directly at mail@ilhan-buenyamin.com.',
+    mailFallback: 'Or send the request by email',
     note: 'No subscription, no obligations — just an honest assessment.',
   },
   wizard: {

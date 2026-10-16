@@ -107,7 +107,7 @@ export interface LangTranslations {
   websiteCheck: {
     label: string; title: string; titleAccent: string; sub: string;
     urlLabel: string; urlPh: string; nameLabel: string; emailLabel: string;
-    submit: string; sending: string; successTitle: string; successSub: string; error: string; note: string;
+    submit: string; sending: string; successTitle: string; successSub: string; error: string; mailFallback: string; note: string;
   };
   wizard: {
     steps: string[];

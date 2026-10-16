@@ -4,8 +4,10 @@ import { provideRouter } from '@angular/router';
 import { WebsiteCheck } from './website-check';
 import { LangService } from '../services/lang.service';
 import { stubIntersectionObserver } from '../../testing/browser-stubs';
+import { SITE_CONFIG } from '../config/site.config';
 
-const MAIL_ENDPOINT = 'https://ilhan-buenyamin.com/send_mail/send_mail.php';
+// A literal on purpose: built from SITE_CONFIG it would only repeat the production formula.
+const MAIL_ENDPOINT = 'https://softlyx.de/send_mail/send_mail.php';
 
 describe('WebsiteCheck', () => {
   let fixture: ComponentFixture<WebsiteCheck>;
@@ -40,6 +42,8 @@ describe('WebsiteCheck', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    // Restores console spies even when an assertion failed before the test could.
+    vi.restoreAllMocks();
     io.restore();
   });
 
@@ -67,7 +71,18 @@ describe('WebsiteCheck', () => {
 
     await check.send();
 
-    expect(sentBody().get('website')).toBe('spam');
+    expect(sentBody().get('hp_contact_ref')).toBe('spam');
+    expect(sentBody().has('website')).toBe(false);
+  });
+
+  /* Browsers autofill a field called "website" with a "Website" label — a real visitor
+     then got a thank-you while the backend silently dropped the inquiry as a bot. */
+  it('names the honeypot so that no browser autofills it', () => {
+    const el: HTMLElement = fixture.nativeElement;
+    const trap = el.querySelector<HTMLInputElement>('input[name="hp_contact_ref"]');
+    expect(trap).not.toBeNull();
+    expect(el.querySelector('input[name="website"]')).toBeNull();
+    expect(el.querySelector(`label[for="${trap?.id}"]`)?.textContent).not.toMatch(/website|url/i);
   });
 
   it('flags an error when the mailer rejects the request', async () => {
@@ -79,6 +94,47 @@ describe('WebsiteCheck', () => {
     expect(check.error()).toBe(true);
     expect(check.sent()).toBe(false);
     expect(check.url()).toBe('https://example.com');
+  });
+
+  it('logs a rejected request with the endpoint and status', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 500 });
+    fill();
+
+    await check.send();
+
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('website-check'), MAIL_ENDPOINT, 500);
+  });
+
+  it('logs a request that never arrives with the endpoint and the error', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const offline = new Error('offline');
+    fetchMock.mockRejectedValue(offline);
+    fill();
+
+    await check.send();
+
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('website-check'), MAIL_ENDPOINT, offline);
+  });
+
+  it('offers a prefilled mail when sending fails', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 500 });
+    fill();
+    check.url.set('https://example.com/?a=1&b=2#x');
+
+    await check.send();
+    fixture.detectChanges();
+
+    const link = (fixture.nativeElement as HTMLElement).querySelector<HTMLAnchorElement>('.error-msg a[href^="mailto:"]');
+    expect(link).not.toBeNull();
+    expect(link?.textContent?.trim()).toBe(TestBed.inject(LangService).t().websiteCheck.mailFallback);
+    const href = link?.getAttribute('href') ?? '';
+    expect(href.startsWith(`mailto:${SITE_CONFIG.email}?subject=`)).toBe(true);
+    // Parsed, not decoded wholesale: an unencoded & or # in the URL would cut the body short.
+    const body = new URL(href).searchParams.get('body') ?? '';
+    expect(body).toContain('https://example.com/?a=1&b=2#x');
+    expect(body).toContain('Test');
   });
 
   it('flags an error when the request never arrives', async () => {

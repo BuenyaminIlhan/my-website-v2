@@ -14,7 +14,8 @@
  * - decomposed and stripped of every combining mark, so ü, u + U+0308, İ and any
  *   other diacritic fold to plain letters; the dotless ı is mapped to i.
  * What is left is matched against "bunyamin", "buenyamin" and "ilhan", in any case.
- * The domain ilhan-buenyamin.com is in every URL and is cut out first.
+ * The domain ilhan-buenyamin.com is cut out first: it is still in the mail address and in old
+ * links, although the site moved to softlyx.de on 2026-10-16.
  */
 const NAME = /b(?:ue|u)nyamin|ilhan/i;
 const DOMAIN = /ilhan-buenyamin\.com/gi;
