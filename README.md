@@ -187,7 +187,7 @@ itself is pinned by fixtures in `scripts/head-check.test.mjs`, which `npm run te
 runs first.
 
 **Deliberately out of scope:** the domain `ilhan-buenyamin.com` (cut out before matching;
-moving it is a separate decision), the text of the legal notice and the privacy policy
+the site moved to softlyx.de, but the mail address still uses it), the text of the legal notice and the privacy policy
 (the law requires the name there), and the visible page. Google may still build a snippet
 from visible text, so this guard keeps the name out of the metadata, not out of every
 search result.
@@ -200,6 +200,74 @@ deploy, or the old URL keeps serving it to image search and preview caches.
 The share card `public/assets/img/og-softlyx.png` and its alt text are **German only**,
 also on `/en/` pages — the static alt in `src/index.html` describes exactly that card. A
 page that passes its own `ogImage` to `SeoService` would need its own alt.
+
+## Domain
+
+The site lives on `https://softlyx.de` since 2026-10-16. `SITE_CONFIG.baseUrl` is the one
+source: canonical, hreflang, structured data, the default og:image, the sitemap
+(`scripts/generate-sitemap.mjs` reads the line) and the form endpoint all derive from it.
+Plain files cannot read it and repeat it — change them together with `baseUrl`:
+`src/index.html` (the template before prerendering), `public/robots.txt` (the sitemap
+generator fails the build when it does not match), the redirect targets in
+`public/.htaccess` and the mail subjects in `public/send_mail/send_mail.php`.
+
+`public/.htaccess` moves `ilhan-buenyamin.com`, `www.ilhan-buenyamin.com` and `www.softlyx.de`
+to the same path on `https://softlyx.de` with a 301 — but only addresses that are not an
+existing file. Page addresses are prerendered directories and all move (without the closing
+slash in two hops, the second from DirectorySlash), and so do the `index.html` behind
+each directory, `robots.txt` and `sitemap.xml`; every other file stays — chunks, `/api/`, `/send_mail/` and the Search
+Console token `google*.html` stay reachable on the old host.
+A tab still open there loads its chunks and posts its form in CORS mode, which a
+cross-host 301 breaks silently; the old Search Console property must stay verified for
+the change of address. Plain HTTP goes to `https://softlyx.de` without exception.
+
+The forms post to an absolute URL on purpose: `ng serve` sends to the deployed script, which
+allows `localhost:4200/4201` via CORS. A relative URL would break local development.
+
+Setup outside the repository: softlyx.de is registered at netcup, its nameservers are IONOS
+(`ns1045.ui-dns.*`, required for the IONOS certificate), and it is connected to the webspace
+folder `/website` — not `/`, which holds an old copy of the site. The mail address stays
+`mail@ilhan-buenyamin.com`, so the old domain must stay registered and pointed at IONOS,
+and its redirects should stay for at least a year.
+
+`scripts/site-consistency.test.mjs` (run by `npm run test:head`) checks that every domain
+redirect targets `baseUrl` and that the mail script traps the honeypot field the forms send.
+
+The honeypot is `hp_contact_ref`. Until 2026-10-16 it was `website`, which browsers
+autofilled; until `LEGACY_HONEYPOT_UNTIL` (2026-11-16) a request that fills only the old
+name — a tab opened before the switch — is delivered with `[Honeypot-Verdacht]` in the
+subject instead of being dropped. After that date it is a trap again: bots that replay a
+recorded field set send it too.
+
+**Before merging a change to the redirects:** `https://softlyx.de/` must answer with a valid
+certificate — every old address is sent there, and browsers cache the 301. Check that
+`LEGACY_HONEYPOT_UNTIL` in `send_mail.php` still lies about 30 days after the deploy.
+
+**In the same release window, outside this repository:** the Turkish site (softlyx.tr repo)
+names this site in its `hreflang="de"` and country link. Pointed at `ilhan-buenyamin.com` it
+names a 301, which Google ignores as an alternate — the de/tr pair stops being reciprocal
+until that repo says `https://softlyx.de/` too.
+
+**After a deploy that touches the redirects** (a wrong 301 is cached by browsers):
+
+```sh
+# one 301 to https://softlyx.de/en/ each, path kept
+for h in ilhan-buenyamin.com www.ilhan-buenyamin.com www.softlyx.de; do
+  curl -sI https://$h/en/ | grep -i '^location'; done
+curl -sI http://softlyx.de/en/ | grep -i '^location'          # https://softlyx.de/en/
+curl -s -o /dev/null -w '%{http_code}\n' https://softlyx.de/en/  # 200
+# files stay on the old host: 405 (GET on the mail script), 200 (token)
+curl -s -o /dev/null -w '%{http_code}\n' https://ilhan-buenyamin.com/send_mail/send_mail.php
+curl -s -o /dev/null -w '%{http_code}\n' https://ilhan-buenyamin.com/google6c91563a23fa41df.html
+curl -sI https://ilhan-buenyamin.com/tr/ | grep -i '^location'  # https://softlyx.tr/ in one hop
+curl -sIL https://ilhan-buenyamin.com/en | grep -i '^location'   # two hops, both https
+curl -sI https://ilhan-buenyamin.com/en/index.html | grep -i '^location'  # https://softlyx.de/en/
+```
+
+Open point: where PHP's `error_log()` writes on the IONOS webspace is not known yet — look it
+up once in the IONOS hosting settings. If it goes nowhere, the mail script's log line for a
+failed `mail()` is lost, and the failure is visible only to the visitor (error text plus the
+prefilled mail link).
 
 ## Running end-to-end tests
 

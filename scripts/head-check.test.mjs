@@ -10,7 +10,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { checkPage } from './head-check.mjs';
 
-const BASE = 'https://ilhan-buenyamin.com';
+const BASE = 'https://softlyx.de';
 const page = ({ head = '', ld = '{"@type":"ProfessionalService","name":"Softlyx"}' } = {}) =>
   '<!doctype html><html><head><title>Softlyx — Websites</title>'
   + '<link rel="canonical" href="' + BASE + '/">'
@@ -19,8 +19,14 @@ const page = ({ head = '', ld = '{"@type":"ProfessionalService","name":"Softlyx"
   + '<script type="application/ld+json">' + ld + '</script>'
   + '</head><body><footer>© Bünyamin Ilhan</footer></body></html>';
 
-test('a clean page passes, the visible body is out of scope, the domain is not the name', () => {
+test('a clean page passes, the visible body is out of scope', () => {
   assert.deepEqual(checkPage('/', page()), { fails: [], image: '/assets/img/og-softlyx.png' });
+});
+
+test('the old domain is not the name, in the head or in the structured data', () => {
+  const head = '<link rel="alternate" href="https://ilhan-buenyamin.com/">';
+  const ld = '{"@type":"ProfessionalService","name":"Softlyx","email":"mail@ilhan-buenyamin.com"}';
+  assert.deepEqual(checkPage('/', page({ head, ld })).fails, []);
 });
 
 test('catches the name in the head in a meta tag, an entity and the Turkish capital', () => {

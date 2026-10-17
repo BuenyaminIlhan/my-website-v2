@@ -9,6 +9,11 @@ describe('route-map', () => {
   describe('absoluteUrl', () => {
     const BASE = SITE_CONFIG.baseUrl;
 
+    it('builds every address on softlyx.de, the domain the site moved to on 2026-10-16', () => {
+      expect(absoluteUrl('')).toBe('https://softlyx.de/');
+      expect(absoluteUrl('en')).toBe('https://softlyx.de/en/');
+    });
+
     it('closes a path with exactly one slash and leaves the root a bare root', () => {
       expect(absoluteUrl('')).toBe(`${BASE}/`);
       expect(absoluteUrl('en')).toBe(`${BASE}/en/`);

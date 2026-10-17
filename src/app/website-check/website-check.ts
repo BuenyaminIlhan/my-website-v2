@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { LangService } from '../services/lang.service';
 import { RevealDirective } from '../directives/scroll-reveal.directive';
+import { MAIL_ENDPOINT, mailtoUrl } from '../config/site.config';
 
 @Component({
   selector: 'app-website-check',
@@ -22,13 +23,19 @@ export class WebsiteCheck {
   readonly sent     = signal(false);
   readonly error    = signal(false);
 
+  /** Mailto fallback with the request prefilled, shown when sending fails. */
+  readonly mailtoHref = computed(() => {
+    const t = this.lang.t().websiteCheck;
+    return mailtoUrl(`${t.title} ${t.titleAccent}`, [`${t.urlLabel}: ${this.url()}`, `${t.nameLabel}: ${this.name()}`]);
+  });
+
   async send() {
     if (this.sending()) return;
     this.sending.set(true);
     this.error.set(false);
 
     try {
-      const resp = await fetch('https://ilhan-buenyamin.com/send_mail/send_mail.php', {
+      const resp = await fetch(MAIL_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
@@ -37,7 +44,7 @@ export class WebsiteCheck {
           email: this.email(),
           url: this.url(),
           lang: this.lang.current(),
-          website: this.honeypot(),
+          hp_contact_ref: this.honeypot(),
         }).toString(),
       });
 
@@ -46,9 +53,11 @@ export class WebsiteCheck {
         this.url.set(''); this.name.set(''); this.email.set('');
         this.honeypot.set('');
       } else {
+        console.error('[website-check] mail endpoint answered', MAIL_ENDPOINT, resp.status);
         this.error.set(true);
       }
-    } catch {
+    } catch (err) {
+      console.error('[website-check] mail endpoint unreachable', MAIL_ENDPOINT, err);
       this.error.set(true);
     } finally {
       this.sending.set(false);

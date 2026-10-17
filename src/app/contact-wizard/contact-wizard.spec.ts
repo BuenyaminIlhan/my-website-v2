@@ -6,7 +6,8 @@ import { LangService } from '../services/lang.service';
 import { InquiryService } from '../services/inquiry.service';
 import { SITE_CONFIG } from '../config/site.config';
 
-const MAIL_ENDPOINT = 'https://ilhan-buenyamin.com/send_mail/send_mail.php';
+// A literal on purpose: built from SITE_CONFIG it would only repeat the production formula.
+const MAIL_ENDPOINT = 'https://softlyx.de/send_mail/send_mail.php';
 
 describe('ContactWizard', () => {
   let fixture: ComponentFixture<ContactWizard>;
@@ -38,7 +39,11 @@ describe('ContactWizard', () => {
     inquiry.projectType.set('');
   });
 
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    // Restores console spies even when an assertion failed before the test could.
+    vi.restoreAllMocks();
+  });
 
   it('starts on step 1 with nothing selected', () => {
     create();
@@ -143,6 +148,51 @@ describe('ContactWizard', () => {
     expect(wizard.sending()).toBe(false);
   });
 
+  it('logs a rejected request with the endpoint and status', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    fetchMock.mockResolvedValue({ ok: false, status: 500 });
+    create();
+
+    await wizard.send();
+
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('contact-wizard'), MAIL_ENDPOINT, 500);
+  });
+
+  it('logs a request that never arrives with the endpoint and the error', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const offline = new Error('offline');
+    fetchMock.mockRejectedValue(offline);
+    create();
+
+    await wizard.send();
+
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('contact-wizard'), MAIL_ENDPOINT, offline);
+  });
+
+  /* Browsers autofill a field called "website" with a "Website" label — a real visitor
+     then got a thank-you while the backend silently dropped the inquiry as a bot. */
+  it('sends the honeypot under a name no browser autofills', async () => {
+    create();
+    wizard.honeypot.set('spam');
+
+    await wizard.send();
+
+    expect(sentBody().get('hp_contact_ref')).toBe('spam');
+    expect(sentBody().has('website')).toBe(false);
+  });
+
+  it('names the honeypot field so that no browser autofills it', () => {
+    create();
+    wizard.step.set(3);
+    fixture.detectChanges();
+
+    const el: HTMLElement = fixture.nativeElement;
+    const trap = el.querySelector<HTMLInputElement>('input[name="hp_contact_ref"]');
+    expect(trap).not.toBeNull();
+    expect(el.querySelector('input[name="website"]')).toBeNull();
+    expect(el.querySelector(`label[for="${trap?.id}"]`)?.textContent).not.toMatch(/website|url/i);
+  });
+
   it('ignores a second submit while one is in flight', async () => {
     create();
     wizard.sending.set(true);
@@ -158,11 +208,15 @@ describe('ContactWizard', () => {
     wizard.timeline.set('Q4');
     wizard.details.set('Shop');
 
+    wizard.message.set('Budget & Zeit? #1');
+
     const href = wizard.mailtoHref();
 
     expect(href.startsWith(`mailto:${SITE_CONFIG.email}?subject=`)).toBe(true);
-    expect(decodeURIComponent(href)).toContain('5-10k');
-    expect(decodeURIComponent(href)).toContain('Shop');
+    // Parsed, not decoded wholesale: an unencoded & or # would cut the body short.
+    const body = new URL(href).searchParams.get('body') ?? '';
+    expect(body.split('\n')).toEqual(expect.arrayContaining(['Shop', 'Budget & Zeit? #1']));
+    expect(body).toContain('5-10k');
   });
 
   /* The success button carries `btn-quiet`, not `btn-ghost`. It shares nothing

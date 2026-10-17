@@ -1,9 +1,4 @@
-# Redirects: www -> non-www, HTTP -> HTTPS (301)
 RewriteEngine On
-RewriteCond %{HTTP_HOST} ^www\.ilhan-buenyamin\.com$ [NC]
-RewriteRule (.*) https://ilhan-buenyamin.com/$1 [R=301,L]
-RewriteCond %{HTTPS} off
-RewriteRule (.*) https://ilhan-buenyamin.com%{REQUEST_URI} [R=301,L]
 
 # The Turkish site moved to its own domain (see SITE_CONFIG.turkishSiteUrl).
 # Every former /tr/... URL is redirected there permanently, keeping the slug.
@@ -29,6 +24,50 @@ RewriteRule ^tr(?:/(.*))?$ https://softlyx.tr/$1 [R=301,L,NC]
 #    there turns this 301 into a redirect to a 404, and nothing here would
 #    notice. It belongs on the same check list as the /tr target above.
 RewriteRule ^manifest\.tr\.json$ https://softlyx.tr/manifest.json [R=301,L]
+
+# The site lives on https://softlyx.de since 2026-10-16 (SITE_CONFIG.baseUrl). The
+# two softlyx.tr rules above come first, so a former /tr URL reaches softlyx.tr in
+# one hop from every host.
+#
+# Domain move: ilhan-buenyamin.com, www.ilhan-buenyamin.com and www.softlyx.de go
+# to the same path on https://softlyx.de. Only addresses that are NOT an existing
+# file move: every page address is a prerendered directory (/, /en/, /blog/...) and
+# moves; a path without its closing slash takes a second hop through DirectorySlash
+# on softlyx.de. The index.html (and index.csr.html) behind a directory is a page,
+# not a file a tab needs: it moves to its directory first — served on the old host
+# it would run the new bundle, whose form posts across origins to softlyx.de and
+# shows an error although the mail went out. Every other file stays reachable on
+# the old host, on purpose:
+#  - a tab still open on the old domain lazy-loads its chunks, calls /api/ and posts
+#    its form to /send_mail/ on that host. Module imports and fetch run in CORS
+#    mode, and a 301 to another host fails them (softlyx.de sends no CORS header),
+#    so navigation would silently do nothing and the inquiry would never arrive;
+#  - Search Console re-checks google*.html on the old property, which has to stay
+#    verified for the change of address.
+# The hosts are named rather than "anything but softlyx.de", so IONOS preview
+# hostnames are not moved over HTTPS (over plain HTTP every host goes to softlyx.de).
+# ilhan-buenyamin.com must stay registered and pointed at this folder: the mail
+# address mail@ilhan-buenyamin.com still depends on it, and Google recommends
+# keeping a moved site's redirects for at least a year.
+# Before deploying a change here: https://softlyx.de/ must answer with a valid
+# certificate — a 301 is cached by browsers, so the target must exist.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?ilhan-buenyamin\.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www\.softlyx\.de$ [NC]
+RewriteRule ^(.*/)?index(?:\.csr)?\.html$ https://softlyx.de/$1 [R=301,L]
+# robots.txt and the sitemap describe the site, not files a tab needs: on the old
+# hosts they move too, so the old property points crawlers at the new address.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?ilhan-buenyamin\.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www\.softlyx\.de$ [NC]
+RewriteRule ^(robots\.txt|sitemap\.xml)$ https://softlyx.de/$1 [R=301,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{HTTP_HOST} ^(?:www\.)?ilhan-buenyamin\.com$ [NC,OR]
+RewriteCond %{HTTP_HOST} ^www\.softlyx\.de$ [NC]
+RewriteRule ^ https://softlyx.de%{REQUEST_URI} [R=301,L]
+
+# Plain HTTP goes to HTTPS on softlyx.de, without exception: form data is never
+# accepted unencrypted.
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://softlyx.de%{REQUEST_URI} [R=301,L]
 
 # Unknown paths: real 404 status with branded error page
 ErrorDocument 404 /404/index.html

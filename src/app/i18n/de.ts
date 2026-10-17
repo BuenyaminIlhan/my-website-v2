@@ -315,6 +315,7 @@ export const de: LangTranslations = {
     successTitle: 'Anfrage erhalten!',
     successSub: 'Vielen Dank — Sie erhalten Ihren persönlichen Website-Check innerhalb von 48 Stunden.',
     error: 'Etwas ist schiefgelaufen. Schreiben Sie mir gern direkt an mail@ilhan-buenyamin.com.',
+    mailFallback: 'Oder die Anfrage per E-Mail senden',
     note: 'Kein Abo, keine Verpflichtung — nur eine ehrliche Einschätzung.',
   },
   wizard: {

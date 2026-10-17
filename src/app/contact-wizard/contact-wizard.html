@@ -92,9 +92,9 @@
             [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
         </div>
         <div class="field hp-field" aria-hidden="true">
-          <label for="wizard-website">Website</label>
-          <input id="wizard-website" type="text" tabindex="-1" autocomplete="off"
-            [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="website" />
+          <label for="wizard-hp">Bitte leer lassen</label>
+          <input id="wizard-hp" type="text" tabindex="-1" autocomplete="off"
+            [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="hp_contact_ref" />
         </div>
         <div class="field">
           <label for="wizard-message">{{ lang.t().contact.message }}</label>
