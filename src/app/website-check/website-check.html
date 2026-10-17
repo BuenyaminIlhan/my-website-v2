@@ -37,13 +37,16 @@
               [ngModel]="email()" (ngModelChange)="email.set($event)" name="email" />
           </div>
           <div class="field hp-field" aria-hidden="true">
-            <label for="check-website">Website</label>
-            <input id="check-website" type="text" tabindex="-1" autocomplete="off"
-              [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="website" />
+            <label for="check-hp">Bitte leer lassen</label>
+            <input id="check-hp" type="text" tabindex="-1" autocomplete="off"
+              [ngModel]="honeypot()" (ngModelChange)="honeypot.set($event)" name="hp_contact_ref" />
           </div>
 
           @if (error()) {
-            <p class="error-msg">{{ lang.t().websiteCheck.error }}</p>
+            <p class="error-msg">
+              {{ lang.t().websiteCheck.error }}<br />
+              <a [href]="mailtoHref()">{{ lang.t().websiteCheck.mailFallback }}</a>
+            </p>
           }
 
           <!-- Says at the point of collection what happens with the data, so nobody

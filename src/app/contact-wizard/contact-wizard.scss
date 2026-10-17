@@ -215,11 +215,6 @@ form { display: flex; flex-direction: column; gap: 1.5rem; }
   font-size: 0.85rem;
 }
 
-/* The mailto fallback link is the only thing the site check's copy lacks. */
-.error-msg {
-  a { color: var(--accent); text-decoration: underline; }
-}
-
 /* Layout and type come from the shared .success-msg in styles.scss. This one
    sits on the raised surface and runs a size larger than the site check's. */
 .success-msg {

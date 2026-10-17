@@ -5,6 +5,8 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { announcesSitemap } from './robots-check.mjs';
+import { readBaseUrl } from './site-config-reader.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT_DIR = join(root, 'dist', 'my-website-v2', 'browser');
@@ -21,12 +23,17 @@ const siteConfig = readFileSync(join(root, 'src/app/config/site.config.ts'), 'ut
 /* Read from the app's own constant instead of repeating it. A second copy would make
    the check below compare this file against itself: every URL would be wrong, every
    URL would still be shaped, and nothing would notice. */
-const baseMatch = siteConfig.match(/^\s*baseUrl:\s*'([^']*)'/m);
-if (!baseMatch) {
+const BASE = readBaseUrl(siteConfig);
+if (!BASE) {
   console.error('site.config.ts has no baseUrl entry — cannot build absolute URLs.');
   process.exit(1);
 }
-const BASE = baseMatch[1];
+
+/* robots.txt must name this sitemap; the rule and its reason live in robots-check.mjs. */
+if (!announcesSitemap(readFileSync(join(root, 'public/robots.txt'), 'utf8'), BASE)) {
+  console.error(`public/robots.txt does not announce ${BASE}/sitemap.xml.`);
+  process.exit(1);
+}
 
 /* Every absolute URL this file emits must have the shape absoluteUrl() produces in
    src/app/i18n/route-map.ts: the base URL, then non-empty segments, always closed by
