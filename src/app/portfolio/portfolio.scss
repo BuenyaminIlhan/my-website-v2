@@ -338,3 +338,27 @@
   .tablet { flex-basis: 24%; }
   .phone  { flex-basis: 14%; }
 }
+
+/* On a phone the three frames shared ~350px: measured at 563px the phone
+   frame was 65px wide (about 45px on a 390px device), its fixed 7px border
+   and 20px radius turned it into a pill, and no capture was readable. Here
+   one frame per project, large enough to read: the phone where a phone
+   capture exists — it is also the device the visitor is holding — else the
+   laptop across the column. The hidden frames' captures are not fetched
+   (display:none, see the note on .capture-light above). */
+/* 639.98px, not 640px: at exactly 640 the full line-up applies (same edge
+   convention as service-page.scss). */
+@media (max-width: 639.98px) {
+  /* The tablet goes everywhere, not only beside a phone: one frame per
+     project, whichever captures a future project brings. */
+  .devices.has-phone .laptop,
+  .devices .tablet { display: none; }
+
+  /* The floor keeps the capture readable at 320px, where 60% of the ~268px
+     column would be 161px; the outer min() keeps that floor inside the column
+     when the visitor raised the browser's font size. */
+  .devices.has-phone .phone { flex: 0 0 min(clamp(11.5rem, 60%, 15rem), 100%); }
+
+  /* The light pool follows the single, narrower frame. */
+  .devices.has-phone::after { left: 22%; right: 22%; }
+}
