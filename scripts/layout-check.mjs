@@ -29,6 +29,9 @@ const VIEWPORTS = [
      LOWER bound of its mode, so the tightest four-column width is the one
      worth sampling (~60px of slack there against ~110px at 760). */
   [610, 900], [701, 900],
+  /* Either side of the portfolio's one-frame breakpoint (639.98px): it once
+     matched 640 too, and nothing sampled there could tell. */
+  [639, 900], [640, 900],
   [900, 900],
   /* 910 is the witness inside the band where the contact grid used to overhang
      (901-939); after the fix it is stacked there, and it is what makes a
@@ -280,6 +283,26 @@ const PROBE = `(async () => {
         right: Math.round((sr.right - parseFloat(cs.paddingRight)) - items[items.length - 1].getBoundingClientRect().right),
       };
     })(),
+    /* A portfolio section without a single matched stage means the selectors
+       drifted — reported, so the check below cannot switch itself off. */
+    portfolioUnmatched: !!document.querySelector('#portfolio')
+      && !document.querySelector('article.project .devices'),
+    /* The portfolio's device line-up, per project: which frames are shown and
+       how wide. On a phone the three frames once shared ~350px — the phone
+       frame came out 45-65px wide, a pill with an unreadable capture, and no
+       other check here could see it. offsetWidth, not the rect: the reveal
+       animation scales the stage while it fades in. */
+    portfolioDevices: [...document.querySelectorAll('article.project .devices')].map(stage => ({
+      column: stage.offsetWidth,
+      total: stage.querySelectorAll('.device').length,
+      hasPhone: !!stage.querySelector('.device.phone'),
+      shown: [...stage.querySelectorAll('.device')]
+        .filter(d => d.offsetWidth > 0)
+        .map(d => ({
+          kind: ['phone', 'tablet', 'laptop'].find(k => d.classList.contains(k)) ?? String(d.className),
+          w: d.offsetWidth,
+        })),
+    })),
     widestSection: (() => {
       /* The content box of a padded section IS the measure. Reported with
          its owner so a regression names the section, not just a number. */
@@ -399,6 +422,26 @@ async function run() {
           failures.push(`${at}: open menu scrolls sideways by ${mm.sideways}px`);
         }
       }
+
+      /* Below 640px one frame per project, large enough to read: the phone
+         where a phone capture exists, else the laptop across the column.
+         From 640px the full line-up again, wherever the captures exist. */
+      if (m.portfolioUnmatched) failures.push(`${at}: #portfolio found but no device stage matched — the check is blind`);
+      m.portfolioDevices.forEach((stage, i) => {
+        const where = `${at}: portfolio project ${i + 1}`;
+        if (width < 640) {
+          const [only] = stage.shown;
+          const expected = stage.hasPhone ? 'phone' : 'laptop';
+          if (stage.shown.length !== 1) failures.push(`${where} shows ${stage.shown.length} devices (one below 640px)`);
+          else if (only.kind !== expected) failures.push(`${where} shows the ${only.kind}, not the ${expected}`);
+          else if (only.kind === 'phone' && only.w < 180) failures.push(`${where} phone frame is ${only.w}px wide (min 180)`);
+          else if (only.kind === 'laptop' && only.w < stage.column * 0.9) {
+            failures.push(`${where} laptop is ${only.w}px of a ${stage.column}px column (min 90%)`);
+          }
+        } else if (stage.shown.length !== stage.total) {
+          failures.push(`${where} shows ${stage.shown.length} of its ${stage.total} devices`);
+        }
+      });
 
       console.log(
         `${route.padEnd(4)} ${String(width).padStart(4)}×${String(height).padEnd(4)}` +
