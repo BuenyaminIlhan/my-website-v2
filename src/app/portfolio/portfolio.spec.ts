@@ -157,6 +157,48 @@ describe('Portfolio', () => {
     expect(stackedSelectors.some(sel => sel.includes('.flipped'))).toBe(true);
   });
 
+  /* Below 640px the three frames shared ~350px: the phone came out 45-65px
+     wide, a pill with an unreadable capture. There, a stage with a phone
+     capture shows the phone alone — the class is what the CSS keys on. */
+  it('marks exactly the stages that have a phone capture', () => {
+    const stages = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.devices'));
+    expect(stages.map(s => s.classList.contains('has-phone')))
+      .toEqual(portfolio.projects.map(p => !!p.phoneImage));
+  });
+
+  it('shows one readable frame below 640px: the phone where it exists', () => {
+    const narrow = Array.from(document.styleSheets)
+      .flatMap(s => { try { return Array.from(s.cssRules); } catch { return []; } })
+      .filter((rule): rule is CSSMediaRule =>
+        rule instanceof CSSMediaRule && rule.conditionText.includes('639.98px'))
+      .flatMap(rule => Array.from(rule.cssRules))
+      .filter((r): r is CSSStyleRule => r instanceof CSSStyleRule);
+    const selectors = (r: CSSStyleRule) => r.selectorText.split(',');
+    const hidden = (test: (sel: string) => boolean) =>
+      narrow.some(r => r.style.display === 'none' && selectors(r).some(test));
+
+    expect(hidden(sel => sel.includes('.has-phone') && sel.includes('.laptop'))).toBe(true);
+    // The tablet goes in every stage, so a future tablet-only project still shows one frame.
+    expect(hidden(sel => sel.includes('.tablet') && !sel.includes('.has-phone'))).toBe(true);
+    expect(hidden(sel => sel.includes('.phone'))).toBe(false);
+    // The floor is what keeps the phone readable at 320px.
+    const phone = narrow.find(r => selectors(r).some(sel => sel.includes('.has-phone') && sel.includes('.phone')));
+    expect(phone?.style.flexBasis).toBe('min(clamp(11.5rem, 60%, 15rem), 100%)');
+  });
+
+  /* Below 640px the phone capture is the only image left on screen, so it
+     carries the description the hidden laptop capture had. */
+  it('describes the phone capture, since on a phone it is the only one shown', () => {
+    const stages = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('.devices'));
+    const withPhone = portfolio.projects.filter(p => p.phoneImage);
+    expect(withPhone.length).toBeGreaterThan(0);
+    portfolio.projects.forEach((project, i) => {
+      for (const img of Array.from(stages[i].querySelectorAll('.phone img'))) {
+        expect(img.getAttribute('alt')).toBe(project.title);
+      }
+    });
+  });
+
   /* The claim rides on the phone capture: a project only says "same app
      everywhere" where an in-app phone screenshot backs it up. */
   it('claims "same app on every device" only where a phone capture exists', () => {

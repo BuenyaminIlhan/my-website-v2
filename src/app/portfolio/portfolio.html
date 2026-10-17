@@ -52,8 +52,11 @@
       </div>
 
       <!-- Same app, three screens: the responsive promise, shown rather
-           than claimed. -->
-      <div class="devices">
+           than claimed. Below 640px one frame only (see portfolio.scss); the
+           phone capture then is the image on screen, hence its alt. Accepted
+           trade-off: from 640px a screen reader hears the title on both the
+           laptop and the phone capture. -->
+      <div class="devices" [class.has-phone]="!!project.phoneImage">
         <div class="device laptop">
           <div class="screen">
             @if (project.imageDark; as imageDark) {
@@ -86,10 +89,10 @@
           <div class="device phone">
             <div class="screen">
               @if (project.phoneImageDark; as phoneImageDark) {
-                <img class="capture-light" [src]="phoneImage" alt="" loading="lazy" decoding="async" width="280" height="590" />
-                <img class="capture-dark" [src]="phoneImageDark" alt="" loading="lazy" decoding="async" width="280" height="590" />
+                <img class="capture-light" [src]="phoneImage" [alt]="project.title" loading="lazy" decoding="async" width="280" height="590" />
+                <img class="capture-dark" [src]="phoneImageDark" [alt]="project.title" loading="lazy" decoding="async" width="280" height="590" />
               } @else {
-                <img [src]="phoneImage" alt="" loading="lazy" decoding="async" width="280" height="590" />
+                <img [src]="phoneImage" [alt]="project.title" loading="lazy" decoding="async" width="280" height="590" />
               }
             </div>
           </div>
