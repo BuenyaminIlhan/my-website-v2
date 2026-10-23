@@ -200,8 +200,12 @@ describe('ServicePage', () => {
 
     it('renders the questions with question and answer in the right places', () => {
       const { faq } = craftsmen();
-      expect(faq).toHaveLength(4);
+      expect(faq).toHaveLength(5);
       expect(el().querySelectorAll('.service-faq details')).toHaveLength(faq.length);
+      // The Business Profile is a service-area business: the page has to say he comes over.
+      const visit = faq.find(item => item.q === 'Kommen Sie auch zu mir in den Betrieb?');
+      expect(visit?.a).toContain('Siegburg, Köln, Bonn und im Rhein-Sieg-Kreis');
+      expect(text(fixture)).toContain('Kommen Sie auch zu mir in den Betrieb?');
       expect(el().querySelector('.service-faq summary')?.textContent).toBe(faq[0].q);
       expect(el().querySelector('.service-faq details p')?.textContent).toBe(faq[0].a);
     });

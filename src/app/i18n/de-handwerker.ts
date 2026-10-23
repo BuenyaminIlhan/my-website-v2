@@ -80,12 +80,13 @@ export const handwerkerPage: ServicePageContent = {
         'Planbare, transparente Kosten',
       ],
     },
-    // Prozess, Schritte 1–4 gekürzt; "Telefon" vom Inhaber bestätigt.
+    // Prozess, Schritte 1–4 gekürzt; "Telefon" und Vor-Ort-Termine im Servicegebiet vom
+    // Inhaber bestätigt (Servicegebiet: SERVICE_AREA in jsonld.ts).
     {
       h2: 'So läuft es ab',
       ordered: true,
       list: [
-        'Kostenloses Erstgespräch — Sie schildern Ihr Vorhaben per Telefon, E-Mail oder Formular; innerhalb von 24 Stunden melde ich mich.',
+        'Kostenloses Erstgespräch — Sie schildern Ihr Vorhaben per Telefon, Videocall oder persönlich in Ihrem Betrieb in Siegburg, Köln, Bonn und im Rhein-Sieg-Kreis; auf Anfragen per E-Mail oder Formular melde ich mich innerhalb von 24 Stunden.',
         'Konzept & Angebot — ein klarer Vorschlag, der zu Ihren Zielen und Ihrem Budget passt, mit transparentem Angebot.',
         'Design & Umsetzung — modern, schnell und suchmaschinenoptimiert; Sie sehen regelmäßig Zwischenstände.',
         'Launch & Betreuung — getestet und startklar; auf Wunsch mit Pflege, Updates und schnellen Antworten.',
@@ -102,7 +103,8 @@ export const handwerkerPage: ServicePageContent = {
     },
   ],
   // 1: FAQ "Was muss ich vorbereiten?" + Artikel "Texte und Fotos"; 2: FAQ "Wie lange …";
-  // 3: vom Inhaber bestätigt; 4: FAQ "Wer kümmert sich nach dem Launch …".
+  // 3: vom Inhaber bestätigt; 4: FAQ "Wer kümmert sich nach dem Launch …";
+  // 5: FAQ "Kommen Sie auch zu mir?".
   faq: {
     title: 'Häufige Fragen',
     items: [
@@ -110,6 +112,7 @@ export const handwerkerPage: ServicePageContent = {
       { q: 'Wie lange dauert es, bis die Website online ist?', a: 'Eine typische Betriebs-Website ist oft innerhalb weniger Wochen online. Im Angebot erhalten Sie einen realistischen Zeitplan.' },
       { q: 'Gehört mir die Website danach?', a: 'Ja. Domain und Website gehören Ihnen, nicht mir — ohne Mietmodell, aus dem Sie nicht wieder herauskommen.' },
       { q: 'Kann ich später selbst etwas ändern?', a: 'Ganz wie Sie möchten: Entweder übernehmen Sie die Pflege selbst — ich weise Sie gern ein — oder ich halte Ihre Website mit dem Sorglos-Paket aktuell, sicher und schnell.' },
+      { q: 'Kommen Sie auch zu mir in den Betrieb?', a: 'Ja. In Siegburg, Köln, Bonn und im Rhein-Sieg-Kreis komme ich gern persönlich in Ihren Betrieb — Sie sparen sich die Fahrt. Außerhalb dieses Gebiets besprechen wir alles bequem per Telefon oder Videocall.' },
     ],
   },
   forWhoTitle: 'Für wen geeignet',

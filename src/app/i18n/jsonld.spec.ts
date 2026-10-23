@@ -99,6 +99,36 @@ describe('buildSiteGraph', () => {
     expect(service.telephone).not.toBe(`+${SITE_CONFIG.whatsappNumber}`);
   });
 
+  it('names the places the owner visits as its service area, in every language', () => {
+    for (const [lang, t] of [['de', de], ['en', en]] as [Lang, LangTranslations][]) {
+      const service = nodeOf(buildSiteGraph(lang, t), 'ProfessionalService') as unknown as {
+        areaServed: { '@type': string; name: string }[];
+      };
+      // Literal on purpose: it has to equal the service area of the Business Profile.
+      expect(service.areaServed).toEqual([
+        { '@type': 'City', name: 'Siegburg' },
+        { '@type': 'City', name: 'Köln' },
+        { '@type': 'City', name: 'Bonn' },
+        { '@type': 'AdministrativeArea', name: 'Rhein-Sieg-Kreis' },
+      ]);
+    }
+  });
+
+  it('keeps nationwide delivery on the service pages: only the visits are regional', () => {
+    const page = de.servicePages['website-erstellen-lassen'];
+    const nodes = (buildServicePageGraph('de', 'website-erstellen-lassen', page) as
+      { '@graph': Record<string, unknown>[] })['@graph'];
+    expect(nodes.find(n => n['@type'] === 'Service')?.['areaServed']).toEqual(['DE']);
+  });
+
+  it('answers on the home page whether the owner comes to the customer, in every language', () => {
+    const questions = (lang: Lang) =>
+      (nodeOf(buildSiteGraph(lang, T[lang]), 'FAQPage') as unknown as { mainEntity: { name: string }[] })
+        .mainEntity.map(q => q.name);
+    expect(questions('de')).toContain('Kommen Sie auch zu mir?');
+    expect(questions('en')).toContain('Can you visit me in person?');
+  });
+
   it('names the business exactly like its Business Profile, in every language', () => {
     for (const [lang, t] of [['de', de], ['en', en]] as [Lang, LangTranslations][]) {
       expect(nodeOf(buildSiteGraph(lang, t), 'ProfessionalService')['name']).toBe('Softlyx');
@@ -162,5 +192,34 @@ describe('buildSiteGraph', () => {
       .querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href;
 
     expect(homeOf('en')).toBe(canonicalHref);
+  });
+});
+
+/**
+ * The texts that promise visits name the same places as areaServed above: the Business
+ * Profile is a service-area business, and Google compares profile and site.
+ */
+describe('service area in the site texts', () => {
+  const PLACES: Record<Lang, string[]> = {
+    de: ['Siegburg', 'Köln', 'Bonn', 'Rhein-Sieg-Kreis'],
+    en: ['Siegburg', 'Cologne', 'Bonn', 'Rhein-Sieg district'],
+  };
+  const IN_PERSON: Record<Lang, string> = { de: 'persönlich', en: 'in person' };
+
+  /** Every place, in whatever grammatical form the sentence needs ("im Rhein-Sieg-Kreis"). */
+  const namesArea = (lang: Lang, text: string) => PLACES[lang].every(place => text.includes(place));
+
+  for (const lang of ['de', 'en'] as Lang[]) {
+    it(`offers the first meeting in person in the service area (${lang})`, () => {
+      const step = T[lang].process.steps[0].desc;
+      expect(step).toContain(IN_PERSON[lang]);
+      expect(namesArea(lang, step)).toBe(true);
+    });
+  }
+
+  it('offers the first meeting in person in the service area on the craftsmen page', () => {
+    const steps = de.servicePages['website-fuer-handwerker'].sections?.find(s => s.ordered)?.list ?? [];
+    expect(steps[0]).toContain('persönlich');
+    expect(namesArea('de', steps[0])).toBe(true);
   });
 });

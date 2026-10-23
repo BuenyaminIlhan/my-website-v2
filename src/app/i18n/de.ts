@@ -82,7 +82,7 @@ export const de: LangTranslations = {
     steps: [
       {
         title: 'Kostenloses Erstgespräch',
-        desc: 'Sie erzählen, ich höre zu: Schildern Sie mir Ihr Vorhaben per E-Mail oder Kontaktformular — unverbindlich und ohne Fachchinesisch. Innerhalb von 24 Stunden melde ich mich bei Ihnen.',
+        desc: 'Sie erzählen, ich höre zu: Schildern Sie mir Ihr Vorhaben per Telefon, Videocall oder persönlich bei Ihnen vor Ort in Siegburg, Köln, Bonn und im Rhein-Sieg-Kreis — unverbindlich und ohne Fachchinesisch. Auf Anfragen per E-Mail oder Kontaktformular melde ich mich innerhalb von 24 Stunden.',
       },
       {
         title: 'Konzept & Angebot',
@@ -118,6 +118,10 @@ export const de: LangTranslations = {
       {
         q: 'Wer kümmert sich nach dem Launch um die Website?',
         a: 'Ganz wie Sie möchten: Entweder übernehmen Sie die Pflege selbst — ich weise Sie gern ein — oder Sie wählen das All-in-One-Paket und ich halte Ihre Website aktuell, sicher und schnell.',
+      },
+      {
+        q: 'Kommen Sie auch zu mir?',
+        a: 'Ja. In Siegburg, Köln, Bonn und im Rhein-Sieg-Kreis komme ich gern persönlich zu Ihnen. Außerhalb dieses Gebiets besprechen wir alles bequem per Telefon oder Videocall.',
       },
       {
         q: 'Arbeiten Sie auch mit bestehenden Websites?',
