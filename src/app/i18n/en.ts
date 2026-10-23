@@ -81,7 +81,7 @@ export const en: LangTranslations = {
     steps: [
       {
         title: 'Free consultation',
-        desc: 'You talk, I listen: describe your idea by email or contact form — no obligation, no tech jargon. I get back to you within 24 hours.',
+        desc: 'You talk, I listen: tell me about your idea by phone, video call or in person at your business in Siegburg, Cologne, Bonn and the Rhein-Sieg district — no obligation, no tech jargon. If you write by email or contact form, I get back to you within 24 hours.',
       },
       {
         title: 'Concept & quote',
@@ -117,6 +117,10 @@ export const en: LangTranslations = {
       {
         q: 'Who takes care of the website after launch?',
         a: 'Entirely up to you: either you maintain it yourself — I will gladly show you how — or you choose the all-in-one package and I keep your website up to date, secure and fast.',
+      },
+      {
+        q: 'Can you visit me in person?',
+        a: 'Yes. In Siegburg, Cologne, Bonn and the Rhein-Sieg district I am happy to visit you in person. Outside this area we discuss everything by phone or video call.',
       },
       {
         q: 'Do you also work with existing websites?',

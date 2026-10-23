@@ -35,6 +35,18 @@ const BUSINESS_ADDRESS = {
   addressCountry: 'DE',
 };
 
+/**
+ * Where the owner visits customers — customers do not come to him. It mirrors the service
+ * area of the Google Business Profile (user decision 2026-10-21); the site texts name the
+ * same four places. Websites themselves are delivered nationwide, see the Service nodes.
+ */
+const SERVICE_AREA = [
+  { '@type': 'City', name: 'Siegburg' },
+  { '@type': 'City', name: 'Köln' },
+  { '@type': 'City', name: 'Bonn' },
+  { '@type': 'AdministrativeArea', name: 'Rhein-Sieg-Kreis' },
+];
+
 const PROJECTS = [
   { pos: 1, type: 'WebApplication', name: 'HausVio', url: 'https://hausvio.de/', category: 'BusinessApplication' },
   { pos: 2, type: 'WebApplication', name: 'Zephir', url: 'https://badeo.net/', category: 'BusinessApplication' },
@@ -71,8 +83,7 @@ function serviceNode(lang: Lang, t: LangTranslations): object {
     ...serviceRef(),
     alternateName: BRAND_WORDMARK,
     description: SERVICE_DESC[lang],
-    // The Turkish market is served by the Turkish site (SITE_CONFIG.turkishSiteUrl).
-    areaServed: ['DE'],
+    areaServed: SERVICE_AREA,
     knowsLanguage: ['de', 'en', 'tr'],
     address: BUSINESS_ADDRESS,
     // The voice line, not WhatsApp: a different number (user, 2026-10-13).
