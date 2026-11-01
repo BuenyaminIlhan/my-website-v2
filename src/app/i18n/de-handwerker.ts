@@ -15,8 +15,8 @@ function costTable(): { head: string[]; rows: string[][] } {
  * 400-line limit.
  *
  * Nothing here is new to the site. Every number is a number of the cost article (or the
- * "24 Stunden" reply time and the "3D" of the Dachplaner) — service-page.spec checks every
- * number on the page. Every other statement repeats one the site already makes; the source
+ * "24 Stunden" reply time) — service-page.spec checks every number on the page. Every
+ * other statement repeats one the site already makes; the source
  * is noted above each block ("FAQ" = de.ts faq.items, "Prozess" = de.ts process.steps,
  * "Artikel" = the cost article in blog-data.ts). FAQ 3 and "Telefon" in step 1 were
  * confirmed by the owner on 2026-10-14.
@@ -91,13 +91,12 @@ export const handwerkerPage: ServicePageContent = {
         'Launch & Betreuung — getestet und startklar; auf Wunsch mit Pflege, Updates und schnellen Antworten.',
       ],
     },
-    // portfolio.ts: Zephir ("täglich im Einsatz") und Dachplaner.
+    // portfolio.ts: Zephir ("täglich im Einsatz").
     {
       h2: 'Beispiele aus dem Handwerk',
       paragraphs: [
         'Für einen Badumbau-Betrieb habe ich eine Angebots-App entwickelt: Angebote direkt beim Kunden vor Ort erstellen, mit Fotos dokumentieren und sofort digital unterschreiben lassen — vom Aufmaß bis zur Unterschrift in einem Termin. Sie ist täglich im Einsatz.',
-        'Der Dachplaner berechnet aus amtlichen 3D-Gebäudedaten Dachfläche, Neigung, First und Traufe — heraus kommt in Minuten ein Materialauszug samt Richtpreis.',
-        'Beides zeigt: Ich baue nicht nur Websites, sondern auch Werkzeuge für den Handwerksalltag.',
+        'Das zeigt: Ich baue nicht nur Websites, sondern auch Werkzeuge für den Handwerksalltag.',
       ],
     },
   ],

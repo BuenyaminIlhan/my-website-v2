@@ -73,18 +73,6 @@ export class Portfolio {
       demoUrl: 'https://badeo.net/',
       isLiveProduct: true,
     },
-    {
-      /* Copy derived from the product's own UI (address search, LoD2 mesh,
-         computed roof geometry, drone-photogrammetry upload, material list
-         with price estimate). No public URL yet — no demo link is rendered. */
-      index: '03', title: 'Dachplaner',
-      stack: ['Angular', 'Photogrammetrie', '3D', 'LoD2-Geodaten', 'DSGVO'],
-      descriptions: {
-        en: '3D roof configurator working with official LoD2 building data: enter an address, load the building from the state 3D mesh, and get roof area, pitch, ridge and eaves computed automatically. Drone photogrammetry models can be added for a photorealistic view — the result is a material list and a price estimate in minutes.',
-        de: '3D-Dachkonfigurator auf Basis amtlicher LoD2-Gebäudedaten: Adresse eingeben, Gebäude aus dem amtlichen 3D-Mesh laden, und Dachfläche, Neigung, First und Traufe werden automatisch berechnet. Optional lassen sich Drohnen-Photogrammetrie-Modelle einbinden — heraus kommt in Minuten ein Materialauszug samt Richtpreis.',
-      },
-      image: 'assets/img/Dachplaner.webp', imageWidth: 1192, imageHeight: 670,
-    },
   ];
 
   description(project: Project): string {

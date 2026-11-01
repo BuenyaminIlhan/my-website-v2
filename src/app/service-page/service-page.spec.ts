@@ -30,7 +30,6 @@ const numbersIn = (text: string): string[] => text.match(/(?<![\d.,])\d+(?:[.,]\
  */
 const NON_PRICE_PHRASES: Record<string, string> = {
   '24 Stunden': 'reply within 24 hours — process step 1 and hero badges in de.ts',
-  '3D-': '"3D-Gebäudedaten" — the Dachplaner text in portfolio.ts',
 };
 
 describe('ServicePage', () => {
@@ -210,6 +209,12 @@ describe('ServicePage', () => {
       mount('website-fuer-handwerker');
       const hrefs = Array.from(el().querySelectorAll<HTMLAnchorElement>('.related-link a')).map(a => a.getAttribute('href'));
       expect(hrefs).toContain('/blog/was-kostet-eine-website-fuer-handwerker');
+    });
+
+    it('no longer shows the Dachplaner, which left the portfolio (owner 2026-11-01)', () => {
+      mount('website-fuer-handwerker');
+      expect(el().textContent).not.toContain('Dachplaner');
+      expect(JSON.stringify(handwerkerPage)).not.toContain('Dachplaner');
     });
 
     it('survives a switch to English, where the page does not exist', () => {
