@@ -38,7 +38,6 @@ const BUSINESS_ADDRESS = {
 const PROJECTS = [
   { pos: 1, type: 'WebApplication', name: 'HausVio', url: 'https://hausvio.de/', category: 'BusinessApplication' },
   { pos: 2, type: 'WebApplication', name: 'Zephir', url: 'https://badeo.net/', category: 'BusinessApplication' },
-  { pos: 3, type: 'WebApplication', name: 'Dachplaner', url: undefined, category: 'BusinessApplication' },
 ];
 
 /**

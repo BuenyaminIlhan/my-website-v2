@@ -92,8 +92,9 @@
 }
 
 /* Number and title share one line inside a 28 % column, so both are sized
-   against the longest product name ("Dachplaner", unbreakable). Measured
-   clear at 1201–1920 px; the tightest point is 1201 px with ~11 px left.
+   against a 10-letter unbreakable name ("Dachplaner", since removed),
+   which is longer than any name today. Measured clear at 1201–1920 px;
+   the tightest point is 1201 px with ~11 px left.
    A raised browser default font size still overhangs — the rem floors win
    there — so keep the floors low if the copy ever gets longer names. */
 .project-num {
@@ -111,8 +112,9 @@
   font-family: "Syne", sans-serif;
   /* Upper bound is set by the narrowest column this title ever lives in, not
      by taste: the text column stops at 393px once .section-padding caps the
-     page, and the devices break out of it. At 2rem "Dachplaner" needed 301px
-     in a 296px box and clipped. 1.75rem leaves room for a longer name too. */
+     page, and the devices break out of it. At 2rem a 10-letter name
+     ("Dachplaner", since removed) needed 301px in a 296px box and clipped.
+     1.75rem leaves room for a longer name too. */
   font-size: clamp(1.3rem, 1.7vw, 1.75rem);
   font-weight: 800;
   line-height: 1.05;

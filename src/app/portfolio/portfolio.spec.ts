@@ -26,8 +26,8 @@ describe('Portfolio', () => {
     document.body.classList.remove('light');
   });
 
-  it('shows exactly the three web-app projects', () => {
-    expect(portfolio.projects.map(p => p.title)).toEqual(['HausVio', 'Zephir', 'Dachplaner']);
+  it('shows exactly the two web-app projects', () => {
+    expect(portfolio.projects.map(p => p.title)).toEqual(['HausVio', 'Zephir']);
   });
 
   it('describes a project in the current locale', () => {
@@ -43,15 +43,13 @@ describe('Portfolio', () => {
     const stages = Array.from(el.querySelectorAll('article.project'));
 
     expect(stages[0].querySelector('.link-btn')?.getAttribute('href')).toBe('https://hausvio.de/');
-    // Dachplaner has no public URL yet.
-    expect(stages[2].querySelectorAll('.link-btn')).toHaveLength(0);
     expect(el.querySelectorAll('a[href="#"]')).toHaveLength(0);
   });
 
   it('renders one stage per project, each led by the laptop screen', () => {
     const el: HTMLElement = fixture.nativeElement;
-    expect(el.querySelectorAll('article.project')).toHaveLength(3);
-    expect(el.querySelectorAll('.devices .laptop')).toHaveLength(3);
+    expect(el.querySelectorAll('article.project')).toHaveLength(2);
+    expect(el.querySelectorAll('.devices .laptop')).toHaveLength(2);
   });
 
   it('adds tablet and phone frames only where a responsive capture exists', () => {
@@ -64,8 +62,6 @@ describe('Portfolio', () => {
     expect(el.querySelectorAll('.devices .tablet')).toHaveLength(withPhone.length);
     const stages = Array.from(el.querySelectorAll('.devices'));
     expect(stages[1].querySelectorAll('.device')).toHaveLength(3);
-    // Dachplaner shows the laptop alone — no public URL to capture from.
-    expect(stages[2].querySelectorAll('.device')).toHaveLength(1);
   });
 
   /* Both captures ship in the markup; CSS picks one. That is what makes the
@@ -117,12 +113,12 @@ describe('Portfolio', () => {
 
     // No body.light: the site is dark, so HausVio shows its dark capture.
     document.body.classList.remove('light');
-    expect(shown('laptop')).toEqual(['assets/img/HausVio-dark.webp', 'assets/img/Zephir.webp', 'assets/img/Dachplaner.webp']);
+    expect(shown('laptop')).toEqual(['assets/img/HausVio-dark.webp', 'assets/img/Zephir.webp']);
     expect(shown('tablet')).toEqual(['assets/img/hausvio-tablet-dark.webp', 'assets/img/zephir-tablet.webp']);
     expect(shown('phone')).toEqual(['assets/img/hausvio-phone-dark.webp', 'assets/img/zephir-phone.webp']);
 
     document.body.classList.add('light');
-    expect(shown('laptop')).toEqual(['assets/img/HausVio.webp', 'assets/img/Zephir.webp', 'assets/img/Dachplaner.webp']);
+    expect(shown('laptop')).toEqual(['assets/img/HausVio.webp', 'assets/img/Zephir.webp']);
     expect(shown('tablet')).toEqual(['assets/img/hausvio-tablet.webp', 'assets/img/zephir-tablet.webp']);
     expect(shown('phone')).toEqual(['assets/img/hausvio-phone.webp', 'assets/img/zephir-phone.webp']);
   });
@@ -155,6 +151,25 @@ describe('Portfolio', () => {
 
     // Must name .flipped explicitly — `.project` alone loses on specificity.
     expect(stackedSelectors.some(sel => sel.includes('.flipped'))).toBe(true);
+  });
+
+  /* Both live projects have a URL and all three captures, so the stages above
+     only ever see the full case. A project without them (the Dachplaner was
+     one until 2026-11-01) must still render: laptop alone, no link, no
+     .has-phone. Added before the first change detection, as OnPush needs. */
+  it('renders a project without URL or responsive captures as laptop alone', () => {
+    const bare = TestBed.createComponent(Portfolio);
+    bare.componentInstance.projects.push({
+      ...bare.componentInstance.projects[1],
+      index: '03', title: 'Ohne URL',
+      demoUrl: undefined, isLiveProduct: undefined, tabletImage: undefined, phoneImage: undefined,
+    });
+    bare.detectChanges();
+
+    const last = Array.from((bare.nativeElement as HTMLElement).querySelectorAll('article.project')).at(-1);
+    expect(last?.querySelectorAll('.link-btn')).toHaveLength(0);
+    expect(last?.querySelectorAll('.device')).toHaveLength(1);
+    expect(last?.querySelector('.devices')?.classList.contains('has-phone')).toBe(false);
   });
 
   /* Below 640px the three frames shared ~350px: the phone came out 45-65px

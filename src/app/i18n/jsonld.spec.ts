@@ -142,6 +142,15 @@ describe('buildSiteGraph', () => {
     expect(site['name']).toBe('Softlyx');
   });
 
+  it('lists HausVio and Zephir as the projects, numbered without gaps', () => {
+    const list = nodeOf(buildSiteGraph('de', de), 'ItemList') as unknown as {
+      itemListElement: { position: number; item: { name: string } }[];
+    };
+
+    expect(list.itemListElement.map(e => e.item.name)).toEqual(['HausVio', 'Zephir']);
+    expect(list.itemListElement.map(e => e.position)).toEqual([1, 2]);
+  });
+
   it('agrees with the canonical link SeoService writes for the same page', () => {
     // Drift detector, not a revert detector: both sides read the same helper, so
     // reverting that helper keeps them equal and only the case above turns red.
